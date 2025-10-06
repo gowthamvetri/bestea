@@ -1,0 +1,22 @@
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="300" fill="#f3f4f6"/>
+  
+  <!-- Tea cup outline -->
+  <path d="M120 180C120 165 130 150 150 150H250C270 150 280 165 280 180V220C280 235 270 250 250 250H150C130 250 120 235 120 220V180Z" stroke="#9ACB3C" stroke-width="3" fill="#ffffff"/>
+  
+  <!-- Tea cup handle -->
+  <path d="M280 170C290 170 300 180 300 190V200C300 210 290 220 280 220" stroke="#9ACB3C" stroke-width="3" fill="none"/>
+  
+  <!-- Tea in cup -->
+  <path d="M125 180C125 170 133 160 150 160H250C267 160 275 170 275 180V215C275 225 267 235 250 235H150C133 235 125 225 125 215V180Z" fill="#9ACB3C" opacity="0.3"/>
+  
+  <!-- Steam lines -->
+  <path d="M170 140C170 135 175 130 175 125C175 120 170 115 170 110" stroke="#9ACB3C" stroke-width="2" stroke-linecap="round"/>
+  <path d="M200 140C200 135 205 130 205 125C205 120 200 115 200 110" stroke="#9ACB3C" stroke-width="2" stroke-linecap="round"/>
+  <path d="M230 140C230 135 235 130 235 125C235 120 230 115 230 110" stroke="#9ACB3C" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- BESTEA text -->
+  <text x="200" y="90" text-anchor="middle" fill="#9ACB3C" font-family="Arial, sans-serif" font-size="24" font-weight="bold">BESTEA</text>
+  <text x="200" y="280" text-anchor="middle" fill="#6b7280" font-family="Arial, sans-serif" font-size="14">Premium Tea Image</text>
+</svg>

@@ -1,0 +1,861 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* BESTEA Professional Design System */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* BESTEA Brand Colors */
+  --bestea-green: #9ACB3C;
+  --royals-blue: #083350;
+  --special-green: #268C43;
+  --cardamom-yellow: #FDC112;
+  
+  /* Professional Foundation */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-slate-50: #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-900: #0f172a;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.6;
+  color: var(--color-slate-900);
+  background-color: var(--color-white);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* BESTEA Container System */
+.container-custom {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .container-custom {
+    padding: 0 2rem;
+  }
+}
+
+/* BESTEA Button System */
+.btn-primary {
+  @apply inline-flex items-center justify-center px-6 py-3 bg-bestea-400 text-white font-semibold rounded-lg 
+         hover:bg-bestea-500 focus:bg-bestea-600 transition-all duration-300 
+         shadow-bestea hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+.btn-secondary {
+  @apply inline-flex items-center justify-center px-6 py-3 border-2 border-bestea-400 text-bestea-500 
+         font-semibold rounded-lg hover:bg-bestea-400 hover:text-white 
+         transition-all duration-300 transform hover:-translate-y-0.5;
+}
+
+.btn-royals {
+  @apply inline-flex items-center justify-center px-6 py-3 bg-royals-500 text-white font-semibold rounded-lg 
+         hover:bg-royals-600 focus:bg-royals-700 transition-all duration-300 
+         shadow-royals hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+.btn-special {
+  @apply inline-flex items-center justify-center px-6 py-3 bg-special-500 text-white font-semibold rounded-lg 
+         hover:bg-special-600 focus:bg-special-700 transition-all duration-300 
+         shadow-special hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+.btn-cardamom {
+  @apply inline-flex items-center justify-center px-6 py-3 bg-cardamom-400 text-white font-semibold rounded-lg 
+         hover:bg-cardamom-500 focus:bg-cardamom-600 transition-all duration-300 
+         shadow-cardamom hover:shadow-lg transform hover:-translate-y-0.5;
+}
+
+.btn-lg {
+  @apply px-8 py-4 text-lg;
+}
+
+.btn-sm {
+  @apply px-4 py-2 text-sm;
+}
+
+.btn-disabled {
+  @apply px-6 py-3 bg-slate-300 text-slate-500 font-semibold rounded-lg cursor-not-allowed;
+}
+
+/* BESTEA Card System */
+.card {
+  @apply bg-white rounded-xl shadow-lg border border-slate-100 overflow-hidden 
+         hover:shadow-xl hover:border-bestea-200 transition-all duration-300 
+         transform hover:-translate-y-1;
+}
+
+/* Modern Interactive Elements */
+.interactive-card {
+  @apply bg-white rounded-3xl border border-gray-100 shadow-lg hover:shadow-2xl 
+         transition-all duration-500 transform hover:-translate-y-2 cursor-pointer;
+}
+
+.hover-scale {
+  @apply transition-transform duration-300 hover:scale-105;
+}
+
+.hover-lift {
+  @apply transition-all duration-300 hover:-translate-y-2 hover:shadow-xl;
+}
+
+.glass-effect {
+  @apply bg-white/80 backdrop-blur-sm border border-white/20;
+}
+
+.gradient-border {
+  @apply bg-gradient-to-r from-bestea-400 via-bestea-500 to-special-500 p-0.5 rounded-2xl;
+}
+
+.gradient-border-content {
+  @apply bg-white rounded-2xl h-full w-full;
+}
+
+/* Smooth Animations */
+.smooth-appear {
+  animation: smoothAppear 0.6s ease-out forwards;
+}
+
+@keyframes smoothAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.float-animation {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Modern Shadows */
+.shadow-2xl {
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.shadow-3xl {
+  box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.3);
+}
+
+/* Clean Focus States */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-bestea-400 focus:ring-offset-2;
+}
+
+/* Modern Input Styles */
+.input-modern {
+  @apply w-full px-4 py-3 bg-white border border-gray-200 rounded-2xl 
+         focus:border-bestea-400 focus:ring-2 focus:ring-bestea-100 
+         transition-all duration-300 placeholder-gray-400;
+}
+
+.card-royals {
+  @apply bg-white rounded-xl shadow-royals border border-slate-100 overflow-hidden 
+         hover:shadow-xl hover:border-royals-200 transition-all duration-300 
+         transform hover:-translate-y-1;
+}
+
+.card-special {
+  @apply bg-white rounded-xl shadow-special border border-slate-100 overflow-hidden 
+         hover:shadow-xl hover:border-special-200 transition-all duration-300 
+         transform hover:-translate-y-1;
+}
+
+.card-cardamom {
+  @apply bg-white rounded-xl shadow-cardamom border border-slate-100 overflow-hidden 
+         hover:shadow-xl hover:border-cardamom-200 transition-all duration-300 
+         transform hover:-translate-y-1;
+}
+
+/* BESTEA Feature Components */
+.feature-box {
+  @apply text-center p-6 rounded-xl bg-white border border-slate-100 
+         hover:border-bestea-200 hover:shadow-bestea transition-all duration-300 
+         transform hover:-translate-y-1;
+}
+
+.feature-icon {
+  @apply w-16 h-16 bg-bestea-100 rounded-full flex items-center justify-center 
+         mx-auto mb-4 text-bestea-500 text-2xl;
+}
+
+/* Product Line Feature Icons */
+.feature-icon-royals {
+  @apply w-16 h-16 bg-royals-100 rounded-full flex items-center justify-center 
+         mx-auto mb-4 text-royals-500 text-2xl;
+}
+
+.feature-icon-special {
+  @apply w-16 h-16 bg-special-100 rounded-full flex items-center justify-center 
+         mx-auto mb-4 text-special-500 text-2xl;
+}
+
+.feature-icon-cardamom {
+  @apply w-16 h-16 bg-cardamom-100 rounded-full flex items-center justify-center 
+         mx-auto mb-4 text-cardamom-500 text-2xl;
+}
+
+/* BESTEA Form Components */
+.form-input {
+  @apply w-full px-4 py-3 border border-slate-300 rounded-lg 
+         focus:outline-none focus:ring-2 focus:ring-bestea-400 focus:border-bestea-400 
+         transition-all duration-300 bg-white;
+}
+
+.form-textarea {
+  @apply w-full px-4 py-3 border border-slate-300 rounded-lg 
+         focus:outline-none focus:ring-2 focus:ring-bestea-400 focus:border-bestea-400 
+         transition-all duration-300 bg-white resize-y min-h-[120px];
+}
+
+.form-select {
+  @apply w-full px-4 py-3 border border-slate-300 rounded-lg 
+         focus:outline-none focus:ring-2 focus:ring-bestea-400 focus:border-bestea-400 
+         transition-all duration-300 bg-white cursor-pointer;
+}
+
+.form-label {
+  @apply block text-sm font-semibold text-slate-700 mb-2;
+}
+
+/* BESTEA Hero Components */
+.hero-section {
+  @apply bg-gradient-to-br from-bestea-400 via-bestea-500 to-special-500 text-white py-20 lg:py-32 relative overflow-hidden;
+}
+
+.hero-title {
+  @apply text-4xl md:text-6xl font-bold mb-6;
+}
+
+.hero-subtitle {
+  @apply text-xl md:text-2xl text-white/90 mb-8 leading-relaxed;
+}
+
+.hero-description {
+  @apply text-lg text-white/80 mb-12 max-w-3xl mx-auto;
+}
+
+/* Product Line Hero Variants */
+.hero-royals {
+  @apply bg-gradient-to-br from-royals-500 via-royals-600 to-primary-600 text-white py-20 lg:py-32 relative overflow-hidden;
+}
+
+.hero-special {
+  @apply bg-gradient-to-br from-special-500 via-special-600 to-bestea-500 text-white py-20 lg:py-32 relative overflow-hidden;
+}
+
+.hero-cardamom {
+  @apply bg-gradient-to-br from-cardamom-400 via-cardamom-500 to-warning-500 text-white py-20 lg:py-32 relative overflow-hidden;
+}
+
+/* BESTEA Navigation */
+.nav-link {
+  @apply text-slate-700 hover:text-bestea-500 font-medium transition-colors duration-300 
+         relative after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 
+         after:bg-bestea-500 after:transition-all after:duration-300 hover:after:w-full;
+}
+
+.nav-link-active {
+  @apply text-bestea-500 after:w-full;
+}
+
+/* BESTEA Typography */
+.text-bestea-gradient {
+  @apply bg-gradient-to-r from-bestea-500 to-special-500 bg-clip-text text-transparent;
+}
+
+.text-royals-gradient {
+  @apply bg-gradient-to-r from-royals-500 to-primary-600 bg-clip-text text-transparent;
+}
+
+/* BESTEA Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* BESTEA Product Badges */
+.badge-bestseller {
+  @apply bg-bestea-500 text-white px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-new {
+  @apply bg-primary-500 text-white px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-offer {
+  @apply bg-error-500 text-white px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-royals {
+  @apply bg-royals-500 text-white px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-special {
+  @apply bg-special-500 text-white px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+.badge-cardamom {
+  @apply bg-cardamom-500 text-white px-3 py-1 rounded-full text-xs font-semibold;
+}
+
+/* BESTEA Utility Classes */
+.section-padding {
+  @apply py-16 lg:py-24;
+}
+
+.text-shadow {
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* BESTEA Responsive Design */
+@media (max-width: 768px) {
+  .hero-title {
+    @apply text-3xl md:text-4xl;
+  }
+  
+  .hero-subtitle {
+    @apply text-lg;
+  }
+  
+  .container-custom {
+    @apply px-4;
+  }
+}
+
+/* BESTEA Loading States */
+.loading-shimmer {
+  @apply animate-pulse bg-slate-200 rounded;
+}
+
+/* BESTEA Accessibility */
+.focus-visible:focus {
+  @apply outline-2 outline-offset-2 outline-bestea-500;
+}
+
+/* BESTEA Print Styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+@layer components {
+  /* Base button styles */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease-in-out;
+    outline: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  .btn:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+
+  .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Primary button - Professional blue */
+  .btn-primary {
+    background-color: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    box-shadow: 0 2px 4px 0 rgba(59, 130, 246, 0.3);
+  }
+
+  /* Secondary button */
+  .btn-secondary {
+    background-color: white;
+    color: #374151;
+    border-color: #d1d5db;
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    background-color: #f9fafb;
+    border-color: #9ca3af;
+  }
+
+  /* Success button */
+  .btn-success {
+    background-color: #10b981;
+    color: white;
+    border-color: #10b981;
+  }
+
+  .btn-success:hover:not(:disabled) {
+    background-color: #059669;
+    border-color: #059669;
+  }
+
+  /* Danger button */
+  .btn-danger {
+    background-color: #ef4444;
+    color: white;
+    border-color: #ef4444;
+  }
+
+  .btn-danger:hover:not(:disabled) {
+    background-color: #dc2626;
+    border-color: #dc2626;
+  }
+
+  /* Button sizes */
+  .btn-sm {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .btn-lg {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .btn-xl {
+    padding: 1rem 2rem;
+    font-size: 1.125rem;
+  }
+
+  /* Professional Card System */
+  .card {
+    background-color: white;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .card-hover {
+    transition: all 0.2s ease-in-out;
+  }
+
+  .card-hover:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+  }
+
+  /* Form Components */
+  .form-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: white;
+  }
+
+  .form-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-error {
+    font-size: 0.875rem;
+    color: #dc2626;
+    margin-top: 0.25rem;
+  }
+
+  /* Container */
+  .container-custom {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .container-custom {
+      padding: 0 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .container-custom {
+      padding: 0 2rem;
+    }
+  }
+
+  /* Professional Badge System */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+
+  .badge-success {
+    background-color: #d1fae5;
+    color: #065f46;
+  }
+
+  .badge-warning {
+    background-color: #fef3c7;
+    color: #92400e;
+  }
+
+  .badge-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+  }
+
+  .badge-info {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+
+  .badge-neutral {
+    background-color: #f3f4f6;
+    color: #374151;
+  }
+
+  /* Navigation */
+  .nav-link {
+    color: #4b5563;
+    font-weight: 500;
+    transition: color 0.2s;
+    text-decoration: none;
+  }
+
+  .nav-link:hover {
+    color: #1f2937;
+  }
+
+  .nav-link-active {
+    color: #3b82f6;
+    font-weight: 600;
+  }
+
+  /* Professional Shadows */
+  .shadow-soft {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .shadow-medium {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+
+  .shadow-strong {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  /* Status indicators */
+  .status-active {
+    color: #059669;
+    background-color: #d1fae5;
+  }
+
+  .status-inactive {
+    color: #dc2626;
+    background-color: #fee2e2;
+  }
+
+  .status-pending {
+    color: #d97706;
+    background-color: #fef3c7;
+  }
+
+  /* Professional Table */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+  }
+
+  .table th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #f3f4f6;
+  }
+
+  .table tbody tr:hover {
+    background-color: #f9fafb;
+  }
+
+  /* Product Card Styling */
+  .product-card {
+    background-color: white;
+    border-radius: 0.75rem;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    transition: all 0.2s ease-in-out;
+    overflow: hidden;
+  }
+
+  .product-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    transform: translateY(-2px);
+  }
+
+  .product-image {
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    width: 100%;
+  }
+
+  .product-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 0.5rem;
+  }
+
+  .product-price {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #059669;
+  }
+
+  .product-price-original {
+    font-size: 0.875rem;
+    color: #6b7280;
+    text-decoration: line-through;
+    margin-left: 0.5rem;
+  }
+
+  .product-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+    color: #eab308;
+    margin-bottom: 0.5rem;
+  }
+
+  /* Category Card Styling */
+  .category-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    background-color: white;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+  }
+
+  .category-card:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .category-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.3);
+    transition: all 0.3s;
+  }
+
+  .category-card:hover .category-overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  /* Loading States */
+  .skeleton {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    background-color: #e5e7eb;
+    border-radius: 0.25rem;
+  }
+
+  /* Animation Classes */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* Hero Section Styling */
+  .hero-section {
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%);
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .hero-title {
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    margin-bottom: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1.125rem, 3vw, 1.5rem);
+    color: #64748b;
+    line-height: 1.6;
+    max-width: 42rem;
+    margin: 0 auto 3rem;
+  }
+
+  /* Feature Box Styling */
+  .feature-box {
+    background: white;
+    border-radius: 1rem;
+    padding: 2rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease-in-out;
+    text-align: center;
+  }
+
+  .feature-box:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-4px);
+  }
+
+  .feature-icon {
+    width: 4rem;
+    height: 4rem;
+    background: #f1f5f9;
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 1.5rem;
+    color: #3b82f6;
+  }
+
+  /* Print Styles */
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+  }
+}
+
+@layer utilities {
+  /* Text utilities */
+  .text-shadow {
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+
+  /* Line clamp utilities */
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Professional spacing utilities */
+  .section-padding {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .section-padding {
+      padding-top: 7rem;
+      padding-bottom: 7rem;
+    }
+  }
+
+  /* Professional background utilities */
+  .bg-professional {
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 50%, #f1f5f9 100%);
+  }
+
+  .bg-muted {
+    background-color: #f8fafc;
+  }
+
+  /* Border utilities */
+  .border-professional {
+    border: 1px solid #e2e8f0;
+  }
+
+  /* Custom Focus */
+  .focus-professional:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+}
