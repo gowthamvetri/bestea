@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "my-vercel-app",
   "builds": [
     {
       "src": "./server.js",
