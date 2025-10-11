@@ -1,7 +1,24 @@
-{
-  "version": 2,
-  "name": "my-vercel-app",
-  "rewrites": [
-    { "source": "/(.*)", "destination": "index.js" }
-  ]
+{{
+
+  "version": 2,  "version": 2,
+
+  "builds": [  "name": "my-vercel-app",
+
+    {  "rewrites": [
+
+      "src": "index.js",    { "source": "/(.*)", "destination": "index.js" }
+
+      "use": "@vercel/node"  ]
+
+    }}
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "index.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }
