@@ -9,9 +9,13 @@ Multiple API endpoints returning **500 Internal Server Error** in production env
 - ❌ `GET /api/admin/dashboard` - 500 error
 - ❌ `GET /api/admin/analytics` - 500 error
 - ❌ `GET /api/admin/reviews` - 500 error
+- ❌ `GET /api/admin/orders` - 500 error
+- ❌ `GET /api/admin/products` - 500 error
 
 ## Root Cause Analysis
-Controllers were using **incorrect field names** that didn't exist in the MongoDB model schemas, causing aggregations and queries to fail.
+1. Controllers were using **incorrect field names** that didn't exist in MongoDB model schemas
+2. Controllers were trying to select/populate **virtual fields** (`mainImage`) which don't work with `.lean()`
+3. Virtual fields require actual Mongoose documents, not plain objects
 
 ## Model Schema Reference
 
@@ -45,16 +49,22 @@ Controllers were using **incorrect field names** that didn't exist in the MongoD
 ### Product Model (`backend/models/Product.js`)
 ```javascript
 {
-  purchases: Number       // ✅ CORRECT
+  purchases: Number,      // ✅ CORRECT
+  images: [{              // ✅ CORRECT - real field
+    url: String,
+    isMain: Boolean
+  }]
   // totalSales: Number   // ❌ WRONG - doesn't exist
+  // mainImage: Virtual   // ❌ WRONG - virtual field, can't be selected
 }
 ```
 
-## Files Modified (Total: 5 files)
+## Files Modified (Total: 7 files)
 
 ### 1. `backend/controllers/adminController.js`
-**Total Changes: 7 fixes**
+**Total Changes: 14 fixes**
 
+**Field Name Fixes:**
 - ✅ Line 54: `totalSales` → `purchases` (aggregation sort)
 - ✅ Line 77: `order.totalAmount` → `order.total` (dashboard data)
 - ✅ Lines 84-85: `product.totalSales` → `product.purchases` (2 occurrences)
@@ -62,32 +72,45 @@ Controllers were using **incorrect field names** that didn't exist in the MongoD
 - ✅ Line 599: `product.totalSales` → `product.purchases` (product listing)
 - ✅ Lines 1137, 1232: `reports` → `reported.users` (reviews filter/count)
 
+**Virtual Field Fixes (mainImage):**
+- ✅ Line 163: `.populate('items.product', 'name mainImage')` → `'name images'`
+- ✅ Lines 181-182: Access `mainImage` → compute from `images` array
+- ✅ Line 584: Removed `.lean()` from getAdminProducts query
+- ✅ Lines 595-596: Added mainImage computation from images array
+- ✅ Line 650: Removed `.lean()` from getAdminProductById query
+- ✅ Line 1170: `.populate('product', 'name slug mainImage')` → `'name slug images'`
+
 ### 2. `backend/controllers/categoryController.js`
 **Total Changes: 1 fix**
 
 - ✅ Line 9: `displayOrder` → `sortOrder` (getCategories sort)
 
 ### 3. `backend/controllers/productController.js`
-**Total Changes: 3 fixes**
+**Total Changes: 4 fixes**
 
 - ✅ Line 70: `totalSales` → `purchases` (popular sort)
 - ✅ Line 226: `totalSales` → `purchases` (bestsellers filter)
 - ✅ Line 229: `totalSales` → `purchases` (bestsellers sort)
+- ✅ Line 194: `.select('...mainImage...')` → `.select('...images...')`
 
 ### 4. `backend/controllers/orderController.js`
-**Total Changes: 2 fixes**
+**Total Changes: 5 fixes**
 
 - ✅ Line 63: `product.totalSales` → `product.purchases` (order creation)
 - ✅ Line 493: `product.totalSales` → `product.purchases` (order cancellation)
+- ✅ Line 115: `.populate('items.product', 'name mainImage')` → `'name images'`
+- ✅ Line 170: `.populate('items.product', 'name mainImage')` → `'name images'`
+- ✅ Line 191: `.populate('items.product', 'name mainImage')` → `'name images'`
 
 ### 5. `backend/controllers/reviewController.js`
-**Total Changes: 3 fixes**
+**Total Changes: 4 fixes**
 
+- ✅ Line 153: `.populate('product', 'name mainImage slug')` → `'name images slug'`
 - ✅ Line 276: `review.reports.find(...)` → `review.reported.users.find(...)`
 - ✅ Line 287: `review.reports.push(...)` → `review.reported.users.push(...)`
 - ✅ Added: `review.reported.count = review.reported.users.length`
 
-## Total Fixes Applied: 16 field corrections across 5 files
+## Total Fixes Applied: 28 corrections across 5 files
 
 ## Impact
 

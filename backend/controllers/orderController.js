@@ -112,7 +112,7 @@ const getOrderById = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id)
       .populate('user', 'name email')
-      .populate('items.product', 'name mainImage');
+      .populate('items.product', 'name images');
 
     if (!order) {
       return res.status(404).json({ message: 'Order not found' });
@@ -167,7 +167,7 @@ const getUserOrders = async (req, res) => {
       
       // Try to get orders from database with exact filter
       orders = await Order.find(filter)
-        .populate('items.product', 'name mainImage')
+        .populate('items.product', 'name images')
         .sort({ createdAt: -1 })
         .skip((page - 1) * limit)
         .limit(parseInt(limit));
@@ -188,7 +188,7 @@ const getUserOrders = async (req, res) => {
           try {
             console.log('Trying alternative filter:', altFilter);
             const altOrders = await Order.find(altFilter)
-              .populate('items.product', 'name mainImage')
+              .populate('items.product', 'name images')
               .sort({ createdAt: -1 })
               .skip((page - 1) * limit)
               .limit(parseInt(limit));

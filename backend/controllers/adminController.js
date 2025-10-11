@@ -160,7 +160,7 @@ const getAdminOrders = async (req, res) => {
     const [orders, totalOrders] = await Promise.all([
       Order.find(finalFilter)
         .populate('user', 'name email phone')
-        .populate('items.product', 'name mainImage')
+        .populate('items.product', 'name images')
         .sort({ createdAt: -1 })
         .skip((page - 1) * limit)
         .limit(parseInt(limit)),
@@ -175,14 +175,17 @@ const getAdminOrders = async (req, res) => {
         email: order.user?.email || 'N/A',
         phone: order.user?.phone || 'N/A'
       },
-      items: order.items.map(item => ({
-        product: {
-          name: item.product?.name || 'Product not found',
-          image: item.product?.mainImage || ''
-        },
-        quantity: item.quantity,
-        price: item.price
-      })),
+      items: order.items.map(item => {
+        const mainImage = item.product?.images?.find(img => img.isMain) || item.product?.images?.[0];
+        return {
+          product: {
+            name: item.product?.name || 'Product not found',
+            image: mainImage?.url || ''
+          },
+          quantity: item.quantity,
+          price: item.price
+        };
+      }),
       totalAmount: order.total,
       status: order.status,
       paymentStatus: order.payment?.status || 'pending',
@@ -580,37 +583,39 @@ const getAdminProducts = async (req, res) => {
         .populate('category', 'name slug')
         .sort(sortObj)
         .skip(skip)
-        .limit(parseInt(limit))
-        .lean(),
+        .limit(parseInt(limit)),
       Product.countDocuments(filter)
     ]);
 
     // Format products for admin display
-    const formattedProducts = products.map(product => ({
-      _id: product._id,
-      name: product.name,
-      description: product.description,
-      shortDescription: product.shortDescription,
-      price: product.price,
-      originalPrice: product.originalPrice,
-      stock: product.stock,
-      isActive: product.isActive,
-      status: product.isActive ? 'active' : 'inactive',
-      sales: product.purchases || 0,
-      averageRating: product.averageRating || 0,
-      totalReviews: product.totalReviews || 0,
-      category: product.category?.name || 'Uncategorized',
-      categorySlug: product.category?.slug || 'uncategorized',
-      isFeatured: product.isFeatured || false,
-      isBestseller: product.isBestseller || false,
-      isNewArrival: product.isNewArrival || false,
-      images: product.images,
-      mainImage: product.mainImage,
-      tags: product.tags || [],
-      createdAt: product.createdAt,
-      updatedAt: product.updatedAt,
-      variants: product.variants || []
-    }));
+    const formattedProducts = products.map(product => {
+      const mainImage = product.images?.find(img => img.isMain) || product.images?.[0];
+      return {
+        _id: product._id,
+        name: product.name,
+        description: product.description,
+        shortDescription: product.shortDescription,
+        price: product.price,
+        originalPrice: product.originalPrice,
+        stock: product.stock,
+        isActive: product.isActive,
+        status: product.isActive ? 'active' : 'inactive',
+        sales: product.purchases || 0,
+        averageRating: product.averageRating || 0,
+        totalReviews: product.totalReviews || 0,
+        category: product.category?.name || 'Uncategorized',
+        categorySlug: product.category?.slug || 'uncategorized',
+        isFeatured: product.isFeatured || false,
+        isBestseller: product.isBestseller || false,
+        isNewArrival: product.isNewArrival || false,
+        images: product.images,
+        mainImage: mainImage,
+        tags: product.tags || [],
+        createdAt: product.createdAt,
+        updatedAt: product.updatedAt,
+        variants: product.variants || []
+      };
+    });
 
     res.json({
       success: true,
@@ -641,8 +646,7 @@ const getAdminProducts = async (req, res) => {
 const getAdminProductById = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id)
-      .populate('category', 'name slug')
-      .lean();
+      .populate('category', 'name slug');
 
     if (!product) {
       return res.status(404).json({
@@ -1161,11 +1165,13 @@ const getAdminReviews = async (req, res) => {
 
     const reviews = await Review.find(filter)
       .populate('user', 'name email')
-      .populate('product', 'name slug mainImage')
+      .populate({
+        path: 'product',
+        select: 'name slug images'
+      })
       .sort(sortObj)
       .skip(skip)
-      .limit(parseInt(limit))
-      .lean();
+      .limit(parseInt(limit));
 
     const totalReviews = await Review.countDocuments(filter);
 

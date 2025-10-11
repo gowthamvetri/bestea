@@ -150,7 +150,7 @@ const getMyReviews = async (req, res) => {
     const { page = 1, limit = 10 } = req.query;
 
     const reviews = await Review.find({ user: req.user.id })
-      .populate('product', 'name mainImage slug')
+      .populate('product', 'name images slug')
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(parseInt(limit));

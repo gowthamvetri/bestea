@@ -191,7 +191,7 @@ const searchProducts = async (req, res) => {
     })
     .limit(parseInt(limit))
     .populate('category', 'name slug')
-    .select('name price mainImage slug averageRating category');
+    .select('name price images slug averageRating category');
 
     res.json({ products });
   } catch (error) {
