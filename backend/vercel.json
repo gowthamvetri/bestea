@@ -1,46 +1,12 @@
-{{{{
-
+{
   "version": 2,
-
-  "builds": [  "version": 2,
-
+  "builds": [
     {
-
-      "src": "index.js",  "builds": [  "version": 2,  "version": 2,
-
+      "src": "index.js",
       "use": "@vercel/node"
-
-    }    {
-
+    }
   ],
-
-  "routes": [      "src": "index.js",  "builds": [  "name": "my-vercel-app",
-
-    {
-
-      "src": "/(.*)",      "use": "@vercel/node"
-
-      "dest": "index.js"
-
-    }    }    {  "rewrites": [
-
-  ]
-
-}  ],
-
-  "routes": [      "src": "index.js",    { "source": "/(.*)", "destination": "index.js" }
-
-    {
-
-      "src": "/(.*)",      "use": "@vercel/node"  ]
-
-      "dest": "index.js"
-
-    }    }}
-
-  ]  ],
-
-}  "routes": [
+  "routes": [
     {
       "src": "/(.*)",
       "dest": "index.js"
