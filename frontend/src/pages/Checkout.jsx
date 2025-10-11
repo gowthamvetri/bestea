@@ -18,6 +18,8 @@ import { toast } from 'react-hot-toast';
 import { getProductImageSrc, handleImageError, DEFAULT_PRODUCT_IMAGE } from '../utils/imageUtils';
 import { clearCart, calculateTotals } from '../store/slices/cartSlice';
 
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
 const Checkout = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -179,7 +181,7 @@ const Checkout = () => {
 
       console.log('Placing order with data:', orderData);
 
-      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/orders`, {
+      const response = await fetch(`${API_URL}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -21,7 +21,7 @@ import axios from 'axios';
 import { getProductImageSrc, handleImageError, DEFAULT_PRODUCT_IMAGE } from '../utils/imageUtils';
 import { testOrdersAPI, testOrdersDebug, testAuth } from '../utils/debugOrders';
 
-const API_URL = process.env.REACT_APP_API_URL || '/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);

@@ -13,6 +13,8 @@ import {
 // Store actions
 import { toggleSearchModal } from '../../store/slices/uiSlice';
 
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
 const SearchModal = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -58,7 +60,6 @@ const SearchModal = () => {
 
   const performSearch = async (query) => {
     try {
-      const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
       const response = await fetch(`${API_URL}/products/search?q=${encodeURIComponent(query)}&limit=5`);
       const data = await response.json();
       
