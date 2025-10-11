@@ -108,8 +108,21 @@ export const fetchBestSellers = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_URL}/products/bestsellers`);
-      return response.data;
+      console.log('Bestsellers API Response:', response.data);
+      
+      // Ensure we return an array
+      if (Array.isArray(response.data)) {
+        return response.data;
+      } else if (response.data?.products && Array.isArray(response.data.products)) {
+        return response.data.products;
+      } else if (response.data?.data && Array.isArray(response.data.data)) {
+        return response.data.data;
+      } else {
+        console.warn('Unexpected bestsellers response format:', response.data);
+        return [];
+      }
     } catch (error) {
+      console.error('Bestsellers fetch error:', error);
       return rejectWithValue(
         error.response?.data?.message || 'Failed to fetch bestsellers'
       );
@@ -136,8 +149,21 @@ export const fetchFeaturedProducts = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_URL}/products/featured`);
-      return response.data;
+      console.log('Featured Products API Response:', response.data);
+      
+      // Ensure we return an array
+      if (Array.isArray(response.data)) {
+        return response.data;
+      } else if (response.data?.products && Array.isArray(response.data.products)) {
+        return response.data.products;
+      } else if (response.data?.data && Array.isArray(response.data.data)) {
+        return response.data.data;
+      } else {
+        console.warn('Unexpected featured products response format:', response.data);
+        return [];
+      }
     } catch (error) {
+      console.error('Featured products fetch error:', error);
       return rejectWithValue(
         error.response?.data?.message || 'Failed to fetch featured products'
       );
@@ -266,25 +292,96 @@ const productSlice = createSlice({
         state.categories = [];
       })
       // Fetch bestsellers
+      .addCase(fetchBestSellers.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(fetchBestSellers.fulfilled, (state, action) => {
-        state.bestSellers = action.payload; // Direct array from API
+        state.isLoading = false;
+        // Handle both array and object responses
+        if (Array.isArray(action.payload)) {
+          state.bestSellers = action.payload;
+        } else if (action.payload?.products) {
+          state.bestSellers = action.payload.products;
+        } else if (action.payload?.data) {
+          state.bestSellers = action.payload.data;
+        } else {
+          state.bestSellers = [];
+        }
+        state.error = null;
+      })
+      .addCase(fetchBestSellers.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+        state.bestSellers = [];
       })
       // Fetch new arrivals
+      .addCase(fetchNewArrivals.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(fetchNewArrivals.fulfilled, (state, action) => {
-        state.newArrivals = action.payload.products || action.payload; // Handle both formats
+        state.isLoading = false;
+        // Handle both formats
+        if (Array.isArray(action.payload)) {
+          state.newArrivals = action.payload;
+        } else if (action.payload?.products) {
+          state.newArrivals = action.payload.products;
+        } else if (action.payload?.data) {
+          state.newArrivals = action.payload.data;
+        } else {
+          state.newArrivals = [];
+        }
+        state.error = null;
+      })
+      .addCase(fetchNewArrivals.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+        state.newArrivals = [];
       })
       // Fetch featured products
+      .addCase(fetchFeaturedProducts.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(fetchFeaturedProducts.fulfilled, (state, action) => {
-        state.featuredProducts = action.payload; // Direct array from API
+        state.isLoading = false;
+        // Handle both array and object responses
+        if (Array.isArray(action.payload)) {
+          state.featuredProducts = action.payload;
+        } else if (action.payload?.products) {
+          state.featuredProducts = action.payload.products;
+        } else if (action.payload?.data) {
+          state.featuredProducts = action.payload.data;
+        } else {
+          state.featuredProducts = [];
+        }
+        state.error = null;
+      })
+      .addCase(fetchFeaturedProducts.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
+        state.featuredProducts = [];
       })
       // Fetch products by category
+      .addCase(fetchProductsByCategory.pending, (state) => {
+        state.isLoading = true;
+        state.error = null;
+      })
       .addCase(fetchProductsByCategory.fulfilled, (state, action) => {
+        state.isLoading = false;
         const { categoryId, products } = action.payload;
         // Store products with proper structure
+        const productData = Array.isArray(products) ? products : (products?.products || products?.data || []);
         state.categoryProducts[categoryId] = {
-          data: products.products || products,
+          data: productData,
           lastFetch: new Date().toISOString()
         };
+        state.error = null;
+      })
+      .addCase(fetchProductsByCategory.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       })
       // Search products
       .addCase(searchProducts.pending, (state) => {

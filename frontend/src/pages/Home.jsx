@@ -32,6 +32,9 @@ const Home = () => {
   const { bestSellers, featuredProducts, isLoading } = useSelector(state => state.products);
   const { featuredTestimonials, isLoading: reviewsLoading } = useSelector(state => state.reviews);
   
+  // Ensure bestSellers and featuredProducts are always arrays
+  const safebestSellers = Array.isArray(bestSellers) ? bestSellers : [];
+  const safeFeaturedProducts = Array.isArray(featuredProducts) ? featuredProducts : [];
 
   useEffect(() => {
     dispatch(fetchBestSellers());
@@ -245,7 +248,7 @@ const Home = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-              {(bestSellers || []).slice(0, 8).map((product, index) => (
+              {safebestSellers.slice(0, 8).map((product, index) => (
                 <motion.div
                   key={product?._id || index}
                   initial={{ opacity: 0, y: 30 }}
@@ -393,8 +396,8 @@ const Home = () => {
               ))}
               
               {/* Fallback when no products available */}
-              {(!bestSellers || bestSellers.length === 0) && !isLoading && (
-                <div className="col-span-full text-center py-16">\
+              {safebestSellers.length === 0 && !isLoading && (
+                <div className="col-span-full text-center py-16">
                   <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-3xl p-12 max-w-md mx-auto border border-gray-200">
                     <FaLeaf className="text-7xl text-gray-300 mx-auto mb-6" />
                     <h3 className="text-2xl font-bold text-gray-700 mb-3">No Products Available</h3>
