@@ -132,8 +132,8 @@ const Shop = () => {
     setWeightFilter(params.weight || '');
   }, [searchParams]);
 
-  // Update product display when products change
-  const displayProducts = products.length > 0 ? products : [];
+  // Update product display when products change (with safety check)
+  const displayProducts = Array.isArray(products) && products.length > 0 ? products : [];
 
   // Handle dynamic filter changes
   const handleFilterChange = (filterType, value) => {
