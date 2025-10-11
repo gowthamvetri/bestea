@@ -273,8 +273,8 @@ const reportReview = async (req, res) => {
     }
 
     // Check if user already reported this review
-    const existingReport = review.reports.find(
-      report => report.user.toString() === req.user.id
+    const existingReport = review.reported.users.find(
+      userId => userId.toString() === req.user.id
     );
 
     if (existingReport) {
@@ -284,11 +284,8 @@ const reportReview = async (req, res) => {
     }
 
     // Add report
-    review.reports.push({
-      user: req.user.id,
-      reason,
-      description
-    });
+    review.reported.users.push(req.user.id);
+    review.reported.count = review.reported.users.length;
 
     await review.save();
 

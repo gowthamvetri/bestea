@@ -6,7 +6,7 @@ const Category = require('../models/Category');
 const getCategories = async (req, res) => {
   try {
     const categories = await Category.find({ isActive: true })
-      .sort({ displayOrder: 1, name: 1 });
+      .sort({ sortOrder: 1, name: 1 });
 
     res.json(categories);
   } catch (error) {

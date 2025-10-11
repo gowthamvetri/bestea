@@ -51,7 +51,7 @@ const getDashboardData = async (req, res) => {
         .limit(5),
       Product.aggregate([
         { $match: { isActive: true } },
-        { $sort: { totalSales: -1 } },
+        { $sort: { purchases: -1 } },
         { $limit: 5 },
         { $lookup: { from: 'categories', localField: 'category', foreignField: '_id', as: 'category' } },
         { $unwind: { path: '$category', preserveNullAndEmptyArrays: true } }
@@ -81,8 +81,8 @@ const getDashboardData = async (req, res) => {
       topProducts: topProducts.map(product => ({
         _id: product._id,
         name: product.name,
-        sales: product.totalSales || 0,
-        revenue: (product.totalSales || 0) * (product.price || 0),
+        sales: product.purchases || 0,
+        revenue: (product.purchases || 0) * (product.price || 0),
         category: product.category?.name || 'Uncategorized'
       }))
     };
@@ -596,7 +596,7 @@ const getAdminProducts = async (req, res) => {
       stock: product.stock,
       isActive: product.isActive,
       status: product.isActive ? 'active' : 'inactive',
-      sales: product.totalSales || 0,
+      sales: product.purchases || 0,
       averageRating: product.averageRating || 0,
       totalReviews: product.totalReviews || 0,
       category: product.category?.name || 'Uncategorized',

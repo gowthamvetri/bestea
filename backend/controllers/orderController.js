@@ -60,7 +60,7 @@ const createOrder = async (req, res) => {
 
       // Update product stock and sales
       product.stock -= item.quantity;
-      product.totalSales = (product.totalSales || 0) + item.quantity;
+      product.purchases = (product.purchases || 0) + item.quantity;
       await product.save();
     }
 
@@ -490,7 +490,7 @@ const cancelOrder = async (req, res) => {
       const product = await Product.findById(item.product);
       if (product) {
         product.stock += item.quantity;
-        product.totalSales = Math.max((product.totalSales || 0) - item.quantity, 0);
+        product.purchases = Math.max((product.purchases || 0) - item.quantity, 0);
         await product.save();
       }
     }

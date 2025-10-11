@@ -67,7 +67,7 @@ const getProducts = async (req, res) => {
         sortObj = { averageRating: -1 };
         break;
       case 'popular':
-        sortObj = { totalSales: -1 };
+        sortObj = { purchases: -1 };
         break;
       default:
         sortObj = { isFeatured: -1, createdAt: -1 };
@@ -223,10 +223,10 @@ const getBestSellers = async (req, res) => {
       
       const salesBasedProducts = await Product.find({ 
         isActive: true,
-        totalSales: { $gt: 0 },
+        purchases: { $gt: 0 },
         _id: { $nin: productIds }
       })
-      .sort({ totalSales: -1 })
+      .sort({ purchases: -1 })
       .limit(remainingLimit)
       .populate('category', 'name slug');
       
