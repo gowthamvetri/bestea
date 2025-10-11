@@ -17,7 +17,7 @@ import {
 } from 'react-icons/fa';
 import { getProductImageSrc, handleImageError, DEFAULT_PRODUCT_IMAGE } from '../../utils/imageUtils';
 
-const API_URL = process.env.REACT_APP_API_URL || '/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 const AdminProductDetail = () => {
   const { id } = useParams();

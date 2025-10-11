@@ -30,6 +30,8 @@ import {
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 
+const API_URL = import.meta.env.VITE_API_URL || '/api';
+
 const AdminAnalytics = () => {
   const [dateRange, setDateRange] = useState('30days');
   const [analyticsData, setAnalyticsData] = useState(null);
@@ -39,7 +41,7 @@ const AdminAnalytics = () => {
   const fetchAnalytics = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/admin/analytics', {
+      const response = await axios.get(`${API_URL}/admin/analytics`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

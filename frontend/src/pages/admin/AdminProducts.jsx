@@ -16,7 +16,7 @@ import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import { getProductImageSrc, handleImageError, DEFAULT_PRODUCT_IMAGE } from '../../utils/imageUtils';
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 // Simple rate limiting to prevent 429 errors
 const createRateLimitedFunction = (fn, delay = 1000) => {
