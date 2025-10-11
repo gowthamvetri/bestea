@@ -10,12 +10,12 @@ const createOrder = async (req, res) => {
     const {
       items,
       shippingAddress,
-      paymentMethod,
+      payment,
       paymentResult,
-      itemsPrice,
-      taxPrice,
-      shippingPrice,
-      totalPrice
+      subtotal,
+      shippingCharges,
+      total,
+      orderNotes
     } = req.body;
 
     if (items && items.length === 0) {
@@ -48,11 +48,11 @@ const createOrder = async (req, res) => {
       }
 
       const orderItem = {
-        name: product.name,
-        quantity: item.quantity,
-        image: product.mainImage,
-        price: product.price,
         product: product._id,
+        variant: item.variant,
+        quantity: item.quantity,
+        price: product.price,
+        total: product.price * item.quantity
       };
 
       orderItems.push(orderItem);
@@ -73,29 +73,24 @@ const createOrder = async (req, res) => {
       orderNumber,
       items: orderItems,
       shippingAddress: {
-        name: shippingAddress.fullName,
+        name: shippingAddress.name,
         phone: shippingAddress.phone,
-        email: shippingAddress.email,
         addressLine1: shippingAddress.addressLine1,
         addressLine2: shippingAddress.addressLine2 || '',
         city: shippingAddress.city,
         state: shippingAddress.state,
-        pincode: shippingAddress.postalCode || shippingAddress.pincode,
+        pincode: shippingAddress.pincode,
         landmark: shippingAddress.landmark || ''
       },
-      paymentMethod: paymentMethod || 'cod',
-      paymentResult: paymentResult || {},
+      payment: {
+        method: payment?.method || 'cod',
+        status: 'pending'
+      },
+      status: 'pending',
       subtotal: calculatedItemsPrice,
-      tax: {
-        amount: taxPrice || 0,
-        percentage: 18
-      },
-      shipping: {
-        amount: shippingPrice || 0,
-        method: 'standard'
-      },
-      total: totalPrice || calculatedItemsPrice + (taxPrice || 0) + (shippingPrice || 0),
-      notes: req.body.orderNotes || ''
+      shippingCharges: shippingCharges || 0,
+      total: total || calculatedItemsPrice + (shippingCharges || 0),
+      notes: orderNotes || ''
     });
 
     const createdOrder = await order.save();

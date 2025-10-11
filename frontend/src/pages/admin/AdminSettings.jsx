@@ -95,7 +95,39 @@ const AdminSettings = () => {
       }
     } catch (error) {
       console.error('Settings load error:', error);
-      // Keep default empty settings if API fails
+      // Set default settings if API fails
+      setSettings({
+        general: {
+          siteName: 'BESTEA',
+          siteDescription: 'Premium Tea Collection',
+          adminEmail: 'admin@bestea.com',
+          timezone: 'Asia/Kolkata'
+        },
+        shipping: {
+          freeShippingThreshold: 499,
+          standardShippingRate: 50,
+          expressShippingRate: 100
+        },
+        payment: {
+          razorpayEnabled: true,
+          codEnabled: true,
+          upiEnabled: true
+        },
+        notifications: {
+          emailNotifications: true,
+          smsNotifications: false,
+          orderUpdates: true
+        },
+        security: {
+          twoFactorAuth: false,
+          sessionTimeout: 30
+        },
+        seo: {
+          metaTitle: 'BESTEA - Premium Tea Collection',
+          metaDescription: 'Discover premium quality teas from Assam\'s finest gardens',
+          metaKeywords: 'tea, premium tea, assam tea, online tea store'
+        }
+      });
     }
   };
 

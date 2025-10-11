@@ -207,13 +207,64 @@ const getBestSellers = async (req, res) => {
   try {
     const { limit = 8 } = req.query;
 
-    const bestSellers = await Product.find({ 
+    // First priority: products marked as bestsellers by admin
+    let bestSellers = await Product.find({ 
       isActive: true,
-      totalSales: { $gt: 0 }
+      isBestseller: true
     })
-    .sort({ totalSales: -1 })
+    .sort({ createdAt: -1 })
     .limit(parseInt(limit))
     .populate('category', 'name slug');
+
+    // If not enough bestsellers, fill with products that have actual sales
+    if (bestSellers.length < parseInt(limit)) {
+      const remainingLimit = parseInt(limit) - bestSellers.length;
+      const productIds = bestSellers.map(p => p._id);
+      
+      const salesBasedProducts = await Product.find({ 
+        isActive: true,
+        totalSales: { $gt: 0 },
+        _id: { $nin: productIds }
+      })
+      .sort({ totalSales: -1 })
+      .limit(remainingLimit)
+      .populate('category', 'name slug');
+      
+      bestSellers = [...bestSellers, ...salesBasedProducts];
+    }
+
+    // If still not enough, fill with featured products
+    if (bestSellers.length < parseInt(limit)) {
+      const remainingLimit = parseInt(limit) - bestSellers.length;
+      const productIds = bestSellers.map(p => p._id);
+      
+      const featuredProducts = await Product.find({ 
+        isActive: true,
+        isFeatured: true,
+        _id: { $nin: productIds }
+      })
+      .sort({ createdAt: -1 })
+      .limit(remainingLimit)
+      .populate('category', 'name slug');
+      
+      bestSellers = [...bestSellers, ...featuredProducts];
+    }
+
+    // If still not enough, fill with any active products
+    if (bestSellers.length < parseInt(limit)) {
+      const remainingLimit = parseInt(limit) - bestSellers.length;
+      const productIds = bestSellers.map(p => p._id);
+      
+      const anyProducts = await Product.find({ 
+        isActive: true,
+        _id: { $nin: productIds }
+      })
+      .sort({ createdAt: -1 })
+      .limit(remainingLimit)
+      .populate('category', 'name slug');
+      
+      bestSellers = [...bestSellers, ...anyProducts];
+    }
 
     res.json(bestSellers);
   } catch (error) {

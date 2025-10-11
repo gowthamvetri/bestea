@@ -89,16 +89,32 @@ const AdminProductDetail = () => {
 
   const toggleStatus = async (field) => {
     try {
-      // Simulate API call - replace with real API
-      setTimeout(() => {
-        setProduct(prev => ({
-          ...prev,
-          [field]: !prev[field]
-        }));
-        toast.success(`Product ${field} updated successfully`);
-      }, 500);
+      const token = localStorage.getItem('token');
+      const newValue = !product[field];
+      
+      const response = await fetch(`/api/admin/products/${id}/status`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          [field]: newValue
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to update product status');
+      }
+
+      // Update the product state with the response data
+      setProduct(data.data);
+      toast.success(data.message || `Product ${field} updated successfully`);
     } catch (error) {
-      toast.error(`Failed to update product ${field}`);
+      console.error('Error updating product status:', error);
+      toast.error(error.message || `Failed to update product ${field}`);
     }
   };
 
@@ -250,8 +266,8 @@ const AdminProductDetail = () => {
                 <FaRupeeSign className="w-5 h-5 text-orange-600 mr-2" />
                 <div>
                   <p className="text-sm text-gray-600">Price</p>
-                  <p className="text-lg font-semibold text-gray-900">₹{product.price}</p>
-                  {product.originalPrice > product.price && (
+                  <p className="text-lg font-semibold text-gray-900">₹{product.price || 0}</p>
+                  {product.originalPrice && product.price && product.originalPrice > product.price && (
                     <p className="text-sm text-gray-500 line-through">₹{product.originalPrice}</p>
                   )}
                 </div>
@@ -263,7 +279,7 @@ const AdminProductDetail = () => {
                 <FaBox className="w-5 h-5 text-blue-600 mr-2" />
                 <div>
                   <p className="text-sm text-gray-600">Stock</p>
-                  <p className="text-lg font-semibold text-gray-900">{product.stock}</p>
+                  <p className="text-lg font-semibold text-gray-900">{product.stock || 0}</p>
                 </div>
               </div>
             </div>
@@ -273,8 +289,8 @@ const AdminProductDetail = () => {
                 <FaStar className="w-5 h-5 text-yellow-600 mr-2" />
                 <div>
                   <p className="text-sm text-gray-600">Rating</p>
-                  <p className="text-lg font-semibold text-gray-900">{product.averageRating}/5</p>
-                  <p className="text-sm text-gray-500">({product.totalReviews} reviews)</p>
+                  <p className="text-lg font-semibold text-gray-900">{product.averageRating || 0}/5</p>
+                  <p className="text-sm text-gray-500">({product.totalReviews || 0} reviews)</p>
                 </div>
               </div>
             </div>
@@ -284,7 +300,7 @@ const AdminProductDetail = () => {
                 <FaMedal className="w-5 h-5 text-green-600 mr-2" />
                 <div>
                   <p className="text-sm text-gray-600">Sales</p>
-                  <p className="text-lg font-semibold text-gray-900">{product.totalSales}</p>
+                  <p className="text-lg font-semibold text-gray-900">{product.totalSales || 0}</p>
                 </div>
               </div>
             </div>
@@ -299,14 +315,14 @@ const AdminProductDetail = () => {
                   <FaEye className="w-4 h-4 text-gray-500 mr-2" />
                   <span className="text-sm text-gray-600">Views</span>
                 </div>
-                <span className="text-sm font-medium text-gray-900">{product.views.toLocaleString()}</span>
+                <span className="text-sm font-medium text-gray-900">{(product.views || 0).toLocaleString()}</span>
               </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center">
                   <FaHeart className="w-4 h-4 text-gray-500 mr-2" />
                   <span className="text-sm text-gray-600">Wishlist</span>
                 </div>
-                <span className="text-sm font-medium text-gray-900">{product.wishlistCount}</span>
+                <span className="text-sm font-medium text-gray-900">{product.wishlistCount || 0}</span>
               </div>
             </div>
           </div>
@@ -362,27 +378,27 @@ const AdminProductDetail = () => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">SKU</label>
-              <p className="text-sm text-gray-900">{product.sku}</p>
+              <p className="text-sm text-gray-900">{product.sku || 'Not assigned'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Category</label>
-              <p className="text-sm text-gray-900 capitalize">{product.category} Tea</p>
+              <p className="text-sm text-gray-900 capitalize">{product.category?.name || product.category || 'Not specified'} Tea</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Weight</label>
-              <p className="text-sm text-gray-900">{product.weight}g</p>
+              <p className="text-sm text-gray-900">{product.weight ? `${product.weight}g` : 'Not specified'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Origin</label>
-              <p className="text-sm text-gray-900">{product.origin}</p>
+              <p className="text-sm text-gray-900">{product.origin || 'Not specified'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Grade</label>
-              <p className="text-sm text-gray-900">{product.grade}</p>
+              <p className="text-sm text-gray-900">{product.grade || 'Not specified'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Harvest Season</label>
-              <p className="text-sm text-gray-900">{product.harvestSeason}</p>
+              <p className="text-sm text-gray-900">{product.harvestSeason || 'Not specified'}</p>
             </div>
           </div>
         </motion.div>
@@ -398,12 +414,12 @@ const AdminProductDetail = () => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Caffeine Level</label>
-              <p className="text-sm text-gray-900">{product.caffeineLevel}</p>
+              <p className="text-sm text-gray-900">{product.caffeineLevel || product.caffeine || 'Not specified'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Flavor Profile</label>
               <div className="flex flex-wrap gap-1 mt-1">
-                {product.flavorProfile.map((flavor, index) => (
+                {(product.flavorProfile || []).map((flavor, index) => (
                   <span
                     key={index}
                     className="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full"
@@ -416,7 +432,7 @@ const AdminProductDetail = () => {
             <div>
               <label className="block text-sm font-medium text-gray-700">Health Benefits</label>
               <div className="flex flex-wrap gap-1 mt-1">
-                {product.benefits.map((benefit, index) => (
+                {(product.benefits || product.healthBenefits || []).map((benefit, index) => (
                   <span
                     key={index}
                     className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"
@@ -428,7 +444,7 @@ const AdminProductDetail = () => {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Ingredients</label>
-              <p className="text-sm text-gray-900">{product.ingredients}</p>
+              <p className="text-sm text-gray-900">{Array.isArray(product.ingredients) ? product.ingredients.join(', ') : product.ingredients || 'Not specified'}</p>
             </div>
           </div>
         </motion.div>
@@ -444,15 +460,15 @@ const AdminProductDetail = () => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Short Description</label>
-              <p className="text-sm text-gray-900">{product.shortDescription}</p>
+              <p className="text-sm text-gray-900">{product.shortDescription || 'Not provided'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Full Description</label>
-              <p className="text-sm text-gray-900 leading-relaxed">{product.description}</p>
+              <p className="text-sm text-gray-900 leading-relaxed">{product.description || 'Not provided'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Brewing Instructions</label>
-              <p className="text-sm text-gray-900">{product.brewingInstructions}</p>
+              <p className="text-sm text-gray-900">{product.brewingInstructions || 'Not provided'}</p>
             </div>
           </div>
         </motion.div>
@@ -468,15 +484,15 @@ const AdminProductDetail = () => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">SEO Title</label>
-              <p className="text-sm text-gray-900">{product.seo.title}</p>
+              <p className="text-sm text-gray-900">{product.seo?.title || product.seoTitle || 'Not set'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">SEO Description</label>
-              <p className="text-sm text-gray-900">{product.seo.description}</p>
+              <p className="text-sm text-gray-900">{product.seo?.description || product.seoDescription || 'Not set'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Keywords</label>
-              <p className="text-sm text-gray-900">{product.seo.keywords}</p>
+              <p className="text-sm text-gray-900">{product.seo?.keywords || product.seoKeywords || 'Not set'}</p>
             </div>
           </div>
         </motion.div>
@@ -492,11 +508,11 @@ const AdminProductDetail = () => {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700">Storage Instructions</label>
-              <p className="text-sm text-gray-900">{product.storageInstructions}</p>
+              <p className="text-sm text-gray-900">{product.storageInstructions || 'Not provided'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Shelf Life</label>
-              <p className="text-sm text-gray-900">{product.shelfLife}</p>
+              <p className="text-sm text-gray-900">{product.shelfLife || 'Not specified'}</p>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">Created</label>

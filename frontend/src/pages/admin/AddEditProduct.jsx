@@ -38,6 +38,8 @@ const AddEditProduct = () => {
     grade: '',
     harvestSeason: '',
     caffeineLevel: '',
+    blendType: '',
+    strength: '',
     flavorProfile: [],
     benefits: [],
     tags: [],
@@ -150,6 +152,8 @@ const AddEditProduct = () => {
           grade: product.grade || '',
           harvestSeason: product.harvestSeason || '',
           caffeineLevel: product.caffeine || '',
+          blendType: product.blendType || '',
+          strength: product.strength || '',
           flavorProfile: product.flavorProfile || [],
           benefits: product.healthBenefits || [],
           storageInstructions: product.storageInstructions || '',
@@ -282,14 +286,23 @@ const AddEditProduct = () => {
         price: parseFloat(formData.price),
         originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : undefined,
         stock: parseInt(formData.stock),
-        tags: tags,
+        weight: formData.weight ? parseFloat(formData.weight) : undefined,
+        tags: formData.tags || [],
+        flavorProfile: formData.flavorProfile || [],
+        healthBenefits: formData.benefits || [],
+        caffeine: formData.caffeineLevel,
+        blendType: formData.blendType || 'BOP', // Default blend type
+        strength: formData.strength || 'Medium', // Default strength
         isActive: formData.isActive !== undefined ? formData.isActive : true,
         isFeatured: formData.isFeatured || false,
         isBestseller: formData.isBestseller || false,
         isNewArrival: formData.isNewArrival || false,
-        images: images.map(img => ({
+        // Handle images properly - generate unique publicId for each image
+        images: images.map((img, index) => ({
           url: img.url,
-          alt: img.alt || formData.name
+          publicId: `product_${formData.name.toLowerCase().replace(/[^a-z0-9]/g, '_')}_${Date.now()}_${index}`,
+          alt: img.alt || formData.name,
+          isMain: index === mainImageIndex
         })),
         mainImage: images[mainImageIndex]?.url || images[0]?.url
       };
@@ -502,6 +515,50 @@ const AddEditProduct = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
                     placeholder="e.g., Assam, India"
                   />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Blend Type *
+                  </label>
+                  <select
+                    name="blendType"
+                    value={formData.blendType}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    required
+                  >
+                    <option value="">Select Blend Type</option>
+                    <option value="BOP">BOP (Broken Orange Pekoe)</option>
+                    <option value="BOPSM">BOPSM (Broken Orange Pekoe Special Mix)</option>
+                    <option value="PD">PD (Pekoe Dust)</option>
+                    <option value="Dust">Dust</option>
+                    <option value="OF">OF (Orange Fannings)</option>
+                    <option value="Orthodox">Orthodox</option>
+                    <option value="Green">Green</option>
+                    <option value="CTC">CTC</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Strength *
+                  </label>
+                  <select
+                    name="strength"
+                    value={formData.strength}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    required
+                  >
+                    <option value="">Select Strength</option>
+                    <option value="Light">Light</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Strong">Strong</option>
+                    <option value="Extra Strong">Extra Strong</option>
+                  </select>
                 </div>
               </div>
 

@@ -185,8 +185,8 @@ const getAdminOrders = async (req, res) => {
       })),
       totalAmount: order.total,
       status: order.status,
-      paymentStatus: order.paymentStatus,
-      paymentMethod: order.paymentMethod,
+      paymentStatus: order.payment?.status || 'pending',
+      paymentMethod: order.payment?.method || 'cod',
       shippingAddress: order.shippingAddress,
       createdAt: order.createdAt,
       updatedAt: order.updatedAt
@@ -288,7 +288,7 @@ const getAdminCustomers = async (req, res) => {
         $addFields: {
           totalOrders: { $size: '$orders' },
           totalSpent: {
-            $sum: '$orders.totalAmount'
+            $sum: '$orders.total'
           },
           lastOrderDate: {
             $max: '$orders.createdAt'
@@ -669,14 +669,19 @@ const getAdminProductById = async (req, res) => {
 // @access  Private/Admin
 const updateProductStatus = async (req, res) => {
   try {
-    const { isActive } = req.body;
+    const { isActive, isFeatured, isBestseller, isOrganic } = req.body;
+    
+    // Build update object with only the fields that are provided
+    const updateFields = { updatedAt: new Date() };
+    
+    if (typeof isActive === 'boolean') updateFields.isActive = isActive;
+    if (typeof isFeatured === 'boolean') updateFields.isFeatured = isFeatured;
+    if (typeof isBestseller === 'boolean') updateFields.isBestseller = isBestseller;
+    if (typeof isOrganic === 'boolean') updateFields.isOrganic = isOrganic;
     
     const product = await Product.findByIdAndUpdate(
       req.params.id,
-      { 
-        isActive,
-        updatedAt: new Date()
-      },
+      updateFields,
       { new: true }
     ).populate('category', 'name slug');
 
@@ -687,10 +692,20 @@ const updateProductStatus = async (req, res) => {
       });
     }
 
+    // Create appropriate success message
+    let message = 'Product status updated successfully';
+    if (typeof isActive === 'boolean') {
+      message = `Product ${isActive ? 'activated' : 'deactivated'} successfully`;
+    } else if (typeof isFeatured === 'boolean') {
+      message = `Product ${isFeatured ? 'marked as featured' : 'removed from featured'} successfully`;
+    } else if (typeof isBestseller === 'boolean') {
+      message = `Product ${isBestseller ? 'marked as bestseller' : 'removed from bestsellers'} successfully`;
+    }
+
     res.json({
       success: true,
       data: product,
-      message: `Product ${isActive ? 'activated' : 'deactivated'} successfully`
+      message
     });
   } catch (error) {
     console.error('Update product status error:', error);
@@ -1419,6 +1434,8 @@ const createAdminProduct = async (req, res) => {
       grade,
       harvestSeason,
       caffeine,
+      blendType,
+      strength,
       flavorProfile,
       healthBenefits,
       storageInstructions,
@@ -1495,6 +1512,7 @@ const createAdminProduct = async (req, res) => {
     // Create the product
     const product = new Product({
       name,
+      slug: name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, ''),
       description,
       shortDescription,
       category,
@@ -1510,6 +1528,8 @@ const createAdminProduct = async (req, res) => {
       grade,
       harvestSeason,
       caffeine,
+      blendType: blendType || 'BOP',
+      strength: strength || 'Medium',
       flavorProfile,
       healthBenefits,
       storageInstructions,
@@ -1542,7 +1562,8 @@ const createAdminProduct = async (req, res) => {
     console.error('Create product error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to create product'
+      message: error.message || 'Failed to create product',
+      error: process.env.NODE_ENV === 'development' ? error : {}
     });
   }
 };

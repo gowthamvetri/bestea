@@ -38,9 +38,9 @@ const AdminOrders = () => {
     // Apply search filter
     if (searchQuery.trim()) {
       filtered = filtered.filter(order => 
-        order.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        order.customerName?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        order.email?.toLowerCase().includes(searchQuery.toLowerCase())
+        order.orderNumber?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        order.customer?.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        order.customer?.email?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -63,9 +63,12 @@ const AdminOrders = () => {
       });
 
       if (response.data.success) {
-        const ordersData = Array.isArray(response.data.data) ? response.data.data : [];
+        console.log('Orders API response:', response.data.data);
+        const ordersData = response.data.data.orders || [];
         setOrders(ordersData);
         setFilteredOrders(ordersData);
+      } else {
+        console.log('Orders API failed:', response.data);
       }
       setLoading(false);
     } catch (error) {
@@ -217,7 +220,7 @@ const AdminOrders = () => {
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Revenue</p>
               <p className="text-2xl font-bold text-gray-900">
-                ₹{Array.isArray(orders) ? orders.reduce((sum, order) => sum + (order.totalAmount || order.total || 0), 0).toLocaleString() : '0'}
+                ₹{Array.isArray(orders) ? orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0).toLocaleString() : '0'}
               </p>
             </div>
           </div>
@@ -305,8 +308,8 @@ const AdminOrders = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
-                        <div className="text-sm font-medium text-gray-900">{order.customerName || order.user?.name}</div>
-                        <div className="text-sm text-gray-500">{order.email || order.user?.email}</div>
+                        <div className="text-sm font-medium text-gray-900">{order.customer?.name || 'Unknown'}</div>
+                        <div className="text-sm text-gray-500">{order.customer?.email || 'N/A'}</div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -331,7 +334,7 @@ const AdminOrders = () => {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      ₹{(order.totalAmount || order.total || 0).toLocaleString()}
+                      ₹{(order.totalAmount || 0).toLocaleString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                       <div className="flex gap-2">
@@ -451,7 +454,7 @@ const AdminOrders = () => {
                     )}
                     <div className="flex justify-between items-center pt-2 font-bold">
                       <span>Total</span>
-                      <span>₹{(selectedOrder.totalAmount || selectedOrder.total || 0).toLocaleString()}</span>
+                      <span>₹{(selectedOrder.totalAmount || 0).toLocaleString()}</span>
                     </div>
                   </div>
                 </div>

@@ -17,6 +17,8 @@ import {
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 
+const API_URL = process.env.REACT_APP_API_URL || '/api';
+
 const AdminCustomers = () => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -29,16 +31,19 @@ const AdminCustomers = () => {
   const fetchCustomers = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:5000/api/admin/customers', {
+      const response = await axios.get(`${API_URL}/admin/customers`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       
       if (response.data.success) {
-        const customersData = Array.isArray(response.data.customers) ? response.data.customers : [];
+        console.log('Customers API response:', response.data.data);
+        const customersData = response.data.data.customers || [];
         setCustomers(customersData);
         setFilteredCustomers(customersData);
+      } else {
+        console.log('Customers API failed:', response.data);
       }
     } catch (error) {
       console.error('Error fetching customers:', error);
@@ -60,7 +65,7 @@ const AdminCustomers = () => {
 
   const handleStatusChange = (customerId, newStatus) => {
     setCustomers(prev => prev.map(customer => 
-      customer.id === customerId ? { ...customer, status: newStatus } : customer
+      customer._id === customerId ? { ...customer, status: newStatus } : customer
     ));
     toast.success('Customer status updated successfully');
   };
@@ -220,7 +225,7 @@ const AdminCustomers = () => {
               {Array.isArray(customers) && customers.map((customer) => {
                 const { tier, color } = getCustomerTier(customer.totalSpent);
                 return (
-                  <tr key={customer.id} className="hover:bg-gray-50">
+                  <tr key={customer._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10">
@@ -241,7 +246,7 @@ const AdminCustomers = () => {
                       <div className="text-sm text-gray-500">{customer.phone}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      {formatDate(customer.joinDate)}
+                      {formatDate(customer.createdAt)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm text-gray-900">{customer.totalOrders} orders</div>
@@ -255,7 +260,7 @@ const AdminCustomers = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <select
                         value={customer.status}
-                        onChange={(e) => handleStatusChange(customer.id, e.target.value)}
+                        onChange={(e) => handleStatusChange(customer._id, e.target.value)}
                         className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[customer.status]}`}
                       >
                         <option value="active">Active</option>
@@ -275,7 +280,7 @@ const AdminCustomers = () => {
                           <FaEdit className="w-4 h-4" />
                         </button>
                         <button 
-                          onClick={() => handleStatusChange(customer.id, 'banned')}
+                          onClick={() => handleStatusChange(customer._id, 'banned')}
                           className="text-red-600 hover:text-red-800"
                         >
                           <FaBan className="w-4 h-4" />

@@ -11,6 +11,7 @@ const initialState = {
   bestSellers: [],
   newArrivals: [],
   featuredProducts: [],
+  categoryProducts: {}, // Object to store products by category ID
   searchResults: [],
   filters: {
     category: '',
@@ -144,6 +145,20 @@ export const fetchFeaturedProducts = createAsyncThunk(
   }
 );
 
+export const fetchProductsByCategory = createAsyncThunk(
+  'products/fetchProductsByCategory',
+  async (categoryId, { rejectWithValue }) => {
+    try {
+      const response = await axios.get(`${API_URL}/products?category=${categoryId}&limit=8`);
+      return { categoryId, products: response.data };
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || 'Failed to fetch products by category'
+      );
+    }
+  }
+);
+
 export const searchProducts = createAsyncThunk(
   'products/searchProducts',
   async (searchTerm, { rejectWithValue }) => {
@@ -261,6 +276,11 @@ const productSlice = createSlice({
       // Fetch featured products
       .addCase(fetchFeaturedProducts.fulfilled, (state, action) => {
         state.featuredProducts = action.payload; // Direct array from API
+      })
+      // Fetch products by category
+      .addCase(fetchProductsByCategory.fulfilled, (state, action) => {
+        const { categoryId, products } = action.payload;
+        state.categoryProducts[categoryId] = products.products || products; // Handle both formats
       })
       // Search products
       .addCase(searchProducts.pending, (state) => {

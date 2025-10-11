@@ -145,4 +145,59 @@ router.delete('/reviews/:id', auth, isAdmin, deleteAdminReview);
 // @access  Private/Admin
 router.post('/reviews/bulk-action', auth, isAdmin, bulkActionReviews);
 
+// Settings Management Routes
+// @route   GET /api/admin/settings
+// @desc    Get admin settings
+// @access  Private/Admin
+router.get('/settings', auth, isAdmin, (req, res) => {
+  // Return default settings for now
+  res.json({
+    success: true,
+    data: {
+      general: {
+        siteName: 'BESTEA',
+        siteDescription: 'Premium Tea Collection',
+        adminEmail: 'admin@bestea.com',
+        timezone: 'Asia/Kolkata'
+      },
+      shipping: {
+        freeShippingThreshold: 499,
+        standardShippingRate: 50,
+        expressShippingRate: 100
+      },
+      payment: {
+        razorpayEnabled: true,
+        codEnabled: true,
+        upiEnabled: true
+      },
+      notifications: {
+        emailNotifications: true,
+        smsNotifications: false,
+        orderUpdates: true
+      },
+      security: {
+        twoFactorAuth: false,
+        sessionTimeout: 30
+      },
+      seo: {
+        metaTitle: 'BESTEA - Premium Tea Collection',
+        metaDescription: 'Discover premium quality teas from Assam\'s finest gardens',
+        metaKeywords: 'tea, premium tea, assam tea, online tea store'
+      }
+    }
+  });
+});
+
+// @route   PUT /api/admin/settings
+// @desc    Update admin settings
+// @access  Private/Admin
+router.put('/settings', auth, isAdmin, (req, res) => {
+  // For now, just return success
+  res.json({
+    success: true,
+    message: 'Settings updated successfully',
+    data: req.body
+  });
+});
+
 module.exports = router;

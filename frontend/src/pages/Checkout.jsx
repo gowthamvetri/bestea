@@ -39,7 +39,7 @@ const Checkout = () => {
     landmark: '',
     
     // Payment Information
-    paymentMethod: 'online',
+    paymentMethod: 'razorpay',
     
     // Order Notes
     orderNotes: ''
@@ -135,35 +135,51 @@ const Checkout = () => {
         return;
       }
 
-      // Prepare order data
+      // Validate cart items before processing
+      if (!cartItems || cartItems.length === 0) {
+        toast.error('Your cart is empty');
+        navigate('/cart');
+        return;
+      }
+
+      // Prepare order data with validation
       const orderData = {
-        items: cartItems.map(item => ({
-          product: item.product._id || item.product.id,
-          name: item.product.name || item.name,
-          quantity: item.quantity,
-          price: item.product.price || item.price,
-          image: item.product.mainImage || item.product.image
-        })),
+        items: cartItems.map(item => {
+          if (!item.productId && !item.id) {
+            throw new Error('Invalid cart item: missing product ID');
+          }
+          const itemTotal = (item.price || 0) * (item.quantity || 1);
+          return {
+            product: item.productId || item.id,
+            name: item.name || 'Unknown Product',
+            quantity: item.quantity || 1,
+            price: item.price || 0,
+            total: itemTotal,
+            image: item.image || '',
+            variant: item.variant?.name || null
+          };
+        }),
         shippingAddress: {
-          fullName: `${formData.firstName} ${formData.lastName}`.trim(),
-          email: formData.email,
+          name: `${formData.firstName} ${formData.lastName}`.trim(),
           phone: formData.phone,
           addressLine1: formData.address,
           city: formData.city,
           state: formData.state,
-          postalCode: formData.pincode,
+          pincode: formData.pincode,
           landmark: formData.landmark
         },
-        paymentMethod: formData.paymentMethod,
-        itemsPrice: subtotal,
-        shippingPrice: shipping,
-        totalPrice: finalTotal,
+        payment: {
+          method: formData.paymentMethod
+        },
+        subtotal: subtotal,
+        shippingCharges: shipping,
+        total: finalTotal,
         orderNotes: formData.orderNotes
       };
 
       console.log('Placing order with data:', orderData);
 
-      const response = await fetch('/api/orders', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:5000/api'}/orders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -206,9 +222,9 @@ const Checkout = () => {
   ];
 
   const paymentMethods = [
-    { id: 'online', name: 'Online Payment', icon: FaCreditCard, description: 'Credit/Debit Card, UPI, Net Banking' },
+    { id: 'razorpay', name: 'Online Payment', icon: FaCreditCard, description: 'Credit/Debit Card, UPI, Net Banking' },
     { id: 'cod', name: 'Cash on Delivery', icon: FaTruck, description: 'Pay when you receive' },
-    { id: 'wallet', name: 'Digital Wallet', icon: FaWallet, description: 'PhonePe, Google Pay, Paytm' }
+    { id: 'upi', name: 'UPI Payment', icon: FaWallet, description: 'PhonePe, Google Pay, Paytm' }
   ];
 
   const indianStates = [

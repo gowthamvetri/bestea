@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, useParams, Link } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { motion } from 'framer-motion';
 import {
@@ -25,10 +25,12 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 const Shop = () => {
   const dispatch = useDispatch();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { category: categorySlug } = useParams();
   const { products, isLoading, error, categories } = useSelector(state => state.products);
   const { items: cartItems } = useSelector(state => state.cart);
   
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+  const [selectedCategory, setSelectedCategory] = useState('');
   const [priceRange, setPriceRange] = useState('');
   const [localSortBy, setLocalSortBy] = useState('name-asc');
   const [showFilters, setShowFilters] = useState(false);
@@ -87,6 +89,20 @@ const Shop = () => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
+  // Handle category from URL parameter
+  useEffect(() => {
+    if (categorySlug && categories.length > 0) {
+      const category = categories.find(cat => cat.slug === categorySlug);
+      if (category) {
+        setSelectedCategory(category._id);
+        // Update search params to include the category
+        const newParams = new URLSearchParams(searchParams);
+        newParams.set('category', category._id);
+        setSearchParams(newParams);
+      }
+    }
+  }, [categorySlug, categories, searchParams, setSearchParams]);
+
   useEffect(() => {
     // Debounce product fetching to prevent too many requests
     const timeoutId = setTimeout(() => {
@@ -102,7 +118,16 @@ const Shop = () => {
     const params = Object.fromEntries(searchParams);
     setLocalSortBy(params.sort || 'name-asc');
     setPriceRange(params.price || '');
-    setAvailabilityFilter(params.availability || '');
+    setSelectedCategory(params.category || '');
+    setSearchTerm(params.search || '');
+    
+    // Handle featured parameter for bestsellers, but only if no explicit availability is set
+    if (params.featured === 'true' && !params.availability) {
+      setAvailabilityFilter('bestseller');
+    } else {
+      setAvailabilityFilter(params.availability || '');
+    }
+    
     setRatingFilter(params.rating || '');
     setWeightFilter(params.weight || '');
   }, [searchParams]);
@@ -118,6 +143,11 @@ const Shop = () => {
       newParams[filterType] = value;
     } else {
       delete newParams[filterType];
+    }
+    
+    // Remove featured parameter when manually setting filters to avoid conflicts
+    if (filterType !== 'featured') {
+      delete newParams.featured;
     }
     
     setSearchParams(newParams);
@@ -228,6 +258,7 @@ const Shop = () => {
 
     // Filter by availability
     if (availabilityFilter) {
+      console.log('Filtering by availability:', availabilityFilter, 'Total products before filter:', filtered.length);
       filtered = filtered.filter(product => {
         switch (availabilityFilter) {
           case 'in-stock':
@@ -235,11 +266,15 @@ const Shop = () => {
           case 'on-sale':
             return product.defaultOriginalPrice || product.originalPrice;
           case 'bestseller':
-            return product.badges?.includes('Best Seller') || product.isBestseller;
+            console.log('Checking bestseller for product:', product.name, 'isBestseller:', product.isBestseller, 'badges:', product.badges);
+            const isBestseller = product.badges?.includes('Best Seller') || product.isBestseller;
+            console.log('Result for', product.name, ':', isBestseller);
+            return isBestseller;
           default:
             return true;
         }
       });
+      console.log('Products after availability filter:', filtered.length);
     }
 
     // Filter by rating
@@ -315,11 +350,16 @@ const Shop = () => {
     dispatch(fetchProducts(newParams));
   };
 
+  // Get current category name for display
+  const currentCategory = categories.find(cat => cat._id === selectedCategory);
+  const categoryName = currentCategory?.name || '';
+  const isBestsellersPage = searchParams.get('featured') === 'true';
+
   return (
     <>
       <Helmet>
-        <title>Shop - Premium Tea Collection | Bestea</title>
-        <meta name="description" content="Discover our premium collection of authentic Indian teas. From classic Assam to exotic Darjeeling - find your perfect cup." />
+        <title>{isBestsellersPage ? 'Bestsellers - Premium Tea Collection | Bestea' : categoryName ? `${categoryName} Tea - Shop | Bestea` : 'Shop - Premium Tea Collection | Bestea'}</title>
+        <meta name="description" content={isBestsellersPage ? "Discover our most popular and bestselling premium teas. Customer favorites sourced directly from the finest plantations." : categoryName ? `Discover our premium ${categoryName} tea collection. Authentic Indian teas sourced directly from plantations.` : "Discover our premium collection of authentic Indian teas. From classic Assam to exotic Darjeeling - find your perfect cup."} />
       </Helmet>
 
       <div className="min-h-screen bg-slate-50">
@@ -349,13 +389,59 @@ const Shop = () => {
                 </button>
               </div>
               
+              {/* Category Filter */}
+              <div className="mb-8">
+                <h3 className="font-medium text-slate-900 mb-4 flex items-center justify-between">
+                  Category
+                  <button 
+                    onClick={() => {
+                      handleFilterChange('category', '');
+                    }}
+                    className="text-sm text-slate-500 hover:text-slate-700"
+                  >
+                    Clear
+                  </button>
+                </h3>
+                <div className="space-y-3">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="category"
+                      value=""
+                      checked={selectedCategory === ''}
+                      onChange={(e) => {
+                        setSelectedCategory('');
+                        handleFilterChange('category', '');
+                      }}
+                      className="w-4 h-4 text-bestea-600 border-slate-300 focus:ring-bestea-500"
+                    />
+                    <span className="ml-3 text-slate-700">All Categories</span>
+                  </label>
+                  {categories.map(category => (
+                    <label key={category._id} className="flex items-center">
+                      <input
+                        type="radio"
+                        name="category"
+                        value={category._id}
+                        checked={selectedCategory === category._id}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          handleFilterChange('category', value);
+                        }}
+                        className="w-4 h-4 text-bestea-600 border-slate-300 focus:ring-bestea-500"
+                      />
+                      <span className="ml-3 text-slate-700">{category.name}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+              
               {/* Price Filter */}
               <div className="mb-8">
                 <h3 className="font-medium text-slate-900 mb-4 flex items-center justify-between">
                   Price Range
                   <button 
                     onClick={() => {
-                      setPriceRange('');
                       handleFilterChange('price', '');
                     }}
                     className="text-sm text-slate-500 hover:text-slate-700"
@@ -373,7 +459,6 @@ const Shop = () => {
                         checked={priceRange === option.value}
                         onChange={(e) => {
                           const value = e.target.value;
-                          setPriceRange(value);
                           handleFilterChange('price', value);
                         }}
                         className="w-4 h-4 text-bestea-600 border-slate-300 focus:ring-bestea-500"
@@ -390,7 +475,6 @@ const Shop = () => {
                   Availability
                   <button 
                     onClick={() => {
-                      setAvailabilityFilter('');
                       handleFilterChange('availability', '');
                     }}
                     className="text-sm text-slate-500 hover:text-slate-700"
@@ -407,7 +491,6 @@ const Shop = () => {
                         checked={availabilityFilter === option.value}
                         onChange={(e) => {
                           const value = e.target.checked ? e.target.value : '';
-                          setAvailabilityFilter(value);
                           handleFilterChange('availability', value);
                         }}
                         className="w-4 h-4 text-bestea-600 border-slate-300 rounded focus:ring-bestea-500"
@@ -424,7 +507,6 @@ const Shop = () => {
                   Customer Rating
                   <button 
                     onClick={() => {
-                      setRatingFilter('');
                       handleFilterChange('rating', '');
                     }}
                     className="text-sm text-slate-500 hover:text-slate-700"
@@ -442,7 +524,6 @@ const Shop = () => {
                         checked={ratingFilter === option.value}
                         onChange={(e) => {
                           const value = e.target.value;
-                          setRatingFilter(value);
                           handleFilterChange('rating', value);
                         }}
                         className="w-4 h-4 text-bestea-600 border-slate-300 focus:ring-bestea-500"
@@ -481,7 +562,6 @@ const Shop = () => {
                   Package Size
                   <button 
                     onClick={() => {
-                      setWeightFilter('');
                       handleFilterChange('weight', '');
                     }}
                     className="text-sm text-slate-500 hover:text-slate-700"
@@ -498,7 +578,6 @@ const Shop = () => {
                         checked={weightFilter === option.value}
                         onChange={(e) => {
                           const value = e.target.checked ? e.target.value : '';
-                          setWeightFilter(value);
                           handleFilterChange('weight', value);
                         }}
                         className="w-4 h-4 text-bestea-600 border-slate-300 rounded focus:ring-bestea-500"
@@ -513,11 +592,6 @@ const Shop = () => {
               <div className="pt-6 border-t border-slate-200">
                 <button
                   onClick={() => {
-                    setPriceRange('');
-                    setAvailabilityFilter('');
-                    setRatingFilter('');
-                    setWeightFilter('');
-                    setSearchTerm('');
                     setSearchParams({});
                     dispatch(fetchProducts({}));
                   }}
@@ -544,11 +618,21 @@ const Shop = () => {
               <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
                 <div>
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    Premium Tea Collection
+                    {isBestsellersPage ? 'Bestsellers Collection' : categoryName ? `${categoryName} Tea Collection` : 'Premium Tea Collection'}
                   </h1>
                   <p className="text-gray-600">
-                    {isLoading ? 'Loading products...' : `Discover ${finalProducts.length} handpicked teas`}
+                    {isLoading ? 'Loading products...' : isBestsellersPage ? `Discover ${finalProducts.length} most popular teas` : `Discover ${finalProducts.length} ${categoryName ? `premium ${categoryName.toLowerCase()} teas` : 'handpicked teas'}`}
                   </p>
+                  {categoryName && (
+                    <div className="mt-2">
+                      <Link
+                        to="/shop"
+                        className="text-sm text-bestea-600 hover:text-bestea-700 font-medium"
+                      >
+                        ← View all categories
+                      </Link>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Search and Sort */}
@@ -630,7 +714,6 @@ const Shop = () => {
                         {priceOptions.find(opt => opt.value === priceRange)?.label}
                         <button
                           onClick={() => {
-                            setPriceRange('');
                             handleFilterChange('price', '');
                           }}
                           className="ml-1 hover:text-bestea-900"
@@ -645,7 +728,6 @@ const Shop = () => {
                         {availabilityOptions.find(opt => opt.value === availabilityFilter)?.label}
                         <button
                           onClick={() => {
-                            setAvailabilityFilter('');
                             handleFilterChange('availability', '');
                           }}
                           className="ml-1 hover:text-bestea-900"
@@ -660,7 +742,6 @@ const Shop = () => {
                         {ratingOptions.find(opt => opt.value === ratingFilter)?.label}
                         <button
                           onClick={() => {
-                            setRatingFilter('');
                             handleFilterChange('rating', '');
                           }}
                           className="ml-1 hover:text-bestea-900"
@@ -675,7 +756,6 @@ const Shop = () => {
                         {weightOptions.find(opt => opt.value === weightFilter)?.label}
                         <button
                           onClick={() => {
-                            setWeightFilter('');
                             handleFilterChange('weight', '');
                           }}
                           className="ml-1 hover:text-bestea-900"
@@ -688,11 +768,6 @@ const Shop = () => {
                   
                   <button
                     onClick={() => {
-                      setPriceRange('');
-                      setAvailabilityFilter('');
-                      setRatingFilter('');
-                      setWeightFilter('');
-                      setSearchTerm('');
                       setSearchParams({});
                       dispatch(fetchProducts({}));
                     }}
