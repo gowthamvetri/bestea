@@ -74,7 +74,7 @@ const getDashboardData = async (req, res) => {
         _id: order._id,
         orderNumber: order.orderNumber,
         customerName: order.user?.name || 'Unknown',
-        amount: order.totalAmount,
+        amount: order.total,
         status: order.status,
         createdAt: order.createdAt
       })),
@@ -382,9 +382,9 @@ const getAdminAnalytics = async (req, res) => {
       {
         $group: {
           _id: null,
-          totalRevenue: { $sum: '$totalAmount' },
+          totalRevenue: { $sum: '$total' },
           totalOrders: { $sum: 1 },
-          avgOrderValue: { $avg: '$totalAmount' }
+          avgOrderValue: { $avg: '$total' }
         }
       }
     ]);
@@ -400,9 +400,9 @@ const getAdminAnalytics = async (req, res) => {
       {
         $group: {
           _id: null,
-          totalRevenue: { $sum: '$totalAmount' },
+          totalRevenue: { $sum: '$total' },
           totalOrders: { $sum: 1 },
-          avgOrderValue: { $avg: '$totalAmount' }
+          avgOrderValue: { $avg: '$total' }
         }
       }
     ]);
@@ -1134,7 +1134,7 @@ const getAdminReviews = async (req, res) => {
 
     // Status filter for reported reviews
     if (status === 'reported') {
-      filter['reports.0'] = { $exists: true };
+      filter['reported.users.0'] = { $exists: true };
     } else if (status === 'approved') {
       filter.isFeatured = true;
     }
@@ -1229,7 +1229,7 @@ const getAdminReviewStats = async (req, res) => {
       Review.countDocuments({
         createdAt: { $gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000) }
       }),
-      Review.countDocuments({ 'reports.0': { $exists: true } }),
+      Review.countDocuments({ 'reported.users.0': { $exists: true } }),
       Review.countDocuments({ isFeatured: true })
     ]);
 
