@@ -90,8 +90,21 @@ export const fetchCategories = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_URL}/categories`);
-      return response.data;
+      console.log('Categories API Response:', response.data);
+      
+      // Ensure we return an array
+      if (Array.isArray(response.data)) {
+        return response.data;
+      } else if (response.data?.categories && Array.isArray(response.data.categories)) {
+        return response.data.categories;
+      } else if (response.data?.data && Array.isArray(response.data.data)) {
+        return response.data.data;
+      } else {
+        console.warn('Unexpected categories response format:', response.data);
+        return [];
+      }
     } catch (error) {
+      console.error('Categories fetch error:', error);
       // Handle rate limiting specifically
       if (error.response?.status === 429) {
         return rejectWithValue('Too many requests. Please wait a moment and try again.');
@@ -176,8 +189,23 @@ export const fetchProductsByCategory = createAsyncThunk(
   async (categoryId, { rejectWithValue }) => {
     try {
       const response = await axios.get(`${API_URL}/products?category=${categoryId}&limit=8`);
-      return { categoryId, products: response.data };
+      console.log(`Category ${categoryId} Products API Response:`, response.data);
+      
+      // Normalize the response to ensure we have an array
+      let productsArray = [];
+      if (Array.isArray(response.data)) {
+        productsArray = response.data;
+      } else if (response.data?.products && Array.isArray(response.data.products)) {
+        productsArray = response.data.products;
+      } else if (response.data?.data && Array.isArray(response.data.data)) {
+        productsArray = response.data.data;
+      } else {
+        console.warn('Unexpected products by category response format:', response.data);
+      }
+      
+      return { categoryId, products: productsArray };
     } catch (error) {
+      console.error(`Category ${categoryId} products fetch error:`, error);
       return rejectWithValue(
         error.response?.data?.message || 'Failed to fetch products by category'
       );
@@ -283,7 +311,16 @@ const productSlice = createSlice({
       })
       .addCase(fetchCategories.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.categories = action.payload; // Direct array from API
+        // Ensure we always store an array
+        if (Array.isArray(action.payload)) {
+          state.categories = action.payload;
+        } else if (action.payload?.categories) {
+          state.categories = action.payload.categories;
+        } else if (action.payload?.data) {
+          state.categories = action.payload.data;
+        } else {
+          state.categories = [];
+        }
         state.error = null;
       })
       .addCase(fetchCategories.rejected, (state, action) => {

@@ -20,6 +20,9 @@ const CategoryProductSlider = () => {
   const { categories, categoryProducts, isLoading } = useSelector(state => state.products);
   const [activeCategory, setActiveCategory] = useState(null);
 
+  // Ensure categories is always an array
+  const safeCategories = Array.isArray(categories) ? categories : [];
+
   useEffect(() => {
     // Fetch categories on component mount
     dispatch(fetchCategories());
@@ -27,16 +30,16 @@ const CategoryProductSlider = () => {
 
   useEffect(() => {
     // Fetch products for each category
-    if (categories && categories.length > 0) {
-      categories.forEach(category => {
+    if (safeCategories && safeCategories.length > 0) {
+      safeCategories.forEach(category => {
         if (category._id && !categoryProducts[category._id]) {
           dispatch(fetchProductsByCategory(category._id));
         }
       });
     }
-  }, [categories, dispatch, categoryProducts]);
+  }, [safeCategories, dispatch, categoryProducts]);
 
-  if (isLoading && (!categories || categories.length === 0)) {
+  if (isLoading && safeCategories.length === 0) {
     return (
       <div className="flex justify-center items-center py-20">
         <LoadingSpinner variant="tea" size="large" />
@@ -44,7 +47,7 @@ const CategoryProductSlider = () => {
     );
   }
 
-  if (!categories || categories.length === 0) {
+  if (safeCategories.length === 0) {
     return null;
   }
 
@@ -71,10 +74,12 @@ const CategoryProductSlider = () => {
 
         {/* Category-wise Product Sliders */}
         <div className="space-y-16">
-          {categories.map((category, index) => {
-            const products = categoryProducts[category._id]?.data || [];
+          {safeCategories.map((category, index) => {
+            // Ensure products is always an array
+            const categoryData = categoryProducts[category._id]?.data;
+            const products = Array.isArray(categoryData) ? categoryData : [];
             
-            if (!products || products.length === 0) return null;
+            if (products.length === 0) return null;
 
             return (
               <motion.div
