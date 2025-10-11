@@ -25,8 +25,9 @@ app.use(cors({
   origin: [
     'http://localhost:3000',
     'http://localhost:5173',
+    'https://bestea-hwja.vercel.app',  // Production frontend
     process.env.CLIENT_URL
-  ],
+  ].filter(Boolean),  // Remove undefined values
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
