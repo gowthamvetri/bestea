@@ -1,5 +1,25 @@
-<!-- Simple favicon placeholder -->
-<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-  <circle cx="8" cy="8" r="8" fill="#9ACB3C"/>
-  <text x="8" y="12" text-anchor="middle" fill="white" font-size="10" font-family="Arial">T</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192"><!-- Simple favicon placeholder -->
+
+  <rect width="192" height="192" fill="#9ACB3C" rx="24"/><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
+
+  <g transform="translate(96, 96)">  <circle cx="8" cy="8" r="8" fill="#9ACB3C"/>
+
+    <!-- Tea cup -->  <text x="8" y="12" text-anchor="middle" fill="white" font-size="10" font-family="Arial">T</text>
+
+    <path d="M -40 -20 L -40 30 Q -40 40 -30 40 L 30 40 Q 40 40 40 30 L 40 -20 Z" </svg>
+
+          fill="white" stroke="white" stroke-width="4"/>
+    <!-- Cup handle -->
+    <path d="M 40 0 Q 60 0 60 20 Q 60 40 40 40" 
+          fill="none" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <!-- Steam -->
+    <path d="M -20 -30 Q -15 -45 -20 -55" 
+          fill="none" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+    <path d="M 0 -30 Q 5 -50 0 -60" 
+          fill="none" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+    <path d="M 20 -30 Q 25 -45 20 -55" 
+          fill="none" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+  </g>
+  <!-- Text -->
+  <text x="96" y="160" text-anchor="middle" fill="white" font-size="32" font-family="Arial, sans-serif" font-weight="bold">BESTEA</text>
 </svg>
