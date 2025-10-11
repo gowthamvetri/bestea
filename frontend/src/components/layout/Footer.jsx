@@ -15,7 +15,7 @@ const Footer = () => {
             {/* Company Info */}
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <div className="w-10 h-10 bg-bestea-400 rounded-lg flex items-center justify-center">
+                <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center shadow-lg">
                   <span className="text-white font-bold text-xl">B</span>
                 </div>
                 <span className="text-2xl font-bold font-serif">BESTEA</span>
@@ -25,16 +25,16 @@ const Footer = () => {
                 we bring you the finest tea experience.
               </p>
               <div className="flex space-x-4">
-                <a href="#" className="text-gray-400 hover:text-bestea-400 transition-colors">
-                  <span className="w-5 h-5 bg-bestea-600 text-white text-xs flex items-center justify-center rounded">f</span>
+                <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
+                  <span className="w-5 h-5 bg-green-600 text-white text-xs flex items-center justify-center rounded">f</span>
                 </a>
-                <a href="#" className="text-gray-400 hover:text-bestea-400 transition-colors">
+                <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
                   <span className="w-5 h-5 bg-pink-600 text-white text-xs flex items-center justify-center rounded">i</span>
                 </a>
-                <a href="#" className="text-gray-400 hover:text-bestea-400 transition-colors">
-                  <span className="w-5 h-5 bg-bestea-500 text-white text-xs flex items-center justify-center rounded">t</span>
+                <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
+                  <span className="w-5 h-5 bg-green-500 text-white text-xs flex items-center justify-center rounded">t</span>
                 </a>
-                <a href="#" className="text-gray-400 hover:text-bestea-400 transition-colors">
+                <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
                   <span className="w-5 h-5 bg-red-600 text-white text-xs flex items-center justify-center rounded">y</span>
                 </a>
               </div>
@@ -69,18 +69,18 @@ const Footer = () => {
               <h4 className="text-lg font-semibold mb-4">Contact Info</h4>
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
-                  <FaPhone className="text-bestea-400 flex-shrink-0" />
+                  <FaPhone className="text-green-400 flex-shrink-0" />
                   <div>
                     <p className="text-gray-400">8000587288</p>
                     <p className="text-gray-400">9500595929</p>
                   </div>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <FaEnvelope className="text-bestea-400 flex-shrink-0" />
+                  <FaEnvelope className="text-green-400 flex-shrink-0" />
                   <p className="text-gray-400">bestea@gmail.com</p>
                 </div>
                 <div className="flex items-start space-x-3">
-                  <FaMapMarkerAlt className="text-bestea-400 flex-shrink-0 mt-1" />
+                  <FaMapMarkerAlt className="text-green-400 flex-shrink-0 mt-1" />
                   <p className="text-gray-400">Tamil Nadu, India</p>
                 </div>
               </div>

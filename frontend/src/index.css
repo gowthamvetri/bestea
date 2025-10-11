@@ -1,9 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-/* BESTEA Professional Design System */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+/* Import Professional Design System */
+@import './styles/professional.css';
 
 :root {
   /* BESTEA Brand Colors */

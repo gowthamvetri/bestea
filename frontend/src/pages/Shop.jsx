@@ -822,93 +822,108 @@ const Shop = () => {
                   </div>
                 ) : (
                   finalProducts.map((product, index) => (
-                    <Link 
-                      key={product._id || product.id} 
-                      to={`/product/${product._id || product.id}`}
-                      className="block group"
+                    <motion.div
+                      key={product._id || product.id}
+                      initial={{ opacity: 0, y: 30 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.05 }}
+                      className="group h-full"
                     >
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.4, delay: index * 0.05 }}
-                        className="modern-card hover-scale group cursor-pointer relative overflow-hidden"
-                      >
-                        {/* Badge */}
-                        {product.badges && product.badges.length > 0 && (
-                          <div className="absolute top-4 left-4 z-10">
-                            <motion.span 
-                              whileHover={{ scale: 1.05 }}
-                              className={`px-3 py-1.5 rounded-full text-xs font-semibold text-white shadow-lg backdrop-blur-sm ${
-                                product.badges[0] === 'Best Seller' ? 'bg-gradient-to-r from-bestea-500 to-bestea-600' :
-                                product.badges[0] === 'Super Saver' ? 'bg-gradient-to-r from-green-500 to-green-600' : 
-                                'bg-gradient-to-r from-red-500 to-red-600'
-                              }`}
-                            >
-                              {product.badges[0]}
-                            </motion.span>
+                      <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 h-full flex flex-col">
+                        {/* Product Image Container */}
+                        <Link to={`/product/${product._id || product.id}`} className="relative block overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+                          <div className="aspect-square relative">
+                            <img
+                              src={product.mainImage?.url || product.image || '/images/tea-placeholder.svg'}
+                              alt={product.name}
+                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                              loading="lazy"
+                            />
+                            
+                            {/* Overlay on Hover */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            
+                            {/* Product Badges - Top Left */}
+                            <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
+                              {product.badges && product.badges.includes('Best Seller') && (
+                                <span className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 px-3 py-1 rounded-full text-xs font-bold shadow-lg flex items-center gap-1">
+                                  <FaStar className="text-xs" />
+                                  BESTSELLER
+                                </span>
+                              )}
+                              {product.badges && product.badges.includes('Super Saver') && (
+                                <span className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                                  SUPER SAVER
+                                </span>
+                              )}
+                              {(product.defaultOriginalPrice || product.originalPrice) && (
+                                <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse">
+                                  SALE
+                                </span>
+                              )}
+                              {product.stock === 0 && (
+                                <span className="bg-gray-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
+                                  OUT OF STOCK
+                                </span>
+                              )}
+                            </div>
+
+                            {/* Quick Actions - Top Right */}
+                            <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                              <button 
+                                className="p-2.5 bg-white rounded-full shadow-lg hover:bg-orange-600 hover:text-white transition-all duration-300 hover:scale-110"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  // Add to wishlist logic
+                                }}
+                                aria-label="Add to wishlist"
+                              >
+                                <FaHeart className="text-sm" />
+                              </button>
+                            </div>
+
+                            {/* Rating Badge - Bottom Right */}
+                            {(product.averageRating || product.rating) && (
+                              <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm rounded-lg px-2.5 py-1.5 flex items-center gap-1.5 shadow-lg">
+                                <FaStar className="text-yellow-400 text-xs" />
+                                <span className="text-xs font-bold text-gray-900">{(product.averageRating || product.rating).toFixed(1)}</span>
+                                <span className="text-xs text-gray-500">({product.reviewCount || 0})</span>
+                              </div>
+                            )}
                           </div>
-                        )}
-
-                        {/* Wishlist Button */}
-                        <div className="absolute top-4 right-4 z-10">
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              e.stopPropagation();
-                              // Add wishlist functionality
-                            }}
-                          >
-                            <FaHeart className="w-4 h-4 text-slate-600 hover:text-red-500 transition-colors" />
-                          </motion.button>
-                        </div>
-                        
-                        {/* Product Image */}
-                        <div className="relative aspect-square mb-6 rounded-2xl overflow-hidden bg-gradient-to-br from-slate-50 to-slate-100">
-                          <img
-                            src={product.mainImage?.url || product.image || '/images/tea-placeholder.svg'}
-                            alt={product.name}
-                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                            loading="lazy"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                        </div>
-
+                        </Link>
+                          
                         {/* Product Info */}
-                        <div className="p-6 pt-0">
-                          {/* Category */}
-                          <div className="flex items-center gap-2 mb-3">
-                            <span className="text-xs font-medium text-bestea-600 bg-bestea-50 px-2 py-1 rounded-full">
+                        <div className="p-4 flex-1 flex flex-col">
+                          {/* Category Badge */}
+                          <div className="mb-2">
+                            <span className="inline-block px-2.5 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-md border border-green-200">
                               {product.category?.name || 'Premium Tea'}
                             </span>
-                            <div className="flex items-center gap-1">
-                              <FaStar className="w-3 h-3 text-amber-400" />
-                              <span className="text-xs font-medium text-slate-600">
-                                {product.averageRating || product.rating || 4.8}
-                              </span>
-                            </div>
                           </div>
-
-                          {/* Name */}
-                          <h3 className="text-lg font-semibold text-slate-900 mb-2 line-clamp-2 group-hover:text-bestea-600 transition-colors">
-                            {product.name}
-                          </h3>
-
-                          {/* Description */}
-                          <p className="text-sm text-slate-600 mb-4 line-clamp-2">
+                          
+                          {/* Product Title */}
+                          <Link to={`/product/${product._id || product.id}`}>
+                            <h3 className="font-bold text-base text-gray-900 mb-2 group-hover:text-orange-600 transition-colors duration-300 line-clamp-2 min-h-[3rem]">
+                              {product.name}
+                            </h3>
+                          </Link>
+                          
+                          {/* Product Description */}
+                          <p className="text-sm text-gray-600 mb-3 line-clamp-2 flex-1">
                             {product.shortDescription || (product.description ? product.description.substring(0, 80) + '...' : 'Premium quality tea blend')}
                           </p>
-
+                          
                           {/* Specifications */}
-                          <div className="flex items-center gap-4 mb-4 text-xs text-slate-500">
+                          <div className="flex items-center gap-3 mb-4 text-xs text-gray-500 flex-wrap">
                             <span className="flex items-center gap-1">
-                              <div className="w-1.5 h-1.5 bg-bestea-400 rounded-full"></div>
+                              <div className="w-1.5 h-1.5 bg-orange-400 rounded-full"></div>
                               {product.type === 'loose' ? 'Loose Leaf' : 'Tea Bags'}
                             </span>
                             <span className="flex items-center gap-1">
-                              <div className="w-1.5 h-1.5 bg-slate-400 rounded-full"></div>
+                              <div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
                               {product.weight || '100'}g
                             </span>
                             <span className="flex items-center gap-1">
@@ -916,103 +931,128 @@ const Shop = () => {
                               {product.cupCount || product.cups || 50} Cups
                             </span>
                           </div>
-
-                          {/* Price */}
-                          <div className="flex items-center justify-between mb-6">
-                            <div className="flex items-baseline gap-2">
-                              <span className="text-2xl font-bold text-slate-900">
-                                ₹{product.defaultPrice || product.price}
-                              </span>
+                          
+                          {/* Price and Action Section */}
+                          <div className="mt-auto space-y-3">
+                            {/* Price Row */}
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-baseline gap-2">
+                                <span className="text-2xl font-bold text-gray-900">
+                                  ₹{product.defaultPrice || product.price}
+                                </span>
+                                {(product.defaultOriginalPrice || product.originalPrice) && (
+                                  <span className="text-sm text-gray-400 line-through">
+                                    ₹{product.defaultOriginalPrice || product.originalPrice}
+                                  </span>
+                                )}
+                              </div>
+                              
+                              {/* Discount Badge */}
                               {(product.defaultOriginalPrice || product.originalPrice) && (
-                                <span className="text-sm text-slate-500 line-through">
-                                  ₹{product.defaultOriginalPrice || product.originalPrice}
+                                <span className="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded-md">
+                                  -{Math.round(((product.defaultOriginalPrice || product.originalPrice) - (product.defaultPrice || product.price)) / (product.defaultOriginalPrice || product.originalPrice) * 100)}%
                                 </span>
                               )}
                             </div>
-                            {(product.defaultOriginalPrice || product.originalPrice) && (
-                              <span className="text-xs font-semibold text-green-600 bg-green-50 px-2 py-1 rounded-full">
-                                {Math.round(((product.defaultOriginalPrice || product.originalPrice) - (product.defaultPrice || product.price)) / (product.defaultOriginalPrice || product.originalPrice) * 100)}% OFF
-                              </span>
-                            )}
-                          </div>
 
-                          {/* Add to Cart Button */}
-                          {(() => {
-                            const cartItem = getCartItem(product);
-                            
-                            if (product.stock === 0) {
+                            {/* Stock Status */}
+                            <div className="flex items-center gap-1.5 text-xs">
+                              {product.stock > 20 ? (
+                                <>
+                                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                                  <span className="text-green-700 font-medium">In Stock</span>
+                                </>
+                              ) : product.stock > 0 ? (
+                                <>
+                                  <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                                  <span className="text-orange-700 font-medium">Only {product.stock} left</span>
+                                </>
+                              ) : (
+                                <>
+                                  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                                  <span className="text-red-700 font-medium">Out of Stock</span>
+                                </>
+                              )}
+                            </div>
+
+                            {/* Add to Cart Button or Quantity Controls */}
+                            {(() => {
+                              const cartItem = getCartItem(product);
+                              
+                              if (product.stock === 0) {
+                                return (
+                                  <button
+                                    disabled
+                                    className="w-full py-2.5 px-4 rounded-lg font-semibold text-sm bg-gray-100 text-gray-400 cursor-not-allowed flex items-center justify-center gap-2"
+                                  >
+                                    <FaShoppingCart className="text-sm" />
+                                    Out of Stock
+                                  </button>
+                                );
+                              }
+                              
+                              if (cartItem) {
+                                return (
+                                  <div 
+                                    onClick={(e) => {
+                                      e.preventDefault();
+                                      e.stopPropagation();
+                                    }}
+                                    className="flex items-center justify-between bg-orange-50 border-2 border-orange-200 rounded-lg p-2"
+                                  >
+                                    <span className="text-sm text-orange-700 font-medium">In Cart:</span>
+                                    <div className="flex items-center gap-2">
+                                      <motion.button
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          handleDecrementCart(cartItem.id);
+                                        }}
+                                        className="p-1.5 text-orange-600 hover:bg-orange-100 rounded-full transition-colors"
+                                        title={cartItem.quantity === 1 ? "Remove from cart" : "Decrease quantity"}
+                                      >
+                                        <FaMinus className="w-3 h-3" />
+                                      </motion.button>
+                                      <span className="font-bold text-orange-700 min-w-[24px] text-center">{cartItem.quantity}</span>
+                                      <motion.button
+                                        whileHover={{ scale: 1.1 }}
+                                        whileTap={{ scale: 0.9 }}
+                                        onClick={(e) => {
+                                          e.preventDefault();
+                                          e.stopPropagation();
+                                          handleIncrementCart(cartItem.id);
+                                        }}
+                                        className="p-1.5 text-orange-600 hover:bg-orange-100 rounded-full transition-colors"
+                                      >
+                                        <FaPlus className="w-3 h-3" />
+                                      </motion.button>
+                                    </div>
+                                  </div>
+                                );
+                              }
+                              
                               return (
-                                <button
-                                  disabled
-                                  className="w-full py-3 px-4 rounded-xl font-semibold bg-slate-100 text-slate-400 cursor-not-allowed flex items-center justify-center gap-2"
-                                >
-                                  <FaShoppingCart className="w-4 h-4" />
-                                  Out of Stock
-                                </button>
-                              );
-                            }
-                            
-                            if (cartItem) {
-                              return (
-                                <div 
+                                <motion.button
+                                  whileHover={{ scale: 1.02 }}
+                                  whileTap={{ scale: 0.98 }}
                                   onClick={(e) => {
                                     e.preventDefault();
                                     e.stopPropagation();
+                                    handleAddToCart(product);
                                   }}
-                                  className="flex items-center justify-between bg-bestea-50 border-2 border-bestea-200 rounded-xl p-2"
+                                  className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-2.5 px-4 rounded-lg font-semibold text-sm hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] flex items-center justify-center gap-2 group/btn"
                                 >
-                                  <span className="text-sm text-bestea-700 font-medium">In Cart:</span>
-                                  <div className="flex items-center">
-                                    <motion.button
-                                      whileHover={{ scale: 1.1 }}
-                                      whileTap={{ scale: 0.9 }}
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        handleDecrementCart(cartItem.id);
-                                      }}
-                                      className="p-1 text-bestea-600 hover:bg-bestea-100 rounded-full"
-                                      title={cartItem.quantity === 1 ? "Remove from cart" : "Decrease quantity"}
-                                    >
-                                      <FaMinus className="w-3 h-3" />
-                                    </motion.button>
-                                    <span className="mx-3 font-bold text-bestea-700">{cartItem.quantity}</span>
-                                    <motion.button
-                                      whileHover={{ scale: 1.1 }}
-                                      whileTap={{ scale: 0.9 }}
-                                      onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        handleIncrementCart(cartItem.id);
-                                      }}
-                                      className="p-1 text-bestea-600 hover:bg-bestea-100 rounded-full"
-                                    >
-                                      <FaPlus className="w-3 h-3" />
-                                    </motion.button>
-                                  </div>
-                                </div>
+                                  <FaShoppingCart className="text-sm group-hover/btn:scale-110 transition-transform" />
+                                  <span>Add to Cart</span>
+                                </motion.button>
                               );
-                            }
-                            
-                            return (
-                              <motion.button
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  handleAddToCart(product);
-                                }}
-                                className="w-full py-3 px-4 rounded-xl font-semibold transition-all duration-300 flex items-center justify-center gap-2 bg-gradient-to-r from-bestea-500 to-bestea-600 hover:from-bestea-600 hover:to-bestea-700 text-white shadow-lg hover:shadow-bestea-500/25"
-                              >
-                                <FaShoppingCart className="w-4 h-4" />
-                                Add to Cart
-                              </motion.button>
-                            );
-                          })()}
+                            })()}
+                          </div>
                         </div>
-                      </motion.div>
-                    </Link>
+                      </div>
+                    </motion.div>
                   ))
                 )}
               </div>

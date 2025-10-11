@@ -280,7 +280,11 @@ const productSlice = createSlice({
       // Fetch products by category
       .addCase(fetchProductsByCategory.fulfilled, (state, action) => {
         const { categoryId, products } = action.payload;
-        state.categoryProducts[categoryId] = products.products || products; // Handle both formats
+        // Store products with proper structure
+        state.categoryProducts[categoryId] = {
+          data: products.products || products,
+          lastFetch: new Date().toISOString()
+        };
       })
       // Search products
       .addCase(searchProducts.pending, (state) => {

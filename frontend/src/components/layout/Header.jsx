@@ -76,7 +76,7 @@ const Header = () => {
   return (
     <>
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-bestea-500 to-bestea-600 text-white text-center py-3">
+      <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white text-center py-2.5">
         <div className="w-full px-4">
           <div className="flex items-center justify-center space-x-6 text-sm font-medium">
             <div className="flex items-center space-x-2">
@@ -104,7 +104,7 @@ const Header = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => dispatch(toggleMobileMenu())}
-              className="lg:hidden p-3 text-slate-700 hover:text-bestea-600 hover:bg-bestea-50 rounded-xl transition-all duration-300"
+              className="lg:hidden p-2.5 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300"
               aria-label="Toggle mobile menu"
             >
               {isMobileMenuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
@@ -117,37 +117,37 @@ const Header = () => {
               onClick={() => dispatch(closeMobileMenu())}
             >
               <div className="relative">
-                <div className="w-12 h-12 bg-gradient-to-br from-bestea-500 to-bestea-600 rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-bestea-500/25 transition-all duration-300 group-hover:scale-105">
+                <div className="w-11 h-11 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-md group-hover:shadow-orange-500/30 transition-all duration-300 group-hover:scale-105">
                   <span className="text-white font-bold text-2xl">B</span>
                 </div>
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-gradient-to-br from-green-400 to-green-500 rounded-full opacity-80"></div>
+                <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-gradient-to-br from-green-400 to-green-600 rounded-full shadow-sm"></div>
               </div>
               <div className="hidden sm:block">
-                <span className="text-3xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent font-serif">
+                <span className="text-2xl lg:text-3xl font-bold text-gray-900">
                   BESTEA
                 </span>
-                <div className="text-xs text-bestea-600 font-medium tracking-wider uppercase">
+                <div className="text-[10px] bg-gradient-to-r from-green-600 to-orange-600 bg-clip-text text-transparent font-semibold tracking-widest uppercase -mt-0.5">
                   Premium Tea Co.
                 </div>
               </div>
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden lg:flex items-center space-x-2">
+            <nav className="hidden lg:flex items-center space-x-1">
               {navigation.map((item) => {
                 const isActive = location.pathname === item.href;
                 return (
                   <Link
                     key={item.name}
                     to={item.href}
-                    className={`relative px-4 py-2 font-medium text-sm tracking-wide uppercase transition-all duration-300 group rounded-xl ${
+                    className={`relative px-5 py-2.5 font-semibold text-sm transition-all duration-300 group rounded-xl ${
                       isActive 
-                        ? 'text-bestea-600 bg-bestea-50' 
-                        : 'text-slate-700 hover:text-bestea-600 hover:bg-bestea-50'
+                        ? 'text-orange-600 bg-orange-50' 
+                        : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50'
                     }`}
                   >
                     {item.name}
-                    <span className={`absolute inset-x-4 -bottom-1 h-0.5 bg-gradient-to-r from-bestea-500 to-bestea-600 transform transition-transform duration-300 rounded-full ${
+                    <span className={`absolute inset-x-5 -bottom-1 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 transform transition-transform duration-300 rounded-full ${
                       isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
                     }`} />
                   </Link>
@@ -161,7 +161,7 @@ const Header = () => {
               {/* Search */}
               <button
                 onClick={() => dispatch(toggleSearchModal())}
-                className="p-3 text-slate-700 hover:text-bestea-600 hover:bg-bestea-50 rounded-xl transition-all duration-300 group"
+                className="p-2.5 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300 group"
                 aria-label="Search"
               >
                 <FaSearch size={18} className="group-hover:scale-110 transition-transform duration-300" />
@@ -171,12 +171,12 @@ const Header = () => {
               {isAuthenticated && (
                 <Link
                   to="/wishlist"
-                  className="relative p-3 text-slate-700 hover:text-bestea-600 hover:bg-bestea-50 rounded-xl transition-all duration-300 group"
+                  className="relative p-2.5 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300 group"
                   aria-label="Wishlist"
                 >
                   <FaHeart size={18} className="group-hover:scale-110 transition-transform duration-300" />
                   {wishlistItems.length > 0 && (
-                    <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-semibold shadow-lg animate-pulse">
+                    <span className="absolute -top-1 -right-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-md">
                       {wishlistItems.length}
                     </span>
                   )}
@@ -186,12 +186,12 @@ const Header = () => {
               {/* Cart */}
               <button
                 onClick={handleCartClick}
-                className="relative p-3 text-slate-700 hover:text-bestea-600 hover:bg-bestea-50 rounded-xl transition-all duration-300 group"
+                className="relative p-2.5 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300 group"
                 aria-label="Shopping cart"
               >
                 <FaShoppingCart size={18} className="group-hover:scale-110 transition-transform duration-300" />
                 {totalQuantity > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-bestea-500 to-bestea-600 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-semibold shadow-lg animate-pulse">
+                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-md">
                     {totalQuantity}
                   </span>
                 )}
@@ -200,16 +200,16 @@ const Header = () => {
               {/* User Menu */}
               {isAuthenticated ? (
                 <div className="relative group">
-                  <button className="flex items-center space-x-3 p-3 text-slate-700 hover:text-bestea-600 hover:bg-bestea-50 rounded-xl transition-all duration-300 group">
+                  <button className="flex items-center space-x-2 p-2.5 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300">
                     {user && getAvatarUrl(user) !== '/images/default-avatar.svg' ? (
                       <img
                         src={getAvatarUrl(user)}
                         alt={user.name || 'User'}
                         onError={handleAvatarError}
-                        className="w-8 h-8 rounded-full object-cover ring-2 ring-bestea-100 group-hover:ring-bestea-300 transition-all duration-300"
+                        className="w-8 h-8 rounded-full object-cover ring-2 ring-orange-100 group-hover:ring-orange-300 transition-all duration-300"
                       />
                     ) : (
-                      <div className="w-8 h-8 bg-gradient-to-br from-bestea-400 to-bestea-500 rounded-full flex items-center justify-center">
+                      <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full flex items-center justify-center">
                         <FaUser size={14} className="text-white" />
                       </div>
                     )}
@@ -219,25 +219,25 @@ const Header = () => {
                   </button>
                   
                   {/* Dropdown Menu */}
-                  <div className="absolute right-0 top-full mt-3 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                  <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-2xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
                     <div className="p-2">
                       <Link
                         to="/profile"
-                        className="flex items-center space-x-3 px-4 py-3 text-sm text-slate-700 hover:bg-bestea-50 hover:text-bestea-700 rounded-xl transition-all duration-300 font-medium"
+                        className="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700 rounded-xl transition-all duration-300 font-medium"
                       >
                         <FaUser className="w-4 h-4" />
                         <span>My Profile</span>
                       </Link>
                       <Link
                         to="/orders"
-                        className="flex items-center space-x-3 px-4 py-3 text-sm text-slate-700 hover:bg-bestea-50 hover:text-bestea-700 rounded-xl transition-all duration-300 font-medium"
+                        className="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700 rounded-xl transition-all duration-300 font-medium"
                       >
                         <FaShoppingCart className="w-4 h-4" />
                         <span>My Orders</span>
                       </Link>
                       <Link
                         to="/wishlist"
-                        className="flex items-center space-x-3 px-4 py-3 text-sm text-slate-700 hover:bg-bestea-50 hover:text-bestea-700 rounded-xl transition-all duration-300 font-medium"
+                        className="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700 rounded-xl transition-all duration-300 font-medium"
                       >
                         <FaHeart className="w-4 h-4" />
                         <span>Wishlist</span>
@@ -249,37 +249,37 @@ const Header = () => {
                       <>
                         <div className="px-2 py-2">
                           <hr className="border-gray-200" />
-                          <div className="px-4 py-3">
-                            <span className="text-xs font-bold text-bestea-600 uppercase tracking-wider bg-bestea-50 px-2 py-1 rounded-full">
+                          <div className="px-4 py-2.5">
+                            <span className="text-xs font-bold text-orange-600 uppercase tracking-wider bg-orange-50 px-2 py-1 rounded-md">
                               Admin Panel
                             </span>
                           </div>
                           <Link
                             to="/admin/dashboard"
-                            className="flex items-center space-x-3 px-4 py-3 text-sm text-bestea-600 hover:bg-bestea-100 hover:text-bestea-700 rounded-xl transition-all duration-300 font-medium"
+                            className="flex items-center space-x-3 px-4 py-2.5 text-sm text-orange-600 hover:bg-orange-100 hover:text-orange-700 rounded-xl transition-all duration-300 font-medium"
                           >
-                            <div className="w-4 h-4 bg-bestea-500 rounded-sm"></div>
+                            <div className="w-4 h-4 bg-orange-500 rounded"></div>
                             <span>Dashboard</span>
                           </Link>
                           <Link
                             to="/admin/products"
-                            className="flex items-center space-x-3 px-4 py-3 text-sm text-bestea-600 hover:bg-bestea-100 hover:text-bestea-700 rounded-xl transition-all duration-300 font-medium"
+                            className="flex items-center space-x-3 px-4 py-2.5 text-sm text-orange-600 hover:bg-orange-100 hover:text-orange-700 rounded-xl transition-all duration-300 font-medium"
                           >
-                            <div className="w-4 h-4 bg-bestea-500 rounded-sm"></div>
+                            <div className="w-4 h-4 bg-orange-500 rounded"></div>
                             <span>Products</span>
                           </Link>
                           <Link
                             to="/admin/orders"
-                            className="flex items-center space-x-3 px-4 py-3 text-sm text-bestea-600 hover:bg-bestea-100 hover:text-bestea-700 rounded-xl transition-all duration-300 font-medium"
+                            className="flex items-center space-x-3 px-4 py-2.5 text-sm text-orange-600 hover:bg-orange-100 hover:text-orange-700 rounded-xl transition-all duration-300 font-medium"
                           >
-                            <div className="w-4 h-4 bg-bestea-500 rounded-sm"></div>
+                            <div className="w-4 h-4 bg-orange-500 rounded"></div>
                             <span>Orders</span>
                           </Link>
                           <Link
                             to="/admin/customers"
-                            className="flex items-center space-x-3 px-4 py-3 text-sm text-bestea-600 hover:bg-bestea-100 hover:text-bestea-700 rounded-xl transition-all duration-300 font-medium"
+                            className="flex items-center space-x-3 px-4 py-2.5 text-sm text-orange-600 hover:bg-orange-100 hover:text-orange-700 rounded-xl transition-all duration-300 font-medium"
                           >
-                            <div className="w-4 h-4 bg-bestea-500 rounded-sm"></div>
+                            <div className="w-4 h-4 bg-orange-500 rounded"></div>
                             <span>Customers</span>
                           </Link>
                         </div>
@@ -290,7 +290,7 @@ const Header = () => {
                       <hr className="border-gray-200 mb-2" />
                       <button
                         onClick={handleLogout}
-                        className="flex items-center space-x-3 w-full px-4 py-3 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 rounded-xl transition-all duration-300 font-medium"
+                        className="flex items-center space-x-3 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 hover:text-red-700 rounded-xl transition-all duration-300 font-medium"
                       >
                         <FaSignOutAlt size={16} />
                         <span>Logout</span>
@@ -301,7 +301,7 @@ const Header = () => {
               ) : (
                 <Link
                   to="/auth"
-                  className="px-6 py-2.5 bg-gradient-to-r from-bestea-500 to-bestea-600 text-white font-semibold rounded-xl hover:from-bestea-600 hover:to-bestea-700 transition-all duration-300 shadow-lg hover:shadow-bestea-500/25 transform hover:scale-105"
+                  className="px-5 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 text-sm"
                 >
                   Login
                 </Link>
@@ -335,19 +335,19 @@ const Header = () => {
                           onClick={() => dispatch(closeMobileMenu())}
                           className={`flex items-center space-x-3 py-3 px-4 rounded-xl transition-all duration-300 font-medium ${
                             isActive 
-                              ? 'text-bestea-600 bg-bestea-100 border-l-4 border-bestea-500' 
-                              : 'text-slate-700 hover:text-bestea-600 hover:bg-bestea-50'
+                              ? 'text-orange-600 bg-orange-100 border-l-4 border-orange-500' 
+                              : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50'
                           }`}
                         >
                           <div className={`w-2 h-2 rounded-full ${
-                            isActive ? 'bg-bestea-600' : 'bg-bestea-400'
+                            isActive ? 'bg-orange-600' : 'bg-orange-400'
                           }`}></div>
                           <span>{item.name}</span>
                           {isActive && (
                             <motion.div
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
-                              className="ml-auto w-2 h-2 bg-bestea-600 rounded-full"
+                              className="ml-auto w-2 h-2 bg-orange-600 rounded-full"
                             />
                           )}
                         </Link>
@@ -365,7 +365,7 @@ const Header = () => {
                       <Link
                         to="/auth"
                         onClick={() => dispatch(closeMobileMenu())}
-                        className="flex items-center space-x-3 py-3 px-4 bg-gradient-to-r from-bestea-500 to-bestea-600 text-white rounded-xl font-semibold shadow-lg"
+                        className="flex items-center space-x-3 py-3 px-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-semibold shadow-lg"
                       >
                         <FaUser className="w-4 h-4" />
                         <span>Login / Register</span>
@@ -383,7 +383,7 @@ const Header = () => {
                       <Link
                         to="/profile"
                         onClick={() => dispatch(closeMobileMenu())}
-                        className="flex items-center space-x-3 py-3 px-4 text-slate-700 hover:text-bestea-600 hover:bg-bestea-50 rounded-xl transition-all duration-300 font-medium"
+                        className="flex items-center space-x-3 py-3 px-4 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300 font-medium"
                       >
                         <FaUser className="w-4 h-4" />
                         <span>My Profile</span>
@@ -391,7 +391,7 @@ const Header = () => {
                       <Link
                         to="/cart"
                         onClick={() => dispatch(closeMobileMenu())}
-                        className="flex items-center space-x-3 py-3 px-4 text-slate-700 hover:text-bestea-600 hover:bg-bestea-50 rounded-xl transition-all duration-300 font-medium"
+                        className="flex items-center space-x-3 py-3 px-4 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300 font-medium"
                       >
                         <FaShoppingCart className="w-4 h-4" />
                         <span>My Cart {totalQuantity > 0 && `(${totalQuantity})`}</span>
@@ -399,7 +399,7 @@ const Header = () => {
                       <Link
                         to="/orders"
                         onClick={() => dispatch(closeMobileMenu())}
-                        className="flex items-center space-x-3 py-3 px-4 text-slate-700 hover:text-bestea-600 hover:bg-bestea-50 rounded-xl transition-all duration-300 font-medium"
+                        className="flex items-center space-x-3 py-3 px-4 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300 font-medium"
                       >
                         <FaShoppingCart className="w-4 h-4" />
                         <span>My Orders</span>

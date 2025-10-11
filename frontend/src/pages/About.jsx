@@ -108,13 +108,13 @@ const About = () => {
 
       <div className="min-h-screen bg-white">
         {/* Hero Section */}
-        <section className="relative py-24 px-8 overflow-hidden">
-          <div className="absolute inset-0">
-            <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-br from-bestea-200/30 to-bestea-300/20 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-br from-green-200/30 to-bestea-200/20 rounded-full blur-3xl"></div>
+        <section className="relative py-24 px-4 overflow-hidden bg-gradient-to-b from-orange-50/50 to-white">
+          <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-br from-orange-200/30 to-orange-300/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-br from-green-200/30 to-orange-200/20 rounded-full blur-3xl"></div>
           </div>
           
-          <div className="relative w-full mx-auto px-4">
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
@@ -125,16 +125,16 @@ const About = () => {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="inline-flex items-center gap-2 bg-bestea-50 text-bestea-700 px-6 py-3 rounded-full font-semibold mb-8"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-green-50 to-orange-50 text-green-700 px-6 py-3 rounded-full font-semibold mb-8 border border-green-200"
               >
-                <FaLeaf className="w-5 h-5" />
-                <span>Est. 1985 • Three Generations of Excellence</span>
+                <FaLeaf className="w-5 h-5 text-green-600" />
+                <span className="bg-gradient-to-r from-green-600 to-orange-600 bg-clip-text text-transparent">Est. 1985 • Three Generations of Excellence</span>
               </motion.div>
               
-              <h1 className="text-6xl md:text-7xl font-bold text-slate-900 mb-8 leading-tight">
-                Our <span className="bg-gradient-to-r from-bestea-600 to-bestea-500 bg-clip-text text-transparent">Tea</span> Journey
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
+                Our <span className="text-gradient-primary">Tea Journey</span>
               </h1>
-              <p className="text-xl text-slate-600 max-w-full mx-auto leading-relaxed">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
                 From the misty hills of Assam to your cherished moments - discover our legacy 
                 of crafting exceptional tea experiences with passion, tradition, and innovation.
               </p>
@@ -145,7 +145,7 @@ const About = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-full mx-auto mb-12"
+              className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto mb-12"
             >
               {[
                 { number: '40+', label: 'Years of Heritage' },
@@ -154,8 +154,8 @@ const About = () => {
                 { number: '24/7', label: 'Fresh Blending' }
               ].map((stat, index) => (
                 <div key={index} className="text-center">
-                  <div className="text-3xl font-bold text-bestea-600 mb-2">{stat.number}</div>
-                  <div className="text-sm text-slate-600 font-medium">{stat.label}</div>
+                  <div className="text-4xl font-bold text-orange-600 mb-2">{stat.number}</div>
+                  <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
                 </div>
               ))}
             </motion.div>
@@ -167,11 +167,11 @@ const About = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="flex flex-col sm:flex-row gap-4 justify-center"
             >
-              <Link to="/shop" className="modern-btn-primary">
+              <Link to="/shop" className="btn btn-primary btn-lg">
                 <span>Explore Our Teas</span>
                 <FaArrowRight className="w-4 h-4" />
               </Link>
-              <a href="#story" className="modern-btn-secondary">
+              <a href="#story" className="btn btn-outline btn-lg">
                 <span>Our Story</span>
               </a>
             </motion.div>
@@ -179,43 +179,45 @@ const About = () => {
         </section>
 
         {/* Story Section */}
-        <section id="story" className="py-20 px-4 bg-slate-50">
-          <div className="w-full mx-auto px-4">
+        <section id="story" className="py-24 bg-gradient-to-b from-white to-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-                Our <span className="text-bestea-600">Story</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Our <span className="text-gradient-primary">Story</span>
               </h2>
-              <p className="text-xl text-slate-600 max-w-full mx-auto">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 A journey that began in the tea gardens of Assam and continues in the hearts of Tamil Nadu
               </p>
             </motion.div>
 
-            <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="grid lg:grid-cols-2 gap-12 items-center">
               <motion.div
                 initial={{ opacity: 0, x: -30 }}
                 whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
               >
-                <div className="modern-card p-8">
-                  <h3 className="text-2xl font-bold text-slate-900 mb-6">From Assam Gardens to Your Cup</h3>
+                <div className="card p-8">
+                  <h3 className="text-3xl font-bold text-gray-900 mb-6">From Assam Gardens to Your Cup</h3>
                   <div className="space-y-6">
-                    <p className="text-slate-600 leading-relaxed">
+                    <p className="text-gray-600 leading-relaxed text-lg">
                       Founded in 1985 by tea enthusiast Rajesh Sharma, BESTEA began as a small family venture 
                       in the lush tea gardens of Assam. With a deep understanding of tea cultivation and 
                       an unwavering commitment to quality, we set out to share authentic Assam tea with the world.
                     </p>
-                    <p className="text-slate-600 leading-relaxed">
+                    <p className="text-gray-600 leading-relaxed text-lg">
                       Our expansion to Tamil Nadu in 1995 marked a new chapter, where we established our 
                       state-of-the-art blending facility. This strategic move allowed us to combine the 
                       authentic flavors of Assam with innovative blending techniques, creating unique 
                       tea experiences that honor tradition while embracing modernity.
                     </p>
-                    <p className="text-slate-600 leading-relaxed">
+                    <p className="text-gray-600 leading-relaxed text-lg">
                       Today, three generations later, BESTEA continues to be a family-owned business 
                       dedicated to bringing you the finest tea experiences. Every cup tells our story 
                       of passion, quality, and the timeless joy of sharing exceptional tea.
@@ -227,28 +229,30 @@ const About = () => {
               <motion.div
                 initial={{ opacity: 0, x: 30 }}
                 whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
-                className="space-y-8"
+                className="space-y-6"
               >
                 {milestones.map((milestone, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     className="flex items-start gap-4"
                   >
-                    <div className="flex-shrink-0 w-12 h-12 bg-bestea-100 rounded-xl flex items-center justify-center">
-                      <milestone.icon className="w-6 h-6 text-bestea-600" />
+                    <div className="flex-shrink-0 w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center">
+                      <milestone.icon className="w-7 h-7 text-orange-600" />
                     </div>
                     <div>
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-sm font-bold text-bestea-600 bg-bestea-50 px-3 py-1 rounded-full">
+                        <span className="text-sm font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">
                           {milestone.year}
                         </span>
-                        <h4 className="text-lg font-semibold text-slate-900">{milestone.title}</h4>
+                        <h4 className="text-lg font-semibold text-gray-900">{milestone.title}</h4>
                       </div>
-                      <p className="text-slate-600">{milestone.description}</p>
+                      <p className="text-gray-600">{milestone.description}</p>
                     </div>
                   </motion.div>
                 ))}
@@ -258,18 +262,19 @@ const About = () => {
         </section>
 
         {/* Values Section */}
-        <section className="py-20 px-8 bg-white">
-          <div className="max-w-7xl mx-auto">
+        <section className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-                Our <span className="text-bestea-600">Values</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Our <span className="text-gradient-primary">Values</span>
               </h2>
-              <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 The principles that guide everything we do, from sourcing to serving
               </p>
             </motion.div>
@@ -280,14 +285,15 @@ const About = () => {
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="modern-card hover-scale text-center p-8"
+                  className="card hover-scale text-center p-8"
                 >
-                  <div className="w-16 h-16 bg-gradient-to-br from-bestea-100 to-bestea-200 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <value.icon className="w-8 h-8 text-bestea-600" />
+                  <div className="w-16 h-16 bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                    <value.icon className="w-8 h-8 text-orange-600" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-4">{value.title}</h3>
-                  <p className="text-slate-600 leading-relaxed">{value.description}</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-4">{value.title}</h3>
+                  <p className="text-gray-600 leading-relaxed">{value.description}</p>
                 </motion.div>
               ))}
             </div>
@@ -295,18 +301,19 @@ const About = () => {
         </section>
 
         {/* Team Section */}
-        <section className="py-20 px-8 bg-slate-50">
-          <div className="max-w-7xl mx-auto">
+        <section className="py-24 bg-gray-50">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-                Meet Our <span className="text-bestea-600">Team</span>
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Meet Our <span className="text-gradient-primary">Team</span>
               </h2>
-              <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 The passionate individuals who bring you exceptional tea experiences every day
               </p>
             </motion.div>
@@ -317,15 +324,16 @@ const About = () => {
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.2 }}
-                  className="modern-card hover-scale text-center p-8"
+                  className="card hover-scale text-center p-8"
                 >
-                  <div className="w-20 h-20 bg-gradient-to-br from-bestea-100 to-bestea-200 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <member.icon className="w-10 h-10 text-bestea-600" />
+                  <div className="w-20 h-20 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <member.icon className="w-10 h-10 text-orange-600" />
                   </div>
-                  <h3 className="text-xl font-bold text-slate-900 mb-2">{member.name}</h3>
-                  <p className="text-bestea-600 font-semibold mb-4">{member.role}</p>
-                  <p className="text-slate-600 leading-relaxed">{member.description}</p>
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
+                  <p className="text-orange-600 font-semibold mb-4">{member.role}</p>
+                  <p className="text-gray-600 leading-relaxed">{member.description}</p>
                 </motion.div>
               ))}
             </div>
@@ -333,18 +341,19 @@ const About = () => {
         </section>
 
         {/* Testimonials Section */}
-        <section className="py-20 px-8 bg-white">
-          <div className="max-w-7xl mx-auto">
+        <section className="py-24 bg-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.8 }}
               className="text-center mb-16"
             >
-              <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">
-                What Our <span className="text-bestea-600">Customers</span> Say
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                What Our <span className="text-gradient-primary">Customers</span> Say
               </h2>
-              <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
                 Hear from tea lovers who have made BESTEA part of their daily ritual
               </p>
             </motion.div>
@@ -355,23 +364,24 @@ const About = () => {
                   key={index}
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: index * 0.2 }}
-                  className="modern-card p-8"
+                  className="card p-8"
                 >
                   <div className="flex items-center justify-between mb-6">
-                    <FaQuoteLeft className="w-8 h-8 text-bestea-200" />
+                    <FaQuoteLeft className="w-8 h-8 text-orange-200" />
                     <div className="flex gap-1">
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <FaStar key={i} className="w-5 h-5 text-amber-400" />
                       ))}
                     </div>
                   </div>
-                  <p className="text-slate-700 leading-relaxed mb-6 text-lg">
+                  <p className="text-gray-700 leading-relaxed mb-6 text-lg">
                     "{testimonial.comment}"
                   </p>
                   <div>
-                    <h4 className="font-semibold text-slate-900">{testimonial.name}</h4>
-                    <p className="text-slate-600">{testimonial.role}</p>
+                    <h4 className="font-semibold text-gray-900">{testimonial.name}</h4>
+                    <p className="text-gray-600">{testimonial.role}</p>
                   </div>
                 </motion.div>
               ))}
@@ -380,11 +390,12 @@ const About = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 px-8 bg-gradient-to-r from-bestea-500 to-bestea-600 text-white">
-          <div className="max-w-4xl mx-auto text-center">
+        <section className="py-24 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
               <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -396,7 +407,7 @@ const About = () => {
               </p>
               <Link 
                 to="/shop" 
-                className="inline-flex items-center gap-3 bg-white text-bestea-600 px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                className="inline-flex items-center gap-3 bg-white text-orange-600 px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl transition-all duration-300 hover:scale-105"
               >
                 <span>Shop Now</span>
                 <FaArrowRight className="w-5 h-5" />
