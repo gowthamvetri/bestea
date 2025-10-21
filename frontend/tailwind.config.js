@@ -125,6 +125,8 @@ export default {
         sans: ['Inter', 'ui-sans-serif', 'system-ui'],
         serif: ['ui-serif', 'Georgia'],
         mono: ['ui-monospace', 'SFMono-Regular'],
+        inter: ['Inter', 'ui-sans-serif', 'system-ui'],
+        playfair: ['Playfair Display', 'ui-serif', 'Georgia'],
       },
       spacing: {
         '18': '4.5rem',

@@ -276,9 +276,9 @@ const Profile = () => {
                     src={getAvatarUrl({ avatar: profileData.avatar })}
                     alt="Profile"
                     onError={handleAvatarError}
-                    className="w-24 h-24 rounded-full object-cover border-4 border-orange-100"
+                    className="w-24 h-24 rounded-full object-cover border-4 border-green-100"
                   />
-                  <button className="absolute bottom-0 right-0 bg-orange-500 text-white p-2 rounded-full hover:bg-orange-600 transition-colors">
+                  <button className="absolute bottom-0 right-0 bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition-colors">
                     <FaCamera className="w-3 h-3" />
                   </button>
                 </div>
@@ -298,7 +298,7 @@ const Profile = () => {
                       onClick={() => setActiveTab(tab.id)}
                       className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                         activeTab === tab.id
-                          ? 'bg-orange-100 text-orange-700'
+                          ? 'bg-green-100 text-green-700'
                           : 'text-gray-600 hover:bg-gray-100'
                       }`}
                     >
@@ -324,7 +324,7 @@ const Profile = () => {
                   <h2 className="text-xl font-semibold text-gray-900">Personal Information</h2>
                   <button
                     onClick={() => isEditing ? setIsEditing(false) : setIsEditing(true)}
-                    className="flex items-center px-4 py-2 text-sm font-medium text-orange-600 hover:text-orange-800 transition-colors"
+                    className="flex items-center px-4 py-2 text-sm font-medium text-green-600 hover:text-green-800 transition-colors"
                   >
                     {isEditing ? (
                       <>
@@ -349,7 +349,7 @@ const Profile = () => {
                       value={profileData.firstName}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                         !isEditing ? 'bg-gray-50 text-gray-500' : errors.firstName ? 'border-red-500' : 'border-gray-300'
                       }`}
                     />
@@ -364,7 +364,7 @@ const Profile = () => {
                       value={profileData.lastName}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                         !isEditing ? 'bg-gray-50 text-gray-500' : errors.lastName ? 'border-red-500' : 'border-gray-300'
                       }`}
                     />
@@ -379,7 +379,7 @@ const Profile = () => {
                       value={profileData.email}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                         !isEditing ? 'bg-gray-50 text-gray-500' : errors.email ? 'border-red-500' : 'border-gray-300'
                       }`}
                     />
@@ -394,7 +394,7 @@ const Profile = () => {
                       value={profileData.phone}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                         !isEditing ? 'bg-gray-50 text-gray-500' : errors.phone ? 'border-red-500' : 'border-gray-300'
                       }`}
                     />
@@ -409,7 +409,7 @@ const Profile = () => {
                       value={profileData.dateOfBirth}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                         !isEditing ? 'bg-gray-50 text-gray-500' : 'border-gray-300'
                       }`}
                     />
@@ -422,7 +422,7 @@ const Profile = () => {
                       value={profileData.gender}
                       onChange={handleInputChange}
                       disabled={!isEditing}
-                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                      className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                         !isEditing ? 'bg-gray-50 text-gray-500' : 'border-gray-300'
                       }`}
                     >
@@ -439,7 +439,7 @@ const Profile = () => {
                     <button
                       onClick={handleSaveProfile}
                       disabled={loading}
-                      className="flex items-center px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors disabled:opacity-50"
+                      className="flex items-center px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50"
                     >
                       {loading ? (
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -514,7 +514,7 @@ const Profile = () => {
                         name="type"
                         value={newAddress.type}
                         onChange={(e) => handleInputChange(e, 'address')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       >
                         <option value="home">Home</option>
                         <option value="work">Work</option>
@@ -530,7 +530,7 @@ const Profile = () => {
                         value={newAddress.name}
                         onChange={(e) => handleInputChange(e, 'address')}
                         placeholder="e.g., Home, Office"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
                     </div>
 
@@ -542,7 +542,7 @@ const Profile = () => {
                         onChange={(e) => handleInputChange(e, 'address')}
                         rows={2}
                         placeholder="Enter complete address"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
                     </div>
 
@@ -553,7 +553,7 @@ const Profile = () => {
                         name="city"
                         value={newAddress.city}
                         onChange={(e) => handleInputChange(e, 'address')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
                     </div>
 
@@ -563,7 +563,7 @@ const Profile = () => {
                         name="state"
                         value={newAddress.state}
                         onChange={(e) => handleInputChange(e, 'address')}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       >
                         <option value="">Select State</option>
                         {indianStates.map(state => (
@@ -580,7 +580,7 @@ const Profile = () => {
                         value={newAddress.pincode}
                         onChange={(e) => handleInputChange(e, 'address')}
                         maxLength="6"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
                     </div>
                   </div>
@@ -592,14 +592,14 @@ const Profile = () => {
                         name="isDefault"
                         checked={newAddress.isDefault}
                         onChange={(e) => handleInputChange(e, 'address')}
-                        className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                        className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                       />
                       <span className="ml-2 text-sm text-gray-700">Set as default address</span>
                     </label>
 
                     <button
                       onClick={handleAddAddress}
-                      className="px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+                      className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                     >
                       Add Address
                     </button>
@@ -626,7 +626,7 @@ const Profile = () => {
                         name="currentPassword"
                         value={passwordData.currentPassword}
                         onChange={(e) => handleInputChange(e, 'password')}
-                        className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                        className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                           errors.currentPassword ? 'border-red-500' : 'border-gray-300'
                         }`}
                       />
@@ -653,7 +653,7 @@ const Profile = () => {
                         name="newPassword"
                         value={passwordData.newPassword}
                         onChange={(e) => handleInputChange(e, 'password')}
-                        className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                        className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                           errors.newPassword ? 'border-red-500' : 'border-gray-300'
                         }`}
                       />
@@ -680,7 +680,7 @@ const Profile = () => {
                         name="confirmPassword"
                         value={passwordData.confirmPassword}
                         onChange={(e) => handleInputChange(e, 'password')}
-                        className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                        className={`w-full px-3 py-2 pr-10 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                           errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
                         }`}
                       />
@@ -703,7 +703,7 @@ const Profile = () => {
                     <button
                       onClick={handleChangePassword}
                       disabled={loading}
-                      className="flex items-center px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors disabled:opacity-50"
+                      className="flex items-center px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors disabled:opacity-50"
                     >
                       {loading ? (
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -737,7 +737,7 @@ const Profile = () => {
                           name="preferences.emailNotifications"
                           checked={profileData.preferences.emailNotifications}
                           onChange={handleInputChange}
-                          className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                          className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                         />
                       </label>
                       <label className="flex items-center justify-between">
@@ -747,7 +747,7 @@ const Profile = () => {
                           name="preferences.smsNotifications"
                           checked={profileData.preferences.smsNotifications}
                           onChange={handleInputChange}
-                          className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                          className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                         />
                       </label>
                       <label className="flex items-center justify-between">
@@ -757,7 +757,7 @@ const Profile = () => {
                           name="preferences.promotionalEmails"
                           checked={profileData.preferences.promotionalEmails}
                           onChange={handleInputChange}
-                          className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                          className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                         />
                       </label>
                       <label className="flex items-center justify-between">
@@ -767,7 +767,7 @@ const Profile = () => {
                           name="preferences.orderUpdates"
                           checked={profileData.preferences.orderUpdates}
                           onChange={handleInputChange}
-                          className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                          className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                         />
                       </label>
                     </div>
@@ -782,7 +782,7 @@ const Profile = () => {
                           name="preferences.language"
                           value={profileData.preferences.language}
                           onChange={handleInputChange}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         >
                           <option value="en">English</option>
                           <option value="hi">Hindi</option>
@@ -797,7 +797,7 @@ const Profile = () => {
                           name="preferences.currency"
                           value={profileData.preferences.currency}
                           onChange={handleInputChange}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         >
                           <option value="INR">INR (₹)</option>
                           <option value="USD">USD ($)</option>
@@ -810,7 +810,7 @@ const Profile = () => {
                   <div className="flex justify-end">
                     <button
                       onClick={() => toast.success('Preferences saved successfully!')}
-                      className="px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+                      className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                     >
                       Save Preferences
                     </button>

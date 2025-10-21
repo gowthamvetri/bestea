@@ -108,10 +108,10 @@ const About = () => {
 
       <div className="min-h-screen bg-white">
         {/* Hero Section */}
-        <section className="relative py-24 px-4 overflow-hidden bg-gradient-to-b from-orange-50/50 to-white">
+        <section className="relative py-24 px-4 overflow-hidden bg-gradient-to-b from-green-50/50 to-white">
           <div className="absolute inset-0 pointer-events-none">
-            <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-br from-orange-200/30 to-orange-300/20 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-br from-green-200/30 to-orange-200/20 rounded-full blur-3xl"></div>
+            <div className="absolute top-20 left-20 w-72 h-72 bg-gradient-to-br from-green-200/30 to-green-300/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-20 right-20 w-96 h-96 bg-gradient-to-br from-green-200/30 to-green-200/20 rounded-full blur-3xl"></div>
           </div>
           
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -125,10 +125,10 @@ const About = () => {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-green-50 to-orange-50 text-green-700 px-6 py-3 rounded-full font-semibold mb-8 border border-green-200"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-green-50 to-green-50 text-green-700 px-6 py-3 rounded-full font-semibold mb-8 border border-green-200"
               >
                 <FaLeaf className="w-5 h-5 text-green-600" />
-                <span className="bg-gradient-to-r from-green-600 to-orange-600 bg-clip-text text-transparent">Est. 1985 • Three Generations of Excellence</span>
+                <span className="bg-gradient-to-r from-green-600 to-green-600 bg-clip-text text-transparent">Est. 1985 • Three Generations of Excellence</span>
               </motion.div>
               
               <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
@@ -154,7 +154,7 @@ const About = () => {
                 { number: '24/7', label: 'Fresh Blending' }
               ].map((stat, index) => (
                 <div key={index} className="text-center">
-                  <div className="text-4xl font-bold text-orange-600 mb-2">{stat.number}</div>
+                  <div className="text-4xl font-bold text-green-600 mb-2">{stat.number}</div>
                   <div className="text-sm text-gray-600 font-medium">{stat.label}</div>
                 </div>
               ))}
@@ -242,12 +242,12 @@ const About = () => {
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     className="flex items-start gap-4"
                   >
-                    <div className="flex-shrink-0 w-14 h-14 bg-orange-100 rounded-xl flex items-center justify-center">
-                      <milestone.icon className="w-7 h-7 text-orange-600" />
+                    <div className="flex-shrink-0 w-14 h-14 bg-green-100 rounded-xl flex items-center justify-center">
+                      <milestone.icon className="w-7 h-7 text-green-600" />
                     </div>
                     <div>
                       <div className="flex items-center gap-3 mb-2">
-                        <span className="text-sm font-bold text-orange-600 bg-orange-50 px-3 py-1 rounded-full">
+                        <span className="text-sm font-bold text-green-600 bg-green-50 px-3 py-1 rounded-full">
                           {milestone.year}
                         </span>
                         <h4 className="text-lg font-semibold text-gray-900">{milestone.title}</h4>
@@ -261,44 +261,6 @@ const About = () => {
           </div>
         </section>
 
-        {/* Values Section */}
-        <section className="py-24 bg-white">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                Our <span className="text-gradient-primary">Values</span>
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                The principles that guide everything we do, from sourcing to serving
-              </p>
-            </motion.div>
-
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {values.map((value, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="card hover-scale text-center p-8"
-                >
-                  <div className="w-16 h-16 bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                    <value.icon className="w-8 h-8 text-orange-600" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-4">{value.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{value.description}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* Team Section */}
         <section className="py-24 bg-gray-50">
@@ -328,11 +290,11 @@ const About = () => {
                   transition={{ duration: 0.6, delay: index * 0.2 }}
                   className="card hover-scale text-center p-8"
                 >
-                  <div className="w-20 h-20 bg-gradient-to-br from-orange-100 to-orange-200 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <member.icon className="w-10 h-10 text-orange-600" />
+                  <div className="w-20 h-20 bg-gradient-to-br from-green-100 to-green-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <member.icon className="w-10 h-10 text-green-600" />
                   </div>
                   <h3 className="text-xl font-bold text-gray-900 mb-2">{member.name}</h3>
-                  <p className="text-orange-600 font-semibold mb-4">{member.role}</p>
+                  <p className="text-green-600 font-semibold mb-4">{member.role}</p>
                   <p className="text-gray-600 leading-relaxed">{member.description}</p>
                 </motion.div>
               ))}
@@ -369,7 +331,7 @@ const About = () => {
                   className="card p-8"
                 >
                   <div className="flex items-center justify-between mb-6">
-                    <FaQuoteLeft className="w-8 h-8 text-orange-200" />
+                    <FaQuoteLeft className="w-8 h-8 text-green-200" />
                     <div className="flex gap-1">
                       {[...Array(testimonial.rating)].map((_, i) => (
                         <FaStar key={i} className="w-5 h-5 text-amber-400" />
@@ -390,7 +352,7 @@ const About = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-24 bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+        <section className="py-24 bg-gradient-to-r from-green-500 to-green-600 text-white">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -407,7 +369,7 @@ const About = () => {
               </p>
               <Link 
                 to="/shop" 
-                className="inline-flex items-center gap-3 bg-white text-orange-600 px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl transition-all duration-300 hover:scale-105"
+                className="inline-flex items-center gap-3 bg-white text-green-600 px-8 py-4 rounded-2xl font-semibold text-lg hover:shadow-2xl transition-all duration-300 hover:scale-105"
               >
                 <span>Shop Now</span>
                 <FaArrowRight className="w-5 h-5" />

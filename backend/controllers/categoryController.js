@@ -1,4 +1,5 @@
 const Category = require('../models/Category');
+const cloudinary = require('../config/cloudinary');
 
 // @desc    Get all categories
 // @route   GET /api/categories
@@ -46,7 +47,14 @@ const createCategory = async (req, res) => {
       return res.status(403).json({ message: 'Access denied' });
     }
 
-    const { name, description, slug, isActive = true } = req.body;
+    // Debug logging
+    console.log('Create category request body:', req.body);
+    console.log('Create category file:', req.file);
+
+    const { name, description, slug, isActive = true, colorTheme } = req.body;
+
+    // Convert string "true"/"false" to boolean for isActive
+    const isActiveBoolean = isActive === 'true' || isActive === true;
 
     // Check if category already exists
     const existingCategory = await Category.findOne({
@@ -59,14 +67,38 @@ const createCategory = async (req, res) => {
       });
     }
 
-    const category = new Category({
+    const categoryData = {
       name,
       description,
       slug: slug || name.toLowerCase().replace(/\s+/g, '-'),
-      isActive
-    });
+      isActive: isActiveBoolean
+    };
 
+    // Add color theme if provided
+    if (colorTheme) {
+      categoryData.colorTheme = colorTheme;
+    }
+
+    // Handle image upload if present (already processed by multer)
+    if (req.file) {
+      console.log('File uploaded successfully:', {
+        filename: req.file.filename,
+        path: req.file.path,
+        size: req.file.size
+      });
+      
+      categoryData.image = {
+        public_id: req.file.filename,
+        url: req.file.path
+      };
+    } else {
+      console.log('No file uploaded');
+    }
+
+    const category = new Category(categoryData);
     await category.save();
+
+    console.log('Category created successfully:', category);
 
     res.status(201).json({
       success: true,
@@ -89,7 +121,12 @@ const updateCategory = async (req, res) => {
       return res.status(403).json({ message: 'Access denied' });
     }
 
-    const { name, description, slug, isActive } = req.body;
+    // Debug logging
+    console.log('Update category request body:', req.body);
+    console.log('Update category file:', req.file);
+    console.log('Category ID:', req.params.id);
+
+    const { name, description, slug, isActive, colorTheme } = req.body;
 
     const category = await Category.findById(req.params.id);
 
@@ -101,7 +138,36 @@ const updateCategory = async (req, res) => {
     if (name) category.name = name;
     if (description !== undefined) category.description = description;
     if (slug) category.slug = slug;
-    if (isActive !== undefined) category.isActive = isActive;
+    if (isActive !== undefined) {
+      // Convert string "true"/"false" to boolean
+      category.isActive = isActive === 'true' || isActive === true;
+    }
+    if (colorTheme) category.colorTheme = colorTheme;
+
+    // Handle image update if present (already processed by multer)
+    if (req.file) {
+      console.log('New file uploaded for update:', {
+        filename: req.file.filename,
+        path: req.file.path,
+        size: req.file.size
+      });
+
+      // Delete old image if exists
+      if (category.image?.public_id) {
+        try {
+          await cloudinary.uploader.destroy(category.image.public_id);
+        } catch (deleteError) {
+          console.error('Error deleting old image:', deleteError);
+          // Continue with update even if delete fails
+        }
+      }
+
+      // Set new image data
+      category.image = {
+        public_id: req.file.filename,
+        url: req.file.path
+      };
+    }
 
     await category.save();
 
@@ -130,6 +196,16 @@ const deleteCategory = async (req, res) => {
 
     if (!category) {
       return res.status(404).json({ message: 'Category not found' });
+    }
+
+    // Delete associated image from cloudinary if exists
+    if (category.image?.public_id) {
+      try {
+        await cloudinary.uploader.destroy(category.image.public_id);
+      } catch (imageError) {
+        console.error('Error deleting category image:', imageError);
+        // Continue with category deletion even if image deletion fails
+      }
     }
 
     await Category.findByIdAndDelete(req.params.id);

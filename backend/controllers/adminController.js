@@ -4,6 +4,7 @@ const Product = require('../models/Product');
 const Order = require('../models/Order');
 const Category = require('../models/Category');
 const Review = require('../models/Review');
+const cloudinary = require('../config/cloudinary');
 
 // Helper function to calculate time ago
 const getTimeAgo = (date) => {
@@ -899,7 +900,11 @@ const getAdminCategoryStats = async (req, res) => {
 // @access  Private/Admin
 const createAdminCategory = async (req, res) => {
   try {
-    const { name, description, slug, isActive = true } = req.body;
+    const { name, description, slug, isActive = true, colorTheme } = req.body;
+
+    // Debug logging
+    console.log('Create admin category request body:', req.body);
+    console.log('Create admin category file:', req.file);
 
     // Validation
     if (!name) {
@@ -921,13 +926,29 @@ const createAdminCategory = async (req, res) => {
       });
     }
 
-    const category = new Category({
+    const categoryData = {
       name,
       description,
       slug: slug || name.toLowerCase().replace(/\s+/g, '-'),
-      isActive
-    });
+      isActive: isActive === 'true' || isActive === true,
+      colorTheme: colorTheme || '#9ACB3C'
+    };
 
+    // Handle image upload if present (already processed by multer)
+    if (req.file) {
+      console.log('File uploaded for new category:', {
+        filename: req.file.filename,
+        path: req.file.path,
+        size: req.file.size
+      });
+
+      categoryData.image = {
+        public_id: req.file.filename,
+        url: req.file.path
+      };
+    }
+
+    const category = new Category(categoryData);
     await category.save();
 
     res.status(201).json({
@@ -949,7 +970,12 @@ const createAdminCategory = async (req, res) => {
 // @access  Private/Admin
 const updateAdminCategory = async (req, res) => {
   try {
-    const { name, description, slug, isActive } = req.body;
+    const { name, description, slug, isActive, colorTheme } = req.body;
+
+    // Debug logging
+    console.log('Update admin category request body:', req.body);
+    console.log('Update admin category file:', req.file);
+    console.log('Category ID:', req.params.id);
 
     const category = await Category.findById(req.params.id);
 
@@ -982,7 +1008,36 @@ const updateAdminCategory = async (req, res) => {
     if (name !== undefined) category.name = name;
     if (description !== undefined) category.description = description;
     if (slug !== undefined) category.slug = slug;
-    if (isActive !== undefined) category.isActive = isActive;
+    if (isActive !== undefined) {
+      // Convert string "true"/"false" to boolean
+      category.isActive = isActive === 'true' || isActive === true;
+    }
+    if (colorTheme !== undefined) category.colorTheme = colorTheme;
+
+    // Handle image update if present (already processed by multer)
+    if (req.file) {
+      console.log('New file uploaded for update:', {
+        filename: req.file.filename,
+        path: req.file.path,
+        size: req.file.size
+      });
+
+      // Delete old image if exists
+      if (category.image?.public_id) {
+        try {
+          await cloudinary.uploader.destroy(category.image.public_id);
+        } catch (deleteError) {
+          console.error('Error deleting old image:', deleteError);
+          // Continue with update even if delete fails
+        }
+      }
+
+      // Set new image data
+      category.image = {
+        public_id: req.file.filename,
+        url: req.file.path
+      };
+    }
 
     await category.save();
 

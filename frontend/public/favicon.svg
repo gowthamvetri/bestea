@@ -1,17 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192"><!-- Simple favicon placeholder -->
-
-  <rect width="192" height="192" fill="#9ACB3C" rx="24"/><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16">
-
-  <g transform="translate(96, 96)">  <circle cx="8" cy="8" r="8" fill="#9ACB3C"/>
-
-    <!-- Tea cup -->  <text x="8" y="12" text-anchor="middle" fill="white" font-size="10" font-family="Arial">T</text>
-
-    <path d="M -40 -20 L -40 30 Q -40 40 -30 40 L 30 40 Q 40 40 40 30 L 40 -20 Z" </svg>
-
-          fill="white" stroke="white" stroke-width="4"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <!-- Background -->
+  <rect width="192" height="192" fill="#9ACB3C" rx="24"/>
+  
+  <!-- Tea cup icon -->
+  <g transform="translate(96, 96)">
+    <!-- Cup body -->
+    <path d="M -40 -20 L -40 30 Q -40 40 -30 40 L 30 40 Q 40 40 40 30 L 40 -20 Z" 
+          fill="white" stroke="none"/>
     <!-- Cup handle -->
-    <path d="M 40 0 Q 60 0 60 20 Q 60 40 40 40" 
-          fill="none" stroke="white" stroke-width="4" stroke-linecap="round"/>
+    <path d="M 40 -5 Q 55 -5 55 10 Q 55 25 40 25" 
+          fill="none" stroke="white" stroke-width="6" stroke-linecap="round"/>
     <!-- Steam -->
     <path d="M -20 -30 Q -15 -45 -20 -55" 
           fill="none" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
@@ -19,7 +17,9 @@
           fill="none" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
     <path d="M 20 -30 Q 25 -45 20 -55" 
           fill="none" stroke="white" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+    <!-- Tea leaf decoration -->
+    <ellipse cx="0" cy="5" rx="15" ry="8" fill="#9ACB3C" opacity="0.3"/>
   </g>
   <!-- Text -->
-  <text x="96" y="160" text-anchor="middle" fill="white" font-size="32" font-family="Arial, sans-serif" font-weight="bold">BESTEA</text>
+  <text x="96" y="160" text-anchor="middle" fill="white" font-size="24" font-family="Arial, sans-serif" font-weight="bold">BESTEA</text>
 </svg>

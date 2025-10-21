@@ -1,6 +1,9 @@
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 const User = require('../models/User');
+const sendEmail = require('../utils/sendEmail');
+const { orderConfirmationEmail, orderStatusUpdateEmail, orderCancellationEmail } = require('../utils/emailTemplates');
+
 
 // @desc    Create new order
 // @route   POST /api/orders
@@ -49,6 +52,8 @@ const createOrder = async (req, res) => {
 
       const orderItem = {
         product: product._id,
+        name: item.name || product.name,
+        mainImage: item.mainImage || product.mainImage || null,
         variant: item.variant,
         quantity: item.quantity,
         price: product.price,
@@ -94,6 +99,37 @@ const createOrder = async (req, res) => {
     });
 
     const createdOrder = await order.save();
+
+    // Send order confirmation email
+    try {
+      const user = await User.findById(req.user.id);
+      if (user && user.email) {
+        console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log('📧 SENDING ORDER CONFIRMATION EMAIL');
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log(`Order Number: ${createdOrder.orderNumber}`);
+        console.log(`Recipient: ${user.email}`);
+        console.log(`Customer Name: ${user.name}`);
+        
+        const emailResult = await sendEmail({
+          email: user.email,
+          subject: `Order Confirmation - ${createdOrder.orderNumber}`,
+          html: orderConfirmationEmail(createdOrder, user)
+        });
+        
+        console.log('✅ Order confirmation email sent successfully!');
+        console.log(`Message ID: ${emailResult.messageId}`);
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+      } else {
+        console.log('⚠️ Cannot send email: User email not found');
+      }
+    } catch (emailError) {
+      console.error('\n❌ FAILED TO SEND ORDER CONFIRMATION EMAIL');
+      console.error('Error:', emailError.message);
+      console.error('Order Number:', createdOrder.orderNumber);
+      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+      // Don't fail the order creation if email fails
+    }
 
     res.status(201).json({
       success: true,
@@ -402,6 +438,7 @@ const updateOrderStatus = async (req, res) => {
       return res.status(403).json({ message: 'Access denied' });
     }
 
+    const previousStatus = order.status;
     order.status = status;
     order.updatedAt = Date.now();
 
@@ -410,6 +447,37 @@ const updateOrderStatus = async (req, res) => {
     }
 
     const updatedOrder = await order.save();
+
+    // Send status update email
+    try {
+      const user = await User.findById(order.user);
+      if (user && user.email) {
+        console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log('📧 SENDING ORDER STATUS UPDATE EMAIL');
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log(`Order Number: ${order.orderNumber}`);
+        console.log(`Status Change: ${previousStatus} → ${status}`);
+        console.log(`Recipient: ${user.email}`);
+        
+        const emailResult = await sendEmail({
+          email: user.email,
+          subject: `Order ${status.charAt(0).toUpperCase() + status.slice(1)} - ${order.orderNumber}`,
+          html: orderStatusUpdateEmail(updatedOrder, user, previousStatus)
+        });
+        
+        console.log('✅ Status update email sent successfully!');
+        console.log(`Message ID: ${emailResult.messageId}`);
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+      } else {
+        console.log('⚠️ Cannot send status update email: User email not found');
+      }
+    } catch (emailError) {
+      console.error('\n❌ FAILED TO SEND STATUS UPDATE EMAIL');
+      console.error('Error:', emailError.message);
+      console.error('Order Number:', order.orderNumber);
+      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+      // Don't fail the status update if email fails
+    }
 
     res.json({
       success: true,
@@ -485,6 +553,18 @@ const cancelOrder = async (req, res) => {
       return res.status(400).json({ message: 'Order is already cancelled' });
     }
 
+    // Check if order is within 24 hours
+    const orderTime = new Date(order.createdAt).getTime();
+    const currentTime = new Date().getTime();
+    const hoursPassed = (currentTime - orderTime) / (1000 * 60 * 60);
+
+    if (hoursPassed > 24) {
+      return res.status(400).json({ 
+        message: 'Order can only be cancelled within 24 hours of placement',
+        canCancel: false
+      });
+    }
+
     // Restore product stock
     for (let item of order.items) {
       const product = await Product.findById(item.product);
@@ -501,6 +581,37 @@ const cancelOrder = async (req, res) => {
 
     const updatedOrder = await order.save();
 
+    // Send cancellation email
+    try {
+      const user = await User.findById(order.user);
+      if (user && user.email) {
+        console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log('📧 SENDING ORDER CANCELLATION EMAIL');
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+        console.log(`Order Number: ${order.orderNumber}`);
+        console.log(`Cancellation Reason: ${order.cancellationReason}`);
+        console.log(`Recipient: ${user.email}`);
+        
+        const emailResult = await sendEmail({
+          email: user.email,
+          subject: `Order Cancelled - ${order.orderNumber}`,
+          html: orderCancellationEmail(updatedOrder, user)
+        });
+        
+        console.log('✅ Cancellation email sent successfully!');
+        console.log(`Message ID: ${emailResult.messageId}`);
+        console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+      } else {
+        console.log('⚠️ Cannot send cancellation email: User email not found');
+      }
+    } catch (emailError) {
+      console.error('\n❌ FAILED TO SEND CANCELLATION EMAIL');
+      console.error('Error:', emailError.message);
+      console.error('Order Number:', order.orderNumber);
+      console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+      // Don't fail the cancellation if email fails
+    }
+
     res.json({
       success: true,
       message: 'Order cancelled successfully',
@@ -510,7 +621,7 @@ const cancelOrder = async (req, res) => {
     console.error('Cancel order error:', error);
     res.status(500).json({ message: 'Server error' });
   }
-};
+};;
 
 // @desc    Get order tracking info
 // @route   GET /api/orders/:id/track

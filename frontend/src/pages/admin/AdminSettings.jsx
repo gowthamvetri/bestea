@@ -206,7 +206,7 @@ const AdminSettings = () => {
                     onClick={() => setActiveTab(tab.id)}
                     className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                       activeTab === tab.id
-                        ? 'bg-orange-100 text-orange-700'
+                        ? 'bg-green-100 text-green-700'
                         : 'text-gray-600 hover:bg-gray-100'
                     }`}
                   >
@@ -232,7 +232,7 @@ const AdminSettings = () => {
                 <h2 className="text-xl font-semibold text-gray-900">General Settings</h2>
                 <button
                   onClick={() => toggleEdit('general')}
-                  className="flex items-center px-4 py-2 text-orange-600 hover:text-orange-800"
+                  className="flex items-center px-4 py-2 text-green-600 hover:text-green-800"
                 >
                   <FaEdit className="w-4 h-4 mr-2" />
                   {isEditing.general ? 'Cancel' : 'Edit'}
@@ -247,7 +247,7 @@ const AdminSettings = () => {
                     value={settings.general.siteName}
                     onChange={(e) => handleInputChange('general', 'siteName', e.target.value)}
                     disabled={!isEditing.general}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-50"
                   />
                 </div>
 
@@ -258,7 +258,7 @@ const AdminSettings = () => {
                     value={settings.general.contactEmail}
                     onChange={(e) => handleInputChange('general', 'contactEmail', e.target.value)}
                     disabled={!isEditing.general}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-50"
                   />
                 </div>
 
@@ -269,7 +269,7 @@ const AdminSettings = () => {
                     onChange={(e) => handleInputChange('general', 'siteDescription', e.target.value)}
                     disabled={!isEditing.general}
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-50"
                   />
                 </div>
 
@@ -280,7 +280,7 @@ const AdminSettings = () => {
                     value={settings.general.contactPhone}
                     onChange={(e) => handleInputChange('general', 'contactPhone', e.target.value)}
                     disabled={!isEditing.general}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-50"
                   />
                 </div>
 
@@ -290,7 +290,7 @@ const AdminSettings = () => {
                     value={settings.general.currency}
                     onChange={(e) => handleInputChange('general', 'currency', e.target.value)}
                     disabled={!isEditing.general}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-50"
                   >
                     <option value="INR">INR (₹)</option>
                     <option value="USD">USD ($)</option>
@@ -305,7 +305,7 @@ const AdminSettings = () => {
                     onChange={(e) => handleInputChange('general', 'address', e.target.value)}
                     disabled={!isEditing.general}
                     rows={2}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-50"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-50"
                   />
                 </div>
               </div>
@@ -314,7 +314,7 @@ const AdminSettings = () => {
                 <div className="flex justify-end mt-6">
                   <button
                     onClick={() => handleSave('general')}
-                    className="flex items-center px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
+                    className="flex items-center px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                   >
                     <FaSave className="w-4 h-4 mr-2" />
                     Save Changes
@@ -335,7 +335,7 @@ const AdminSettings = () => {
                 <h2 className="text-xl font-semibold text-gray-900">Payment Settings</h2>
                 <button
                   onClick={() => toggleEdit('payment')}
-                  className="flex items-center px-4 py-2 text-orange-600 hover:text-orange-800"
+                  className="flex items-center px-4 py-2 text-green-600 hover:text-green-800"
                 >
                   <FaEdit className="w-4 h-4 mr-2" />
                   {isEditing.payment ? 'Cancel' : 'Edit'}
@@ -353,7 +353,7 @@ const AdminSettings = () => {
                         checked={settings.payment.enableCOD}
                         onChange={(e) => handleInputChange('payment', 'enableCOD', e.target.checked)}
                         disabled={!isEditing.payment}
-                        className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                        className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                       />
                       <span className="ml-2 text-gray-700">Cash on Delivery (COD)</span>
                     </label>
@@ -363,7 +363,7 @@ const AdminSettings = () => {
                         checked={settings.payment.enableOnlinePayment}
                         onChange={(e) => handleInputChange('payment', 'enableOnlinePayment', e.target.checked)}
                         disabled={!isEditing.payment}
-                        className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                        className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                       />
                       <span className="ml-2 text-gray-700">Online Payment</span>
                     </label>
@@ -373,7 +373,7 @@ const AdminSettings = () => {
                         checked={settings.payment.enableWalletPayment}
                         onChange={(e) => handleInputChange('payment', 'enableWalletPayment', e.target.checked)}
                         disabled={!isEditing.payment}
-                        className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                        className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                       />
                       <span className="ml-2 text-gray-700">Wallet Payment</span>
                     </label>
@@ -388,7 +388,7 @@ const AdminSettings = () => {
                     value={settings.payment.codCharges}
                     onChange={(e) => handleInputChange('payment', 'codCharges', parseInt(e.target.value))}
                     disabled={!isEditing.payment}
-                    className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-50"
+                    className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-50"
                   />
                 </div>
 
@@ -405,7 +405,7 @@ const AdminSettings = () => {
                               type="checkbox"
                               checked={gateway.enabled}
                               disabled={!isEditing.payment}
-                              className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                              className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                             />
                             <span className="ml-2 text-sm text-gray-700">Enabled</span>
                           </label>
@@ -417,7 +417,7 @@ const AdminSettings = () => {
                             value={gateway.apiKey}
                             disabled={!isEditing.payment}
                             placeholder="Enter API key"
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:bg-gray-50"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 disabled:bg-gray-50"
                           />
                         </div>
                       </div>
@@ -430,7 +430,7 @@ const AdminSettings = () => {
                 <div className="flex justify-end mt-6">
                   <button
                     onClick={() => handleSave('payment')}
-                    className="flex items-center px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
+                    className="flex items-center px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                   >
                     <FaSave className="w-4 h-4 mr-2" />
                     Save Changes
@@ -463,7 +463,7 @@ const AdminSettings = () => {
                           type={showPassword.current ? 'text' : 'password'}
                           value={settings.security.adminPassword}
                           onChange={(e) => handleInputChange('security', 'adminPassword', e.target.value)}
-                          className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                          className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                         <button
                           type="button"
@@ -486,7 +486,7 @@ const AdminSettings = () => {
                           type={showPassword.new ? 'text' : 'password'}
                           value={settings.security.newPassword}
                           onChange={(e) => handleInputChange('security', 'newPassword', e.target.value)}
-                          className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                          className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                         <button
                           type="button"
@@ -505,7 +505,7 @@ const AdminSettings = () => {
 
                   <button
                     onClick={() => handleSave('security')}
-                    className="mt-4 flex items-center px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
+                    className="mt-4 flex items-center px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
                   >
                     <FaSave className="w-4 h-4 mr-2" />
                     Update Password
@@ -522,7 +522,7 @@ const AdminSettings = () => {
                         type="number"
                         value={settings.security.sessionTimeout}
                         onChange={(e) => handleInputChange('security', 'sessionTimeout', parseInt(e.target.value))}
-                        className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       />
                     </div>
 
@@ -531,7 +531,7 @@ const AdminSettings = () => {
                         type="checkbox"
                         checked={settings.security.enableTwoFactor}
                         onChange={(e) => handleInputChange('security', 'enableTwoFactor', e.target.checked)}
-                        className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                        className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                       />
                       <span className="ml-2 text-gray-700">Enable Two-Factor Authentication</span>
                     </label>
@@ -546,55 +546,109 @@ const AdminSettings = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white rounded-lg shadow-sm p-6"
+              className="space-y-6"
             >
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">Notification Settings</h2>
-              <div className="space-y-4">
-                <label className="flex items-center justify-between">
-                  <span className="text-gray-700">Email Notifications</span>
-                  <input
-                    type="checkbox"
-                    checked={settings.notifications.emailNotifications}
-                    onChange={(e) => handleInputChange('notifications', 'emailNotifications', e.target.checked)}
-                    className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
-                  />
-                </label>
-                <label className="flex items-center justify-between">
-                  <span className="text-gray-700">SMS Notifications</span>
-                  <input
-                    type="checkbox"
-                    checked={settings.notifications.smsNotifications}
-                    onChange={(e) => handleInputChange('notifications', 'smsNotifications', e.target.checked)}
-                    className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
-                  />
-                </label>
-                <label className="flex items-center justify-between">
-                  <span className="text-gray-700">Order Confirmation</span>
-                  <input
-                    type="checkbox"
-                    checked={settings.notifications.orderConfirmation}
-                    onChange={(e) => handleInputChange('notifications', 'orderConfirmation', e.target.checked)}
-                    className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
-                  />
-                </label>
-                <label className="flex items-center justify-between">
-                  <span className="text-gray-700">Low Stock Alerts</span>
-                  <input
-                    type="checkbox"
-                    checked={settings.notifications.lowStockAlerts}
-                    onChange={(e) => handleInputChange('notifications', 'lowStockAlerts', e.target.checked)}
-                    className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
-                  />
-                </label>
+              {/* Email Test Section */}
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-200 rounded-lg shadow-sm p-6">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-2 flex items-center">
+                      📧 Email Configuration Test
+                    </h2>
+                    <p className="text-gray-600 text-sm mb-4">
+                      Test your email configuration to ensure order confirmations and notifications are being sent correctly.
+                    </p>
+                    <div className="bg-white rounded-lg p-4 mb-4 border border-blue-200">
+                      <h3 className="font-semibold text-gray-900 mb-2">Current Configuration:</h3>
+                      <div className="space-y-1 text-sm text-gray-600">
+                        <p>• Host: {import.meta.env.VITE_EMAIL_HOST || 'smtp.gmail.com'}</p>
+                        <p>• Port: {import.meta.env.VITE_EMAIL_PORT || '587'}</p>
+                        <p>• From: {import.meta.env.VITE_EMAIL_USER || 'your-email@gmail.com'}</p>
+                      </div>
+                    </div>
+                    <button
+                      onClick={async () => {
+                        const loadingToast = toast.loading('Sending test email...');
+                        try {
+                          const token = localStorage.getItem('token');
+                          const response = await axios.post(
+                            `${API_URL}/admin/test-email`,
+                            {},
+                            { headers: { Authorization: `Bearer ${token}` } }
+                          );
+                          
+                          if (response.data.success) {
+                            toast.success(
+                              'Test email sent successfully! Check your inbox (and spam folder).',
+                              { id: loadingToast, duration: 5000 }
+                            );
+                          }
+                        } catch (error) {
+                          toast.error(
+                            error.response?.data?.message || 'Failed to send test email. Check your email configuration in .env file.',
+                            { id: loadingToast, duration: 6000 }
+                          );
+                        }
+                      }}
+                      className="flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
+                    >
+                      <FaUpload className="w-4 h-4 mr-2" />
+                      Send Test Email
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div className="flex justify-end mt-6">
-                <button
-                  onClick={() => handleSave('notifications')}
-                  className="flex items-center px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
-                >
-                  <FaSave className="w-4 h-4 mr-2" />
-                  Save Changes
-                </button>
+
+              {/* Notification Settings */}
+              <div className="bg-white rounded-lg shadow-sm p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">Notification Settings</h2>
+                <div className="space-y-4">
+                  <label className="flex items-center justify-between">
+                    <span className="text-gray-700">Email Notifications</span>
+                    <input
+                      type="checkbox"
+                      checked={settings.notifications.emailNotifications}
+                      onChange={(e) => handleInputChange('notifications', 'emailNotifications', e.target.checked)}
+                      className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                    />
+                  </label>
+                  <label className="flex items-center justify-between">
+                    <span className="text-gray-700">SMS Notifications</span>
+                    <input
+                      type="checkbox"
+                      checked={settings.notifications.smsNotifications}
+                      onChange={(e) => handleInputChange('notifications', 'smsNotifications', e.target.checked)}
+                      className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                    />
+                  </label>
+                  <label className="flex items-center justify-between">
+                    <span className="text-gray-700">Order Confirmation</span>
+                    <input
+                      type="checkbox"
+                      checked={settings.notifications.orderConfirmation}
+                      onChange={(e) => handleInputChange('notifications', 'orderConfirmation', e.target.checked)}
+                      className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                    />
+                  </label>
+                  <label className="flex items-center justify-between">
+                    <span className="text-gray-700">Low Stock Alerts</span>
+                    <input
+                      type="checkbox"
+                    checked={settings.notifications.lowStockAlerts}
+                      onChange={(e) => handleInputChange('notifications', 'lowStockAlerts', e.target.checked)}
+                      className="rounded border-gray-300 text-green-600 focus:ring-green-500"
+                    />
+                  </label>
+                </div>
+                <div className="flex justify-end mt-6">
+                  <button
+                    onClick={() => handleSave('notifications')}
+                    className="flex items-center px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
+                  >
+                    <FaSave className="w-4 h-4 mr-2" />
+                    Save Changes
+                  </button>
+                </div>
               </div>
             </motion.div>
           )}

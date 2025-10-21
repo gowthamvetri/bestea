@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { auth, isAdmin } = require('../middleware/auth');
+const { uploadCategory } = require('../config/cloudinary');
 
 // Import controllers
 const {
@@ -102,12 +103,12 @@ router.get('/categories/stats', auth, isAdmin, getAdminCategoryStats);
 // @route   POST /api/admin/categories
 // @desc    Create new category
 // @access  Private/Admin
-router.post('/categories', auth, isAdmin, createAdminCategory);
+router.post('/categories', auth, isAdmin, uploadCategory.single('image'), createAdminCategory);
 
 // @route   PUT /api/admin/categories/:id
 // @desc    Update category
 // @access  Private/Admin
-router.put('/categories/:id', auth, isAdmin, updateAdminCategory);
+router.put('/categories/:id', auth, isAdmin, uploadCategory.single('image'), updateAdminCategory);
 
 // @route   DELETE /api/admin/categories/:id
 // @desc    Delete category
@@ -198,6 +199,106 @@ router.put('/settings', auth, isAdmin, (req, res) => {
     message: 'Settings updated successfully',
     data: req.body
   });
+});
+
+// Test Email Configuration
+// @route   POST /api/admin/test-email
+// @desc    Test email configuration by sending a test email
+// @access  Private/Admin
+router.post('/test-email', auth, isAdmin, async (req, res) => {
+  try {
+    const sendEmail = require('../utils/sendEmail');
+    const User = require('../models/User');
+    
+    const user = await User.findById(req.user.id);
+    
+    if (!user || !user.email) {
+      return res.status(400).json({
+        success: false,
+        message: 'User email not found'
+      });
+    }
+
+    console.log('\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+    console.log('🧪 TESTING EMAIL CONFIGURATION');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+
+    const testEmailHTML = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9fafb; padding: 30px; border-radius: 0 0 10px 10px; }
+            .success { background: #d1fae5; border-left: 4px solid #10b981; padding: 15px; margin: 20px 0; border-radius: 5px; }
+            .footer { text-align: center; margin-top: 20px; color: #6b7280; font-size: 12px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>✅ Email Test Successful!</h1>
+            </div>
+            <div class="content">
+              <h2>Hello ${user.name},</h2>
+              <div class="success">
+                <p><strong>Great news!</strong> Your email configuration is working perfectly!</p>
+              </div>
+              <p>This is a test email from your BESTEA e-commerce application.</p>
+              <p>If you're receiving this email, it means:</p>
+              <ul>
+                <li>✅ SMTP server connection is working</li>
+                <li>✅ Email credentials are correct</li>
+                <li>✅ Email templates are rendering properly</li>
+                <li>✅ Your customers will receive order confirmations</li>
+              </ul>
+              <p><strong>Email Configuration Details:</strong></p>
+              <ul>
+                <li>Host: ${process.env.EMAIL_HOST}</li>
+                <li>Port: ${process.env.EMAIL_PORT}</li>
+                <li>From: ${process.env.EMAIL_USER}</li>
+              </ul>
+              <div class="footer">
+                <p>BESTEA - Premium Tea Co.</p>
+                <p>This is an automated test email from your e-commerce system</p>
+              </div>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+
+    const result = await sendEmail({
+      email: user.email,
+      subject: '✅ BESTEA - Email Configuration Test',
+      html: testEmailHTML
+    });
+
+    console.log('✅ Test email sent successfully!');
+    console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+
+    res.json({
+      success: true,
+      message: 'Test email sent successfully! Please check your inbox.',
+      data: {
+        recipient: user.email,
+        messageId: result.messageId,
+        timestamp: new Date().toISOString()
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Test email failed:', error.message);
+    console.error('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n');
+    
+    res.status(500).json({
+      success: false,
+      message: 'Failed to send test email',
+      error: error.message
+    });
+  }
 });
 
 module.exports = router;

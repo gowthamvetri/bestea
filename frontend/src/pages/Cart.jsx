@@ -30,7 +30,7 @@ import { validateCoupon } from '../services/couponService';
 import { toast } from 'react-hot-toast';
 
 // Wishlist actions
-import { addToWishlist } from '../store/slices/wishlistSlice';
+import { addToWishlist, addToWishlistAPI } from '../store/slices/wishlistSlice';
 
 // Image utilities
 import { getProductImageSrc, handleImageError, DEFAULT_PRODUCT_IMAGE } from '../utils/imageUtils';
@@ -48,6 +48,8 @@ const Cart = () => {
     totalQuantity = 0, 
     isLoading = false 
   } = useSelector(state => state.cart || {});
+  
+  const { isAuthenticated } = useSelector(state => state.auth);
   
   const [couponCode, setCouponCode] = useState('');
   const [showCouponInput, setShowCouponInput] = useState(false);
@@ -99,7 +101,7 @@ const Cart = () => {
     toast.success('Coupon removed successfully');
   };
 
-  const handleAddToWishlist = (item) => {
+  const handleAddToWishlist = async (item) => {
     // Add to wishlist without removing from cart
     const wishlistItem = {
       _id: item.productId,
@@ -111,11 +113,16 @@ const Cart = () => {
       originalPrice: item.originalPrice,
     };
     
-    dispatch(addToWishlist(wishlistItem));
+    // Use API if authenticated, localStorage if not
+    if (isAuthenticated) {
+      await dispatch(addToWishlistAPI(wishlistItem));
+    } else {
+      dispatch(addToWishlist(wishlistItem));
+    }
     toast.success('Item added to wishlist');
   };
 
-  const handleMoveToWishlist = (item) => {
+  const handleMoveToWishlist = async (item) => {
     // Add to wishlist and remove from cart
     const wishlistItem = {
       _id: item.productId,
@@ -127,7 +134,12 @@ const Cart = () => {
       originalPrice: item.originalPrice,
     };
     
-    dispatch(addToWishlist(wishlistItem));
+    // Use API if authenticated, localStorage if not
+    if (isAuthenticated) {
+      await dispatch(addToWishlistAPI(wishlistItem));
+    } else {
+      dispatch(addToWishlist(wishlistItem));
+    }
     // Remove from cart
     dispatch(removeFromCart(item.id));
     toast.success('Item moved to wishlist');
@@ -434,13 +446,13 @@ const Cart = () => {
 
                   {/* Free Shipping Progress */}
                   {subtotal < 499 && (
-                    <div className="bg-yellow-50 p-3 rounded-lg">
-                      <div className="text-sm text-yellow-800 mb-2">
+                    <div className="bg-green-50 p-3 rounded-lg">
+                      <div className="text-sm text-green-800 mb-2">
                         Add ₹{(499 - subtotal).toLocaleString()} more for FREE shipping!
                       </div>
-                      <div className="w-full bg-yellow-200 rounded-full h-2">
-                        <div
-                          className="bg-yellow-500 h-2 rounded-full transition-all duration-300"
+                      <div className="w-full bg-green-200 rounded-full h-2">
+                        <div 
+                          className="bg-green-500 h-2 rounded-full transition-all duration-300"
                           style={{ width: `${Math.min((subtotal / 499) * 100, 100)}%` }}
                         />
                       </div>

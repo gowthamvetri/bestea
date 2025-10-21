@@ -16,6 +16,7 @@ import {
 } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
+import Card from '../../components/common/Card';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -110,7 +111,7 @@ const AdminDashboard = () => {
               message: `New order #${order.orderNumber || order._id?.slice(-8)} placed`,
               time: order.createdAt || order.orderDate,
               icon: FaShoppingCart,
-              color: 'text-bestea-600'
+              color: 'text-green-600'
             })),
             ...(reviewsResponse.data.success ? (reviewsResponse.data.data?.reviews || []).slice(0, 2).map(review => ({
               type: 'review',
@@ -143,7 +144,7 @@ const AdminDashboard = () => {
       title: 'Total Products',
       value: stats.totalProducts || 0,
       icon: FaBoxes,
-      color: 'bg-bestea-500',
+      color: 'bg-green-500',
       trend: '+12%',
       trendUp: true
     },
@@ -167,7 +168,7 @@ const AdminDashboard = () => {
       title: 'Total Revenue',
       value: `₹${(stats.totalRevenue || 0).toLocaleString()}`,
       icon: FaRupeeSign,
-      color: 'bg-orange-500',
+      color: 'bg-green-500',
       trend: '+22%',
       trendUp: true
     },
@@ -205,7 +206,7 @@ const AdminDashboard = () => {
       case 'delivered':
         return 'bg-green-100 text-green-800';
       case 'shipped':
-        return 'bg-bestea-100 text-bestea-800';
+        return 'bg-green-100 text-green-800';
       case 'processing':
         return 'bg-yellow-100 text-yellow-800';
       default:
@@ -262,141 +263,140 @@ const AdminDashboard = () => {
   return (
     <div className="space-y-6">
       {/* Welcome Header */}
-      <div className="bg-bestea-600 rounded-lg shadow-lg p-6 text-white">
+      <div className="bg-green-600 rounded-lg shadow-lg p-6 text-white">
         <h1 className="text-3xl font-bold mb-2">Welcome to BESTEA Admin Panel</h1>
-        <p className="text-orange-100">Manage your tea business efficiently and grow your sales</p>
+        <p className="text-green-100">Manage your tea business efficiently and grow your sales</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {statsCards.map((card, index) => {
-          const Icon = card.icon;
-          return (
-            <motion.div
-              key={card.title}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className={`bg-white rounded-lg shadow p-6 ${card.urgent ? 'ring-2 ring-red-200' : ''}`}
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex-1">
-                  <p className="text-sm font-medium text-gray-600">{card.title}</p>
-                  <p className="text-2xl font-bold text-gray-900">{card.value}</p>
-                  {card.trend && (
-                    <div className={`flex items-center mt-1 text-sm ${
-                      card.trendUp ? 'text-green-600' : 'text-red-600'
-                    }`}>
-                      {card.trendUp ? (
-                        <FaArrowUp className="w-3 h-3 mr-1" />
-                      ) : (
-                        <FaArrowDown className="w-3 h-3 mr-1" />
-                      )}
-                      <span>{card.trend} from last month</span>
-                    </div>
-                  )}
-                </div>
-                <div className={`${card.color} p-3 rounded-lg ${card.urgent ? 'animate-pulse' : ''}`}>
-                  <Icon className="w-6 h-6 text-white" />
-                </div>
-              </div>
-            </motion.div>
-          );
-        })}
+        {statsCards.map((card, index) => (
+          <Card.Stats
+            key={card.title}
+            title={card.title}
+            value={card.value}
+            icon={card.icon}
+            trend={card.trend}
+            trendUp={card.trendUp}
+            urgent={card.urgent}
+            color={card.color}
+            delay={index}
+          />
+        ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Recent Orders */}
-        <motion.div
+        <Card 
+          hover={true}
+          className="overflow-hidden"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white rounded-lg shadow"
         >
-          <div className="p-6 border-b border-gray-200">
+          <Card.Header>
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium text-gray-900">Recent Orders</h3>
+              <h3 className="text-xl font-bold text-gray-900 font-playfair">Recent Orders</h3>
               <Link
                 to="/admin/orders"
-                className="text-orange-600 hover:text-orange-800 text-sm font-medium"
+                className="text-green-400 hover:text-special-500 text-sm font-bold font-inter tracking-wide"
               >
-                View all
+                View all →
               </Link>
             </div>
-          </div>
-          <div className="p-6">
+          </Card.Header>
+          <Card.Body>
             <div className="space-y-4">
               {Array.isArray(stats.recentOrders) && stats.recentOrders.length > 0 ? (
-                stats.recentOrders.map((order) => (
-                  <div key={order._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                stats.recentOrders.map((order, index) => (
+                  <motion.div 
+                    key={order._id} 
+                    className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-50/50 rounded-2xl border border-gray-100/60 hover:border-green-400/20 hover:bg-gradient-to-r hover:from-green-400/5 hover:to-special-500/5 transition-all duration-300"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    whileHover={{ x: 4 }}
+                  >
                     <div>
-                      <p className="font-medium text-gray-900">#{order.orderNumber || order._id?.slice(-8)}</p>
-                      <p className="text-sm text-gray-600">{order.customerName || order.user?.name}</p>
+                      <p className="font-bold text-gray-900 font-inter">#{order.orderNumber || order._id?.slice(-8)}</p>
+                      <p className="text-sm text-gray-600 font-medium">{order.customerName || order.user?.name}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium text-gray-900">₹{(order.amount || order.totalAmount || 0).toLocaleString()}</p>
-                      <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(order.status)}`}>
+                      <p className="font-bold text-green-400 text-lg">₹{(order.amount || order.totalAmount || 0).toLocaleString()}</p>
+                      <span className={`inline-flex px-3 py-1 text-xs font-bold rounded-2xl ${getStatusColor(order.status)}`}>
                         {order.status}
                       </span>
                     </div>
-                  </div>
+                  </motion.div>
                 ))
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <FaShoppingCart className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                  <p>No recent orders</p>
+                <div className="text-center py-12 text-gray-500">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center">
+                    <FaShoppingCart className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <p className="font-medium">No recent orders</p>
                 </div>
               )}
             </div>
-          </div>
-        </motion.div>
+          </Card.Body>
+        </Card>
 
         {/* Top Products */}
-        <motion.div
+        <Card 
+          hover={true}
+          className="overflow-hidden"
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-white rounded-lg shadow"
         >
-          <div className="p-6 border-b border-gray-200">
+          <Card.Header>
             <div className="flex items-center justify-between">
-              <h3 className="text-lg font-medium text-gray-900">Top Products</h3>
+              <h3 className="text-xl font-bold text-gray-900 font-playfair">Top Products</h3>
               <Link
                 to="/admin/products"
-                className="text-orange-600 hover:text-orange-800 text-sm font-medium"
+                className="text-green-400 hover:text-special-500 text-sm font-bold font-inter tracking-wide"
               >
-                View all
+                View all →
               </Link>
             </div>
-          </div>
-          <div className="p-6">
+          </Card.Header>
+          <Card.Body>
             <div className="space-y-4">
               {Array.isArray(stats.topProducts) && stats.topProducts.length > 0 ? (
                 stats.topProducts.map((product, index) => (
-                  <div key={product._id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <motion.div 
+                    key={product._id} 
+                    className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-50/50 rounded-2xl border border-gray-100/60 hover:border-green-400/20 hover:bg-gradient-to-r hover:from-green-400/5 hover:to-special-500/5 transition-all duration-300"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    whileHover={{ x: 4 }}
+                  >
                     <div className="flex items-center">
-                      <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-3">
-                        <span className="text-sm font-medium text-orange-600">#{index + 1}</span>
+                      <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-special-500 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+                        <span className="text-sm font-bold text-white">#{index + 1}</span>
                       </div>
                       <div>
-                        <p className="font-medium text-gray-900">{product.name}</p>
-                        <p className="text-sm text-gray-600">{product.sales || 0} sales</p>
+                        <p className="font-bold text-gray-900 font-inter">{product.name}</p>
+                        <p className="text-sm text-gray-600 font-medium">{product.sales || 0} sales</p>
                       </div>
                     </div>
                     <div className="text-right">
-                      <p className="font-medium text-gray-900">₹{(product.revenue || 0).toLocaleString()}</p>
+                      <p className="font-bold text-green-400 text-lg">₹{(product.revenue || 0).toLocaleString()}</p>
                     </div>
-                  </div>
+                  </motion.div>
                 ))
               ) : (
-                <div className="text-center py-8 text-gray-500">
-                  <FaBoxes className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-                  <p>No top products data</p>
+                <div className="text-center py-12 text-gray-500">
+                  <div className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center">
+                    <FaBoxes className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <p className="font-medium">No top products data</p>
                 </div>
               )}
             </div>
-          </div>
-        </motion.div>
+          </Card.Body>
+        </Card>
       </div>
 
       {/* Low Stock Alerts & Recent Activities */}
@@ -459,7 +459,7 @@ const AdminDashboard = () => {
           <div className="p-6 border-b border-gray-200">
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <FaClock className="w-5 h-5 text-bestea-500 mr-2" />
+                <FaClock className="w-5 h-5 text-green-500 mr-2" />
                 <h3 className="text-lg font-medium text-gray-900">Recent Activities</h3>
               </div>
             </div>
@@ -615,10 +615,10 @@ const AdminDashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <Link
             to="/admin/products/add"
-            className="flex items-center p-4 bg-bestea-50 hover:bg-bestea-100 rounded-lg transition-colors"
+            className="flex items-center p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors"
           >
-            <FaBoxes className="w-5 h-5 text-bestea-600 mr-3" />
-            <span className="font-medium text-bestea-900">Add New Product</span>
+            <FaBoxes className="w-5 h-5 text-green-600 mr-3" />
+            <span className="font-medium text-green-900">Add New Product</span>
           </Link>
           <Link
             to="/admin/orders"

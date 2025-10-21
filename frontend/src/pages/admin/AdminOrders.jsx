@@ -214,8 +214,8 @@ const AdminOrders = () => {
 
         <div className="bg-white p-6 rounded-lg shadow-sm">
           <div className="flex items-center">
-            <div className="p-2 bg-orange-100 rounded-lg">
-              <FaShoppingCart className="w-6 h-6 text-orange-600" />
+            <div className="p-2 bg-green-100 rounded-lg">
+              <FaShoppingCart className="w-6 h-6 text-green-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Revenue</p>
@@ -238,7 +238,7 @@ const AdminOrders = () => {
                 placeholder="Search orders..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
           </div>
@@ -246,7 +246,7 @@ const AdminOrders = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             <option value="all">All Status</option>
             <option value="pending">Pending</option>
@@ -340,7 +340,7 @@ const AdminOrders = () => {
                       <div className="flex gap-2">
                         <button
                           onClick={() => setSelectedOrder(order)}
-                          className="text-orange-600 hover:text-orange-800"
+                          className="text-green-600 hover:text-green-800"
                           title="View Details"
                         >
                           <FaEye className="w-4 h-4" />

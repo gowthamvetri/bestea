@@ -29,13 +29,13 @@ const Footer = () => {
                   <span className="w-5 h-5 bg-green-600 text-white text-xs flex items-center justify-center rounded">f</span>
                 </a>
                 <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
-                  <span className="w-5 h-5 bg-pink-600 text-white text-xs flex items-center justify-center rounded">i</span>
+                  <span className="w-5 h-5 bg-green-600 text-white text-xs flex items-center justify-center rounded">i</span>
                 </a>
                 <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
                   <span className="w-5 h-5 bg-green-500 text-white text-xs flex items-center justify-center rounded">t</span>
                 </a>
                 <a href="#" className="text-gray-400 hover:text-green-400 transition-colors">
-                  <span className="w-5 h-5 bg-red-600 text-white text-xs flex items-center justify-center rounded">y</span>
+                  <span className="w-5 h-5 bg-green-600 text-white text-xs flex items-center justify-center rounded">y</span>
                 </a>
               </div>
             </div>

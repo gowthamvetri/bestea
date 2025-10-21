@@ -289,8 +289,8 @@ const BrewingGuide = () => {
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case 'Beginner': return 'bg-green-100 text-green-800';
-      case 'Intermediate': return 'bg-yellow-100 text-yellow-800';
-      case 'Advanced': return 'bg-red-100 text-red-800';
+      case 'Intermediate': return 'bg-green-200 text-green-800';
+      case 'Advanced': return 'bg-green-300 text-green-900';
       default: return 'bg-gray-100 text-gray-800';
     }
   };
@@ -298,7 +298,7 @@ const BrewingGuide = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white py-16">
+      <div className="bg-gradient-to-r from-green-500 to-green-600 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <motion.div
@@ -310,7 +310,7 @@ const BrewingGuide = () => {
               <h1 className="text-4xl md:text-5xl font-bold mb-4">
                 Perfect Tea Brewing Guide
               </h1>
-              <p className="text-xl text-orange-100 max-w-2xl mx-auto">
+              <p className="text-xl text-green-100 max-w-2xl mx-auto">
                 Master the art of tea brewing with our comprehensive guides for every type of tea
               </p>
             </motion.div>
@@ -324,7 +324,7 @@ const BrewingGuide = () => {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="fixed top-20 right-4 bg-white rounded-lg shadow-lg p-4 z-50 border-l-4 border-orange-500"
+            className="fixed top-20 right-4 bg-white rounded-lg shadow-lg p-4 z-50 border-l-4 border-green-500"
           >
             <div className="flex items-center justify-between mb-2">
               <h3 className="font-medium text-gray-900">Brewing Timer</h3>
@@ -333,13 +333,13 @@ const BrewingGuide = () => {
               </button>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-orange-600 mb-2">
+              <div className="text-3xl font-bold text-green-600 mb-2">
                 {formatTime(timeRemaining)}
               </div>
               <div className="flex gap-2">
                 <button
                   onClick={timerActive ? pauseTimer : () => startTimer(timeRemaining)}
-                  className="flex items-center px-3 py-1 bg-orange-600 text-white rounded text-sm hover:bg-orange-700"
+                  className="flex items-center px-3 py-1 bg-green-600 text-white rounded text-sm hover:bg-green-700"
                 >
                   {timerActive ? <FaPause className="w-3 h-3" /> : <FaPlay className="w-3 h-3" />}
                 </button>
@@ -359,13 +359,13 @@ const BrewingGuide = () => {
                 placeholder="Search brewing guides..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
 
             {/* Quick Access */}
             <div className="flex items-center gap-3">
-              <button className="flex items-center px-4 py-2 text-orange-600 border border-orange-600 rounded-lg hover:bg-orange-50">
+              <button className="flex items-center px-4 py-2 text-green-600 border border-green-600 rounded-lg hover:bg-green-50">
                 <FaBookmark className="w-4 h-4 mr-2" />
                 Favorites ({favorites.length})
               </button>
@@ -386,8 +386,8 @@ const BrewingGuide = () => {
                   onClick={() => setActiveCategory(category.id)}
                   className={`flex items-center px-4 py-2 rounded-lg font-medium transition-colors ${
                     activeCategory === category.id
-                      ? 'bg-orange-600 text-white'
-                      : 'bg-white text-gray-700 hover:bg-orange-50 border border-gray-200'
+                      ? 'bg-green-600 text-white'
+                      : 'bg-white text-gray-700 hover:bg-green-50 border border-gray-200'
                   }`}
                 >
                   <Icon className="w-4 h-4 mr-2" />
@@ -425,7 +425,7 @@ const BrewingGuide = () => {
                     onClick={() => toggleFavorite(guide.id)}
                     className={`p-2 rounded-full transition-colors ${
                       favorites.includes(guide.id)
-                        ? 'bg-red-500 text-white'
+                        ? 'bg-green-500 text-white'
                         : 'bg-white bg-opacity-90 text-gray-600 hover:bg-opacity-100'
                     }`}
                   >
@@ -448,19 +448,19 @@ const BrewingGuide = () => {
                 {/* Quick Stats */}
                 <div className="grid grid-cols-2 gap-4 mb-4">
                   <div className="flex items-center text-sm text-gray-600">
-                    <FaThermometerHalf className="w-4 h-4 mr-2 text-orange-500" />
+                    <FaThermometerHalf className="w-4 h-4 mr-2 text-green-500" />
                     {guide.temperature}°C
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
-                    <FaClock className="w-4 h-4 mr-2 text-orange-500" />
+                    <FaClock className="w-4 h-4 mr-2 text-green-500" />
                     {formatTime(guide.brewTime)}
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
-                    <FaWater className="w-4 h-4 mr-2 text-orange-500" />
+                    <FaWater className="w-4 h-4 mr-2 text-green-500" />
                     {guide.ratio} ratio
                   </div>
                   <div className="flex items-center text-sm text-gray-600">
-                    <FaCoffee className="w-4 h-4 mr-2 text-orange-500" />
+                    <FaCoffee className="w-4 h-4 mr-2 text-green-500" />
                     {guide.servings} servings
                   </div>
                 </div>
@@ -469,7 +469,7 @@ const BrewingGuide = () => {
                 <div className="flex gap-2">
                   <button
                     onClick={() => setExpandedGuide(expandedGuide === guide.id ? null : guide.id)}
-                    className="flex-1 flex items-center justify-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+                    className="flex-1 flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     {expandedGuide === guide.id ? (
                       <>
@@ -485,7 +485,7 @@ const BrewingGuide = () => {
                   </button>
                   <button
                     onClick={() => startTimer(guide.brewTime)}
-                    className="flex items-center px-4 py-2 border border-orange-600 text-orange-600 rounded-lg hover:bg-orange-50 transition-colors"
+                    className="flex items-center px-4 py-2 border border-green-600 text-green-600 rounded-lg hover:bg-green-50 transition-colors"
                   >
                     <FaClock className="w-4 h-4 mr-2" />
                     Timer
@@ -503,13 +503,13 @@ const BrewingGuide = () => {
                     {/* Brewing Steps */}
                     <div className="mb-6">
                       <h4 className="font-semibold text-gray-900 mb-3 flex items-center">
-                        <FaCoffee className="w-4 h-4 mr-2 text-orange-500" />
+                        <FaCoffee className="w-4 h-4 mr-2 text-green-500" />
                         Brewing Steps
                       </h4>
                       <ol className="space-y-2">
                         {guide.steps.map((step, index) => (
                           <li key={index} className="flex items-start">
-                            <span className="flex-shrink-0 w-6 h-6 bg-orange-100 text-orange-600 rounded-full flex items-center justify-center text-xs font-medium mr-3">
+                            <span className="flex-shrink-0 w-6 h-6 bg-green-100 text-green-600 rounded-full flex items-center justify-center text-xs font-medium mr-3">
                               {index + 1}
                             </span>
                             <span className="text-sm text-gray-700">{step}</span>
@@ -524,7 +524,7 @@ const BrewingGuide = () => {
                       <ul className="space-y-1">
                         {guide.tips.map((tip, index) => (
                           <li key={index} className="text-sm text-gray-600 flex items-start">
-                            <FaStar className="w-3 h-3 text-yellow-500 mr-2 mt-1 flex-shrink-0" />
+                            <FaStar className="w-3 h-3 text-green-500 mr-2 mt-1 flex-shrink-0" />
                             {tip}
                           </li>
                         ))}
@@ -551,7 +551,7 @@ const BrewingGuide = () => {
                         {guide.pairings.map((pairing, index) => (
                           <span
                             key={index}
-                            className="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm"
+                            className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm"
                           >
                             {pairing}
                           </span>
@@ -581,7 +581,7 @@ const BrewingGuide = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <div className="flex items-center mb-4">
-                <FaThermometerHalf className="w-6 h-6 text-orange-500 mr-3" />
+                <FaThermometerHalf className="w-6 h-6 text-green-500 mr-3" />
                 <h3 className="text-lg font-semibold text-gray-900">Water Temperature</h3>
               </div>
               <ul className="space-y-2 text-sm text-gray-600">
@@ -595,7 +595,7 @@ const BrewingGuide = () => {
 
             <div>
               <div className="flex items-center mb-4">
-                <FaClock className="w-6 h-6 text-orange-500 mr-3" />
+                <FaClock className="w-6 h-6 text-green-500 mr-3" />
                 <h3 className="text-lg font-semibold text-gray-900">Steeping Time</h3>
               </div>
               <ul className="space-y-2 text-sm text-gray-600">
@@ -609,7 +609,7 @@ const BrewingGuide = () => {
 
             <div>
               <div className="flex items-center mb-4">
-                <FaWater className="w-6 h-6 text-orange-500 mr-3" />
+                <FaWater className="w-6 h-6 text-green-500 mr-3" />
                 <h3 className="text-lg font-semibold text-gray-900">Tea to Water Ratio</h3>
               </div>
               <ul className="space-y-2 text-sm text-gray-600">

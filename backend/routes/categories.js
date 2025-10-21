@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { auth } = require('../middleware/auth');
+const { uploadCategory } = require('../config/cloudinary');
 const {
   getCategories,
   getCategoryBySlug,
@@ -22,12 +23,12 @@ router.get('/:slug', getCategoryBySlug);
 // @route   POST /api/categories
 // @desc    Create category (Admin only)
 // @access  Private/Admin
-router.post('/', auth, createCategory);
+router.post('/', auth, uploadCategory.single('image'), createCategory);
 
 // @route   PUT /api/categories/:id
 // @desc    Update category (Admin only)
 // @access  Private/Admin
-router.put('/:id', auth, updateCategory);
+router.put('/:id', auth, uploadCategory.single('image'), updateCategory);
 
 // @route   DELETE /api/categories/:id
 // @desc    Delete category (Admin only)

@@ -55,59 +55,7 @@ const Contact = () => {
     }, 2000);
   };
 
-  const contactInfo = [
-    {
-      icon: FaPhone,
-      title: 'Call Us',
-      details: ['+91 98765 43210', '+91 87654 32109'],
-      subtitle: 'Mon-Sat, 9 AM - 6 PM'
-    },
-    {
-      icon: FaEnvelope,
-      title: 'Email Us',
-      details: ['hello@bestea.com', 'support@bestea.com'],
-      subtitle: 'We reply within 24 hours'
-    },
-    {
-      icon: FaMapMarkerAlt,
-      title: 'Visit Us',
-      details: ['123 Tea Garden Road', 'Coimbatore, Tamil Nadu 641001'],
-      subtitle: 'Mon-Fri, 10 AM - 5 PM'
-    },
-    {
-      icon: FaWhatsapp,
-      title: 'WhatsApp',
-      details: ['+91 98765 43210'],
-      subtitle: 'Quick support & orders'
-    }
-  ];
 
-  const supportOptions = [
-    {
-      icon: FaShippingFast,
-      title: 'Order Support',
-      description: 'Track orders, shipping queries, delivery issues',
-      action: 'Track Order'
-    },
-    {
-      icon: FaHeadset,
-      title: 'Customer Care',
-      description: 'General inquiries, product information, assistance',
-      action: 'Get Help'
-    },
-    {
-      icon: FaAward,
-      title: 'Quality Concerns',
-      description: 'Product quality, freshness, replacement requests',
-      action: 'Report Issue'
-    },
-    {
-      icon: FaLeaf,
-      title: 'Tea Expertise',
-      description: 'Brewing tips, tea selection, flavor recommendations',
-      action: 'Ask Expert'
-    }
-  ];
 
   const faqItems = [
     {
@@ -144,8 +92,8 @@ const Contact = () => {
         {/* Hero Section */}
         <section className="relative py-24 overflow-hidden">
           <div className="absolute inset-0">
-            <div className="absolute top-20 right-20 w-64 h-64 bg-gradient-to-br from-orange-200/30 to-orange-300/20 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-br from-green-200/30 to-orange-200/20 rounded-full blur-3xl"></div>
+            <div className="absolute top-20 right-20 w-64 h-64 bg-gradient-to-br from-green-200/30 to-green-300/20 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-20 left-20 w-80 h-80 bg-gradient-to-br from-green-200/30 to-green-200/20 rounded-full blur-3xl"></div>
           </div>
           
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -159,10 +107,10 @@ const Contact = () => {
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-green-50 to-orange-50 px-6 py-3 rounded-full font-semibold mb-8 border border-green-200"
+                className="inline-flex items-center gap-2 bg-gradient-to-r from-green-50 to-green-50 px-6 py-3 rounded-full font-semibold mb-8 border border-green-200"
               >
                 <FaHeadset className="w-5 h-5 text-green-600" />
-                <span className="bg-gradient-to-r from-green-600 to-orange-600 bg-clip-text text-transparent">24/7 Support • Always Here to Help</span>
+                <span className="bg-gradient-to-r from-green-600 to-green-600 bg-clip-text text-transparent">24/7 Support • Always Here to Help</span>
               </motion.div>
               
               <h1 className="text-6xl md:text-7xl font-bold text-gray-900 mb-8 leading-tight">
@@ -186,8 +134,8 @@ const Contact = () => {
                   <span className="font-medium">24hr Response</span>
                 </div>
                 <div className="flex items-center justify-center gap-3 text-gray-600">
-                  <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-                    <FaHeadset className="w-5 h-5 text-orange-600" />
+                  <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                    <FaHeadset className="w-5 h-5 text-green-600" />
                   </div>
                   <span className="font-medium">Expert Guidance</span>
                 </div>
@@ -202,88 +150,7 @@ const Contact = () => {
           </div>
         </section>
 
-        {/* Contact Information */}
-        <section className="py-24 bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-16"
-            >
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                How Can We <span className="text-gradient-primary">Help</span> You?
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Choose the best way to connect with our tea experts and support team
-              </p>
-            </motion.div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-              {contactInfo.map((info, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="card hover-scale text-center p-8 group cursor-pointer"
-                >
-                  <div className="w-16 h-16 bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:from-orange-500 group-hover:to-orange-600 transition-all duration-300">
-                    <info.icon className="text-orange-600 text-2xl group-hover:text-white transition-colors duration-300" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors">
-                    {info.title}
-                  </h3>
-                  <div className="space-y-1 mb-3">
-                    {info.details.map((detail, idx) => (
-                      <p key={idx} className="text-gray-700 font-medium">
-                        {detail}
-                      </p>
-                    ))}
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    {info.subtitle}
-                  </p>
-                </motion.div>
-              ))}
-            </div>
 
-            {/* Support Options */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {supportOptions.map((option, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  className="card hover-scale p-8 group cursor-pointer"
-                >
-                  <div className="w-14 h-14 bg-gradient-to-br from-orange-100 to-orange-200 rounded-2xl flex items-center justify-center mb-4 group-hover:from-orange-500 group-hover:to-orange-600 transition-all duration-300">
-                    <option.icon className="text-orange-600 text-xl group-hover:text-white transition-colors duration-300" />
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-orange-600 transition-colors">
-                    {option.title}
-                  </h3>
-                  <p className="text-gray-600 mb-4 leading-relaxed">
-                    {option.description}
-                  </p>
-                  <button className="inline-flex items-center gap-2 text-orange-600 font-semibold hover:text-orange-700 transition-colors">
-                    <span>{option.action}</span>
-                    <motion.div
-                      whileHover={{ x: 4 }}
-                      transition={{ duration: 0.2 }}
-                    >
-                      →
-                    </motion.div>
-                  </button>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* Contact Form & Map */}
         <section className="py-24 bg-white">
@@ -313,7 +180,7 @@ const Contact = () => {
                           value={formData.name}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all"
                           placeholder="Your full name"
                         />
                       </div>
@@ -326,7 +193,7 @@ const Contact = () => {
                           name="phone"
                           value={formData.phone}
                           onChange={handleChange}
-                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all"
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all"
                           placeholder="Your phone number"
                         />
                       </div>
@@ -342,7 +209,7 @@ const Contact = () => {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all"
                         placeholder="your@email.com"
                       />
                     </div>
@@ -355,7 +222,7 @@ const Contact = () => {
                         name="inquiryType"
                         value={formData.inquiryType}
                         onChange={handleChange}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all"
                       >
                         <option value="general">General Inquiry</option>
                         <option value="order">Order Support</option>
@@ -375,7 +242,7 @@ const Contact = () => {
                         value={formData.subject}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all"
                         placeholder="Brief subject of your message"
                       />
                     </div>
@@ -390,7 +257,7 @@ const Contact = () => {
                         onChange={handleChange}
                         required
                         rows={5}
-                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all resize-none"
+                        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-transparent transition-all resize-none"
                         placeholder="Please describe your inquiry in detail..."
                       ></textarea>
                     </div>

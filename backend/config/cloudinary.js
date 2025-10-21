@@ -35,6 +35,19 @@ const avatarStorage = new CloudinaryStorage({
   },
 });
 
+// Storage configuration for category images
+const categoryStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'bestea/categories',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'webp'],
+    transformation: [
+      { width: 400, height: 400, crop: 'fill', quality: 'auto' },
+      { fetch_format: 'auto' }
+    ]
+  },
+});
+
 // Multer middleware for product images
 const uploadProduct = multer({ 
   storage: productStorage,
@@ -64,6 +77,35 @@ const uploadAvatar = multer({
     }
   }
 });
+
+// Multer middleware for category images
+const uploadCategory = multer({ 
+  storage: categoryStorage,
+  limits: {
+    fileSize: 3 * 1024 * 1024, // 3MB limit
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image files are allowed!'), false);
+    }
+  }
+});
+
+// Helper function to upload to Cloudinary
+const uploadToCloudinary = async (file, folder, transformation) => {
+  try {
+    const result = await cloudinary.uploader.upload(file.path, {
+      folder: folder,
+      transformation: transformation
+    });
+    return result;
+  } catch (error) {
+    console.error('Error uploading to Cloudinary:', error);
+    throw error;
+  }
+};
 
 // Helper function to delete image from Cloudinary
 const deleteImage = async (publicId) => {
@@ -95,6 +137,7 @@ module.exports = {
   cloudinary,
   uploadProduct,
   uploadAvatar,
+  uploadCategory,
   deleteImage,
   extractPublicId
 };

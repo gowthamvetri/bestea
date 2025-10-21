@@ -161,7 +161,7 @@ const ProductImageManager = ({
                     
                     {/* Main Image Badge */}
                     {image.isMain && (
-                      <div className="absolute top-2 left-2 bg-bestea-500 text-white text-xs px-2 py-1 rounded flex items-center space-x-1">
+                      <div className="absolute top-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded flex items-center space-x-1">
                         <FaStar size={10} />
                         <span>Main</span>
                       </div>
@@ -172,7 +172,7 @@ const ProductImageManager = ({
                       {!image.isMain && (
                         <button
                           onClick={() => handleSetMainImage(index)}
-                          className="bg-white text-bestea-600 p-1 rounded shadow hover:bg-bestea-50"
+                          className="bg-white text-green-600 p-1 rounded shadow hover:bg-green-50"
                           title="Set as main image"
                         >
                           <FaStar size={12} />
@@ -199,12 +199,12 @@ const ProductImageManager = ({
                             type="text"
                             value={altText}
                             onChange={(e) => setAltText(e.target.value)}
-                            className="flex-1 text-xs border border-gray-300 rounded px-2 py-1 focus:ring-1 focus:ring-bestea-400 focus:border-bestea-400"
+                            className="flex-1 text-xs border border-gray-300 rounded px-2 py-1 focus:ring-1 focus:ring-green-400 focus:border-green-400"
                             placeholder="Enter alt text..."
                           />
                           <button
                             onClick={() => handleSaveAlt(index)}
-                            className="text-bestea-600 hover:text-bestea-700 p-1"
+                            className="text-green-600 hover:text-green-700 p-1"
                           >
                             <FaCheck size={10} />
                           </button>
@@ -222,7 +222,7 @@ const ProductImageManager = ({
                           </p>
                           <button
                             onClick={() => handleEditAlt(index)}
-                            className="text-gray-400 hover:text-bestea-600 p-1"
+                            className="text-gray-400 hover:text-green-600 p-1"
                           >
                             <FaEdit size={10} />
                           </button>

@@ -12,7 +12,11 @@ import {
   FaTimes,
   FaExclamationTriangle,
   FaPlus,
-  FaMinus
+  FaMinus,
+  FaChevronDown,
+  FaTimesCircle,
+  FaThLarge,
+  FaList
 } from 'react-icons/fa';
 
 // Store actions
@@ -21,6 +25,7 @@ import { addToCart, updateQuantity, removeFromCart } from '../store/slices/cartS
 
 // Components
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import Card from '../components/common/Card';
 
 const Shop = () => {
   const dispatch = useDispatch();
@@ -34,6 +39,7 @@ const Shop = () => {
   const [priceRange, setPriceRange] = useState('');
   const [localSortBy, setLocalSortBy] = useState('name-asc');
   const [showFilters, setShowFilters] = useState(false);
+  const [viewMode, setViewMode] = useState('grid'); // grid or list
 
 
 
@@ -89,19 +95,35 @@ const Shop = () => {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  // Handle category from URL parameter
+  // Handle category from URL parameter (both route param and query param)
   useEffect(() => {
-    if (categorySlug && categories.length > 0) {
-      const category = categories.find(cat => cat.slug === categorySlug);
-      if (category) {
-        setSelectedCategory(category._id);
-        // Update search params to include the category
+    if (categories.length > 0) {
+      let categoryToSelect = null;
+      
+      // Check route parameter first (/shop/category-slug)
+      if (categorySlug) {
+        categoryToSelect = categories.find(cat => cat.slug === categorySlug);
+      }
+      
+      // If no route param, check query parameter (?category=category-slug)
+      if (!categoryToSelect) {
+        const categoryParam = searchParams.get('category');
+        if (categoryParam) {
+          // Try to find by slug first, then by ID
+          categoryToSelect = categories.find(cat => cat.slug === categoryParam) || 
+                           categories.find(cat => cat._id === categoryParam);
+        }
+      }
+      
+      if (categoryToSelect && categoryToSelect._id !== selectedCategory) {
+        setSelectedCategory(categoryToSelect._id);
+        // Update search params to use category ID for consistency
         const newParams = new URLSearchParams(searchParams);
-        newParams.set('category', category._id);
-        setSearchParams(newParams);
+        newParams.set('category', categoryToSelect._id);
+        setSearchParams(newParams, { replace: true });
       }
     }
-  }, [categorySlug, categories, searchParams, setSearchParams]);
+  }, [categorySlug, categories, searchParams, setSearchParams, selectedCategory]);
 
   useEffect(() => {
     // Debounce product fetching to prevent too many requests
@@ -113,13 +135,17 @@ const Shop = () => {
     return () => clearTimeout(timeoutId);
   }, [dispatch, searchParams]);
 
-  // Sync local state with URL parameters
+  // Sync local state with URL parameters (excluding category which is handled above)
   useEffect(() => {
     const params = Object.fromEntries(searchParams);
     setLocalSortBy(params.sort || 'name-asc');
     setPriceRange(params.price || '');
-    setSelectedCategory(params.category || '');
     setSearchTerm(params.search || '');
+    
+    // Only update selectedCategory if it's not already handled by the category-specific useEffect above
+    if (!categorySlug && !searchParams.get('category')) {
+      setSelectedCategory('');
+    }
     
     // Handle featured parameter for bestsellers, but only if no explicit availability is set
     if (params.featured === 'true' && !params.availability) {
@@ -130,7 +156,7 @@ const Shop = () => {
     
     setRatingFilter(params.rating || '');
     setWeightFilter(params.weight || '');
-  }, [searchParams]);
+  }, [searchParams, categorySlug]);
 
   // Update product display when products change (with safety check)
   const displayProducts = Array.isArray(products) && products.length > 0 ? products : [];
@@ -362,48 +388,53 @@ const Shop = () => {
         <meta name="description" content={isBestsellersPage ? "Discover our most popular and bestselling premium teas. Customer favorites sourced directly from the finest plantations." : categoryName ? `Discover our premium ${categoryName} tea collection. Authentic Indian teas sourced directly from plantations.` : "Discover our premium collection of authentic Indian teas. From classic Assam to exotic Darjeeling - find your perfect cup."} />
       </Helmet>
 
-      <div className="min-h-screen bg-slate-50">
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
         <div className="flex">
           {/* Mobile Filter Toggle */}
           <div className="lg:hidden fixed top-20 left-4 z-50">
             <button
               onClick={() => setShowFilters(!showFilters)}
-              className="bg-bestea-500 text-white p-3 rounded-full shadow-lg hover:bg-bestea-600 transition-colors"
+              className="bg-gradient-to-r from-green-500 to-green-600 text-white p-3 rounded-xl shadow-lg hover:from-green-600 hover:to-green-700 transition-all duration-200"
             >
               <FaFilter className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Sidebar Filter - Professional Style */}
-          <div className={`w-80 bg-white shadow-sm border-r border-slate-200 min-h-screen transition-transform duration-300 ${
+          {/* Sidebar Filter - Enhanced Professional Style */}
+          <div className={`w-80 bg-white shadow-xl border-r-2 border-gray-100 min-h-screen transition-transform duration-300 ${
             showFilters ? 'translate-x-0' : '-translate-x-full'
-          } lg:translate-x-0 fixed lg:static top-0 left-0 z-40 lg:z-auto`}>
-            <div className="p-6">
+          } lg:translate-x-0 fixed lg:static top-0 left-0 z-40 lg:z-auto overflow-y-auto`}>
+            <div className="p-5">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-slate-900">Filter by</h2>
+                <div className="flex items-center gap-3">
+                  <div className="bg-gradient-to-br from-green-400 to-green-600 p-2 rounded-lg">
+                    <FaFilter className="w-5 h-5 text-white" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-gray-900">Filters</h2>
+                </div>
                 <button
                   onClick={() => setShowFilters(false)}
-                  className="lg:hidden text-slate-500 hover:text-slate-700"
+                  className="lg:hidden text-gray-500 hover:text-gray-700 p-2 hover:bg-gray-100 rounded-lg transition-colors"
                 >
                   <FaTimes className="w-5 h-5" />
                 </button>
               </div>
               
-              {/* Category Filter */}
-              <div className="mb-8">
-                <h3 className="font-medium text-slate-900 mb-4 flex items-center justify-between">
+              {/* Category Filter - Enhanced */}
+              <div className="mb-6">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center justify-between text-base">
                   Category
                   <button 
                     onClick={() => {
                       handleFilterChange('category', '');
                     }}
-                    className="text-sm text-slate-500 hover:text-slate-700"
+                    className="text-sm text-green-600 hover:text-green-700 font-medium"
                   >
                     Clear
                   </button>
                 </h3>
-                <div className="space-y-3">
-                  <label className="flex items-center">
+                <div className="space-y-1">
+                  <label className="flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors group">
                     <input
                       type="radio"
                       name="category"
@@ -413,12 +444,12 @@ const Shop = () => {
                         setSelectedCategory('');
                         handleFilterChange('category', '');
                       }}
-                      className="w-4 h-4 text-bestea-600 border-slate-300 focus:ring-bestea-500"
+                      className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
                     />
-                    <span className="ml-3 text-slate-700">All Categories</span>
+                    <span className="ml-3 text-gray-700 font-medium group-hover:text-green-600 transition-colors text-sm">All Categories</span>
                   </label>
                   {categories.map(category => (
-                    <label key={category._id} className="flex items-center">
+                    <label key={category._id} className="flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors group">
                       <input
                         type="radio"
                         name="category"
@@ -428,30 +459,30 @@ const Shop = () => {
                           const value = e.target.value;
                           handleFilterChange('category', value);
                         }}
-                        className="w-4 h-4 text-bestea-600 border-slate-300 focus:ring-bestea-500"
+                        className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
                       />
-                      <span className="ml-3 text-slate-700">{category.name}</span>
+                      <span className="ml-3 text-gray-700 font-medium group-hover:text-green-600 transition-colors text-sm">{category.name}</span>
                     </label>
                   ))}
                 </div>
               </div>
               
-              {/* Price Filter */}
-              <div className="mb-8">
-                <h3 className="font-medium text-slate-900 mb-4 flex items-center justify-between">
+              {/* Price Filter - Enhanced */}
+              <div className="mb-6">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center justify-between text-base">
                   Price Range
                   <button 
                     onClick={() => {
                       handleFilterChange('price', '');
                     }}
-                    className="text-sm text-slate-500 hover:text-slate-700"
+                    className="text-sm text-green-600 hover:text-green-700 font-medium"
                   >
                     Clear
                   </button>
                 </h3>
-                <div className="space-y-3">
+                <div className="space-y-1">
                   {priceOptions.slice(1).map(option => (
-                    <label key={option.value} className="flex items-center">
+                    <label key={option.value} className="flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors group">
                       <input
                         type="radio"
                         name="price"
@@ -461,30 +492,30 @@ const Shop = () => {
                           const value = e.target.value;
                           handleFilterChange('price', value);
                         }}
-                        className="w-4 h-4 text-bestea-600 border-slate-300 focus:ring-bestea-500"
+                        className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
                       />
-                      <span className="ml-3 text-slate-700">{option.label}</span>
+                      <span className="ml-3 text-gray-700 font-medium group-hover:text-green-600 transition-colors text-sm">{option.label}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
-              {/* Availability Filter */}
-              <div className="mb-8">
-                <h3 className="font-medium text-slate-900 mb-4 flex items-center justify-between">
+              {/* Availability Filter - Enhanced */}
+              <div className="mb-6">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center justify-between text-base">
                   Availability
                   <button 
                     onClick={() => {
                       handleFilterChange('availability', '');
                     }}
-                    className="text-sm text-slate-500 hover:text-slate-700"
+                    className="text-sm text-green-600 hover:text-green-700 font-medium"
                   >
                     Clear
                   </button>
                 </h3>
-                <div className="space-y-3">
+                <div className="space-y-1">
                   {availabilityOptions.slice(1).map(option => (
-                    <label key={option.value} className="flex items-center">
+                    <label key={option.value} className="flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors group">
                       <input
                         type="checkbox"
                         value={option.value}
@@ -493,30 +524,30 @@ const Shop = () => {
                           const value = e.target.checked ? e.target.value : '';
                           handleFilterChange('availability', value);
                         }}
-                        className="w-4 h-4 text-bestea-600 border-slate-300 rounded focus:ring-bestea-500"
+                        className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                       />
-                      <span className="ml-3 text-slate-700">{option.label}</span>
+                      <span className="ml-3 text-gray-700 font-medium group-hover:text-green-600 transition-colors text-sm">{option.label}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
-              {/* Rating Filter */}
-              <div className="mb-8">
-                <h3 className="font-medium text-slate-900 mb-4 flex items-center justify-between">
+              {/* Rating Filter - Enhanced */}
+              <div className="mb-6">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center justify-between text-base">
                   Customer Rating
                   <button 
                     onClick={() => {
                       handleFilterChange('rating', '');
                     }}
-                    className="text-sm text-slate-500 hover:text-slate-700"
+                    className="text-sm text-green-600 hover:text-green-700 font-medium"
                   >
                     Clear
                   </button>
                 </h3>
-                <div className="space-y-3">
+                <div className="space-y-1">
                   {ratingOptions.slice(1).map(option => (
-                    <label key={option.value} className="flex items-center">
+                    <label key={option.value} className="flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors group">
                       <input
                         type="radio"
                         name="rating"
@@ -526,9 +557,9 @@ const Shop = () => {
                           const value = e.target.value;
                           handleFilterChange('rating', value);
                         }}
-                        className="w-4 h-4 text-bestea-600 border-slate-300 focus:ring-bestea-500"
+                        className="w-4 h-4 text-green-600 border-gray-300 focus:ring-green-500"
                       />
-                      <span className="ml-3 text-slate-700 flex items-center">
+                      <span className="ml-3 text-gray-700 font-medium group-hover:text-green-600 transition-colors flex items-center text-sm">
                         {option.label}
                         <div className="flex ml-2">
                           {(() => {
@@ -556,22 +587,22 @@ const Shop = () => {
                 </div>
               </div>
 
-              {/* Weight Filter */}
-              <div className="mb-8">
-                <h3 className="font-medium text-slate-900 mb-4 flex items-center justify-between">
+              {/* Weight Filter - Enhanced */}
+              <div className="mb-6">
+                <h3 className="font-semibold text-gray-900 mb-3 flex items-center justify-between text-base">
                   Package Size
                   <button 
                     onClick={() => {
                       handleFilterChange('weight', '');
                     }}
-                    className="text-sm text-slate-500 hover:text-slate-700"
+                    className="text-sm text-green-600 hover:text-green-700 font-medium"
                   >
                     Clear
                   </button>
                 </h3>
-                <div className="space-y-3">
+                <div className="space-y-1">
                   {weightOptions.slice(1).map(option => (
-                    <label key={option.value} className="flex items-center">
+                    <label key={option.value} className="flex items-center p-2 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors group">
                       <input
                         type="checkbox"
                         value={option.value}
@@ -580,23 +611,24 @@ const Shop = () => {
                           const value = e.target.checked ? e.target.value : '';
                           handleFilterChange('weight', value);
                         }}
-                        className="w-4 h-4 text-bestea-600 border-slate-300 rounded focus:ring-bestea-500"
+                        className="w-4 h-4 text-green-600 border-gray-300 rounded focus:ring-green-500"
                       />
-                      <span className="ml-3 text-slate-700">{option.label}</span>
+                      <span className="ml-3 text-gray-700 font-medium group-hover:text-green-600 transition-colors text-sm">{option.label}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
-              {/* Clear All Filters */}
-              <div className="pt-6 border-t border-slate-200">
+              {/* Clear All Filters - Enhanced */}
+              <div className="pt-6 border-t-2 border-gray-100">
                 <button
                   onClick={() => {
                     setSearchParams({});
                     dispatch(fetchProducts({}));
                   }}
-                  className="w-full py-3 px-4 border border-slate-300 rounded-xl text-slate-700 hover:bg-slate-50 transition-colors font-medium"
+                  className="w-full py-3 px-4 border-2 border-red-200 bg-red-50 rounded-xl text-red-600 hover:bg-red-100 hover:border-red-300 transition-all duration-200 font-semibold shadow-sm hover:shadow-md flex items-center justify-center gap-2"
                 >
+                  <FaTimesCircle className="w-4 h-4" />
                   Clear All Filters
                 </button>
               </div>
@@ -608,57 +640,68 @@ const Shop = () => {
             <div
               className="fixed inset-0 bg-black/50 z-30 lg:hidden"
               onClick={() => setShowFilters(false)}
-            />
+            ></div>
           )}
 
           {/* Main Content */}
           <div className="flex-1 lg:ml-0">
-            {/* Modern Header */}
-            <section className="bg-white py-8 px-8 border-b border-gray-100">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-                <div>
-                  <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                    {isBestsellersPage ? 'Bestsellers Collection' : categoryName ? `${categoryName} Tea Collection` : 'Premium Tea Collection'}
-                  </h1>
-                  <p className="text-gray-600">
-                    {isLoading ? 'Loading products...' : isBestsellersPage ? `Discover ${finalProducts.length} most popular teas` : `Discover ${finalProducts.length} ${categoryName ? `premium ${categoryName.toLowerCase()} teas` : 'handpicked teas'}`}
-                  </p>
-                  {categoryName && (
-                    <div className="mt-2">
-                      <Link
-                        to="/shop"
-                        className="text-sm text-bestea-600 hover:text-bestea-700 font-medium"
-                      >
-                        ← View all categories
-                      </Link>
-                    </div>
-                  )}
+            {/* Enhanced Professional Header */}
+            <motion.section 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white py-8 px-6 lg:px-8 border-b-2 border-gray-100 shadow-sm"
+            >
+              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-6 lg:space-y-0 gap-4">
+                {/* Title Section */}
+                <div className="flex items-center gap-4">
+                  <div className="bg-gradient-to-br from-green-400 to-green-600 p-3 rounded-xl shadow-md hidden sm:block">
+                    <FaShoppingCart className="w-7 h-7 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">
+                      {isBestsellersPage ? 'Bestsellers Collection' : categoryName ? `${categoryName} Tea Collection` : 'Premium Tea Collection'}
+                    </h1>
+                    <p className="text-gray-600 text-sm sm:text-base">
+                      {isLoading ? 'Loading products...' : isBestsellersPage ? `Discover ${finalProducts.length} most popular teas` : `Discover ${finalProducts.length} ${categoryName ? `premium ${categoryName.toLowerCase()} teas` : 'handpicked teas'}`}
+                    </p>
+                    {categoryName && (
+                      <div className="mt-2">
+                        <Link
+                          to="/shop"
+                          className="text-sm text-green-600 hover:text-green-700 font-semibold inline-flex items-center gap-1"
+                        >
+                          ← View all categories
+                        </Link>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 
-                {/* Search and Sort */}
-                <div className="flex items-center space-x-4">
+                {/* Search, Sort and View Controls */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                   {/* Mobile Filter Button */}
                   <button
                     onClick={() => setShowFilters(true)}
-                    className="lg:hidden flex items-center gap-2 px-4 py-3 bg-bestea-500 text-white rounded-xl hover:bg-bestea-600 transition-colors"
+                    className="lg:hidden flex items-center justify-center gap-2 px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 font-semibold shadow-md"
                   >
                     <FaFilter className="w-4 h-4" />
                     Filters
                   </button>
+                  
                   {/* Search Bar */}
-                  <form onSubmit={handleSearch} className="relative">
+                  <form onSubmit={handleSearch} className="relative flex-1 sm:flex-none">
                     <input
                       type="text"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                       placeholder="Search teas..."
-                      className="w-64 px-4 py-3 pr-10 bg-gray-50 border border-gray-200 rounded-2xl focus:border-bestea-400 focus:ring-2 focus:ring-bestea-100 transition-all duration-300 placeholder-gray-400"
+                      className="w-full sm:w-64 px-4 py-3 pr-10 bg-gray-50 border-2 border-gray-200 rounded-xl focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all duration-200 placeholder-gray-400 font-medium"
                     />
                     <button
                       type="submit"
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-bestea-500 transition-colors"
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-green-500 transition-colors"
                     >
-                      <FaSearch size={16} />
+                      <FaSearch className="w-5 h-5" />
                     </button>
                   </form>
                   
@@ -668,7 +711,7 @@ const Shop = () => {
                       value={localSortBy}
                       onChange={(e) => handleSortChange(e.target.value)}
                       disabled={isLoading}
-                      className="appearance-none bg-white border border-gray-200 rounded-2xl px-4 py-3 pr-10 focus:border-bestea-400 focus:ring-2 focus:ring-bestea-100 transition-all duration-300 disabled:opacity-50 cursor-pointer"
+                      className="appearance-none bg-white border-2 border-gray-200 rounded-xl px-4 py-3 pr-10 focus:border-green-400 focus:ring-2 focus:ring-green-100 transition-all duration-200 disabled:opacity-50 cursor-pointer font-medium text-gray-700 w-full sm:w-auto shadow-sm hover:shadow-md"
                     >
                       {sortOptions.map(option => (
                         <option key={option.value} value={option.value}>
@@ -677,22 +720,56 @@ const Shop = () => {
                       ))}
                     </select>
                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
-                      <i className="w-2 h-2 border-r-2 border-b-2 border-gray-400 transform rotate-45"></i>
+                      <FaChevronDown className="w-4 h-4 text-gray-400" />
                     </div>
+                  </div>
+
+                  {/* View Mode Toggle */}
+                  <div className="flex items-center bg-white border-2 border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
+                    <button
+                      onClick={() => setViewMode('grid')}
+                      className={`p-3 transition-all duration-200 ${
+                        viewMode === 'grid' 
+                          ? 'bg-gradient-to-br from-green-400 to-green-600 text-white' 
+                          : 'text-gray-600 hover:bg-gray-50'
+                      }`}
+                      title="Grid View"
+                    >
+                      <FaThLarge className="w-5 h-5" />
+                    </button>
+                    <div className="w-px h-6 bg-gray-200"></div>
+                    <button
+                      onClick={() => setViewMode('list')}
+                      className={`p-3 transition-all duration-200 ${
+                        viewMode === 'list' 
+                          ? 'bg-gradient-to-br from-green-400 to-green-600 text-white' 
+                          : 'text-gray-600 hover:bg-gray-50'
+                      }`}
+                      title="List View"
+                    >
+                      <FaList className="w-5 h-5" />
+                    </button>
                   </div>
                 </div>
               </div>
-            </section>
+            </motion.section>
 
-            {/* Active Filters */}
+            {/* Active Filters - Enhanced */}
             {(priceRange || availabilityFilter || ratingFilter || weightFilter || searchTerm) && (
-              <section className="px-8 py-4 bg-slate-50 border-b border-slate-200">
-                <div className="flex items-center justify-between">
+              <motion.section 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="px-6 lg:px-8 py-4 bg-green-50 border-b-2 border-green-100"
+              >
+                <div className="flex items-center justify-between flex-wrap gap-3">
                   <div className="flex items-center gap-2 flex-wrap">
-                    <span className="text-sm font-medium text-slate-700">Active filters:</span>
+                    <span className="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                      <FaFilter className="w-4 h-4 text-green-600" />
+                      Active filters:
+                    </span>
                     
                     {searchTerm && (
-                      <span className="inline-flex items-center gap-1 px-3 py-1 bg-bestea-100 text-bestea-800 rounded-full text-sm">
+                      <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border-2 border-green-200 text-green-800 rounded-lg text-sm font-medium shadow-sm">
                         Search: "{searchTerm}"
                         <button
                           onClick={() => {
@@ -702,7 +779,7 @@ const Shop = () => {
                             setSearchParams(newParams);
                             dispatch(fetchProducts(newParams));
                           }}
-                          className="ml-1 hover:text-bestea-900"
+                          className="ml-1 hover:text-green-900 p-0.5 hover:bg-green-100 rounded transition-colors"
                         >
                           <FaTimes className="w-3 h-3" />
                         </button>
@@ -710,13 +787,13 @@ const Shop = () => {
                     )}
                     
                     {priceRange && (
-                      <span className="inline-flex items-center gap-1 px-3 py-1 bg-bestea-100 text-bestea-800 rounded-full text-sm">
+                      <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border-2 border-green-200 text-green-800 rounded-lg text-sm font-medium shadow-sm">
                         {priceOptions.find(opt => opt.value === priceRange)?.label}
                         <button
                           onClick={() => {
                             handleFilterChange('price', '');
                           }}
-                          className="ml-1 hover:text-bestea-900"
+                          className="ml-1 hover:text-green-900 p-0.5 hover:bg-green-100 rounded transition-colors"
                         >
                           <FaTimes className="w-3 h-3" />
                         </button>
@@ -724,13 +801,13 @@ const Shop = () => {
                     )}
                     
                     {availabilityFilter && (
-                      <span className="inline-flex items-center gap-1 px-3 py-1 bg-bestea-100 text-bestea-800 rounded-full text-sm">
+                      <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border-2 border-green-200 text-green-800 rounded-lg text-sm font-medium shadow-sm">
                         {availabilityOptions.find(opt => opt.value === availabilityFilter)?.label}
                         <button
                           onClick={() => {
                             handleFilterChange('availability', '');
                           }}
-                          className="ml-1 hover:text-bestea-900"
+                          className="ml-1 hover:text-green-900 p-0.5 hover:bg-green-100 rounded transition-colors"
                         >
                           <FaTimes className="w-3 h-3" />
                         </button>
@@ -738,13 +815,13 @@ const Shop = () => {
                     )}
                     
                     {ratingFilter && (
-                      <span className="inline-flex items-center gap-1 px-3 py-1 bg-bestea-100 text-bestea-800 rounded-full text-sm">
+                      <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border-2 border-green-200 text-green-800 rounded-lg text-sm font-medium shadow-sm">
                         {ratingOptions.find(opt => opt.value === ratingFilter)?.label}
                         <button
                           onClick={() => {
                             handleFilterChange('rating', '');
                           }}
-                          className="ml-1 hover:text-bestea-900"
+                          className="ml-1 hover:text-green-900 p-0.5 hover:bg-green-100 rounded transition-colors"
                         >
                           <FaTimes className="w-3 h-3" />
                         </button>
@@ -752,13 +829,13 @@ const Shop = () => {
                     )}
                     
                     {weightFilter && (
-                      <span className="inline-flex items-center gap-1 px-3 py-1 bg-bestea-100 text-bestea-800 rounded-full text-sm">
+                      <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-white border-2 border-green-200 text-green-800 rounded-lg text-sm font-medium shadow-sm">
                         {weightOptions.find(opt => opt.value === weightFilter)?.label}
                         <button
                           onClick={() => {
                             handleFilterChange('weight', '');
                           }}
-                          className="ml-1 hover:text-bestea-900"
+                          className="ml-1 hover:text-green-900 p-0.5 hover:bg-green-100 rounded transition-colors"
                         >
                           <FaTimes className="w-3 h-3" />
                         </button>
@@ -771,288 +848,103 @@ const Shop = () => {
                       setSearchParams({});
                       dispatch(fetchProducts({}));
                     }}
-                    className="text-sm text-slate-600 hover:text-bestea-600 font-medium"
+                    className="text-sm text-red-600 hover:text-red-700 font-semibold flex items-center gap-1 px-3 py-1.5 hover:bg-white rounded-lg transition-colors"
                   >
+                    <FaTimesCircle className="w-4 h-4" />
                     Clear all
                   </button>
                 </div>
-              </section>
+              </motion.section>
             )}
 
             {/* Products Grid */}
-            <section className="py-12 px-8">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            <section className="py-8 px-6 lg:px-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {isLoading ? (
-                  // Loading skeleton
+                  // Loading skeleton - Compact
                   [...Array(8)].map((_, index) => (
-                    <div key={index} className="modern-card animate-pulse">
-                      <div className="aspect-square bg-gradient-to-br from-slate-200 to-slate-300 rounded-2xl mb-4"></div>
-                      <div className="p-6 space-y-3">
-                        <div className="h-4 bg-slate-200 rounded-full"></div>
-                        <div className="h-3 bg-slate-200 rounded-full w-2/3"></div>
-                        <div className="h-6 bg-slate-200 rounded-full w-1/2"></div>
+                    <div key={index} className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm animate-pulse">
+                      <div className="aspect-[4/3] bg-gradient-to-br from-gray-200 to-gray-300"></div>
+                      <div className="p-4 space-y-3">
+                        <div className="h-3 bg-gray-200 rounded-full w-1/3"></div>
+                        <div className="h-4 bg-gray-200 rounded-full"></div>
+                        <div className="h-4 bg-gray-200 rounded-full w-2/3"></div>
+                        <div className="h-3 bg-gray-200 rounded-full w-1/2"></div>
+                        <div className="h-10 bg-gray-200 rounded-xl"></div>
                       </div>
                     </div>
                   ))
                 ) : error ? (
-                  <div className="col-span-full text-center py-20">
-                    <div className="modern-card max-w-md mx-auto p-8">
-                      <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <FaExclamationTriangle className="w-8 h-8 text-red-500" />
+                  <div className="col-span-full text-center py-16">
+                    <motion.div 
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="bg-white rounded-2xl max-w-md mx-auto p-8 shadow-lg border-2 border-red-100"
+                    >
+                      <div className="w-20 h-20 bg-gradient-to-br from-red-100 to-red-200 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                        <FaExclamationTriangle className="w-10 h-10 text-red-500" />
                       </div>
-                      <h3 className="text-xl font-semibold text-slate-900 mb-2">Something went wrong</h3>
-                      <p className="text-slate-600 mb-6">{error}</p>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-3">Something went wrong</h3>
+                      <p className="text-gray-600 mb-6">{error}</p>
                       <button 
                         onClick={() => dispatch(fetchProducts())}
-                        className="btn-primary"
+                        className="px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg"
                       >
                         Try Again
                       </button>
-                    </div>
+                    </motion.div>
                   </div>
                 ) : finalProducts.length === 0 ? (
-                  <div className="col-span-full text-center py-20">
-                    <div className="modern-card max-w-md mx-auto p-8">
-                      <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <FaSearch className="w-8 h-8 text-slate-400" />
+                  <div className="col-span-full text-center py-16">
+                    <motion.div 
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className="bg-white rounded-2xl max-w-md mx-auto p-8 shadow-lg border-2 border-gray-100"
+                    >
+                      <div className="w-20 h-20 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+                        <FaSearch className="w-10 h-10 text-gray-400" />
                       </div>
-                      <h3 className="text-xl font-semibold text-slate-900 mb-2">No products found</h3>
-                      <p className="text-slate-600">Try adjusting your search or filter criteria</p>
-                    </div>
+                      <h3 className="text-2xl font-bold text-gray-900 mb-3">No products found</h3>
+                      <p className="text-gray-600 mb-6">Try adjusting your search or filter criteria to find what you're looking for.</p>
+                      <button
+                        onClick={() => {
+                          setSearchParams({});
+                          dispatch(fetchProducts({}));
+                        }}
+                        className="px-8 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-md hover:shadow-lg inline-flex items-center gap-2"
+                      >
+                        <FaTimesCircle className="w-5 h-5" />
+                        Clear Filters
+                      </button>
+                    </motion.div>
                   </div>
                 ) : (
                   finalProducts.map((product, index) => (
-                    <motion.div
+                    <Card.Product
                       key={product._id || product.id}
-                      initial={{ opacity: 0, y: 30 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: index * 0.05 }}
-                      className="group h-full"
-                    >
-                      <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 h-full flex flex-col">
-                        {/* Product Image Container */}
-                        <Link to={`/product/${product._id || product.id}`} className="relative block overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-                          <div className="aspect-square relative">
-                            <img
-                              src={product.mainImage?.url || product.image || '/images/tea-placeholder.svg'}
-                              alt={product.name}
-                              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                              loading="lazy"
-                            />
-                            
-                            {/* Overlay on Hover */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/0 to-black/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                            
-                            {/* Product Badges - Top Left */}
-                            <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
-                              {product.badges && product.badges.includes('Best Seller') && (
-                                <span className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-gray-900 px-3 py-1 rounded-full text-xs font-bold shadow-lg flex items-center gap-1">
-                                  <FaStar className="text-xs" />
-                                  BESTSELLER
-                                </span>
-                              )}
-                              {product.badges && product.badges.includes('Super Saver') && (
-                                <span className="bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                                  SUPER SAVER
-                                </span>
-                              )}
-                              {(product.defaultOriginalPrice || product.originalPrice) && (
-                                <span className="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg animate-pulse">
-                                  SALE
-                                </span>
-                              )}
-                              {product.stock === 0 && (
-                                <span className="bg-gray-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">
-                                  OUT OF STOCK
-                                </span>
-                              )}
-                            </div>
+                      product={{
+                        ...product,
+                        images: product.mainImage?.url ? [product.mainImage.url] : [product.image || '/images/tea-placeholder.svg'],
+                        price: product.defaultPrice || product.price,
+                        originalPrice: product.defaultOriginalPrice || product.originalPrice,
+                        rating: product.averageRating || product.rating || 0,
+                        reviewCount: product.reviewCount || 0,
+                        isNew: product.badges?.includes('New'),
+                        isFeatured: product.badges?.includes('Best Seller'),
+                        discount: product.defaultOriginalPrice ? Math.round(((product.defaultOriginalPrice - product.defaultPrice) / product.defaultOriginalPrice) * 100) : 0
+                      }}
+                      delay={index}
+                      onAddToCart={() => handleAddToCart(product)}
+                      onAddToWishlist={() => {
+                        // Add to wishlist logic
+                        console.log('Add to wishlist:', product.name);
+                      }}
+                      onViewDetails={() => {
+                        // Navigate to product details
+                        window.location.href = `/product/${product._id || product.id}`;
+                      }}
+                    />
 
-                            {/* Quick Actions - Top Right */}
-                            <div className="absolute top-3 right-3 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-                              <button 
-                                className="p-2.5 bg-white rounded-full shadow-lg hover:bg-orange-600 hover:text-white transition-all duration-300 hover:scale-110"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  // Add to wishlist logic
-                                }}
-                                aria-label="Add to wishlist"
-                              >
-                                <FaHeart className="text-sm" />
-                              </button>
-                            </div>
-
-                            {/* Rating Badge - Bottom Right */}
-                            {(product.averageRating || product.rating) && (
-                              <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm rounded-lg px-2.5 py-1.5 flex items-center gap-1.5 shadow-lg">
-                                <FaStar className="text-yellow-400 text-xs" />
-                                <span className="text-xs font-bold text-gray-900">{(product.averageRating || product.rating).toFixed(1)}</span>
-                                <span className="text-xs text-gray-500">({product.reviewCount || 0})</span>
-                              </div>
-                            )}
-                          </div>
-                        </Link>
-                          
-                        {/* Product Info */}
-                        <div className="p-4 flex-1 flex flex-col">
-                          {/* Category Badge */}
-                          <div className="mb-2">
-                            <span className="inline-block px-2.5 py-1 text-xs font-semibold bg-green-50 text-green-700 rounded-md border border-green-200">
-                              {product.category?.name || 'Premium Tea'}
-                            </span>
-                          </div>
-                          
-                          {/* Product Title */}
-                          <Link to={`/product/${product._id || product.id}`}>
-                            <h3 className="font-bold text-base text-gray-900 mb-2 group-hover:text-orange-600 transition-colors duration-300 line-clamp-2 min-h-[3rem]">
-                              {product.name}
-                            </h3>
-                          </Link>
-                          
-                          {/* Product Description */}
-                          <p className="text-sm text-gray-600 mb-3 line-clamp-2 flex-1">
-                            {product.shortDescription || (product.description ? product.description.substring(0, 80) + '...' : 'Premium quality tea blend')}
-                          </p>
-                          
-                          {/* Specifications */}
-                          <div className="flex items-center gap-3 mb-4 text-xs text-gray-500 flex-wrap">
-                            <span className="flex items-center gap-1">
-                              <div className="w-1.5 h-1.5 bg-orange-400 rounded-full"></div>
-                              {product.type === 'loose' ? 'Loose Leaf' : 'Tea Bags'}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <div className="w-1.5 h-1.5 bg-gray-400 rounded-full"></div>
-                              {product.weight || '100'}g
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <div className="w-1.5 h-1.5 bg-amber-400 rounded-full"></div>
-                              {product.cupCount || product.cups || 50} Cups
-                            </span>
-                          </div>
-                          
-                          {/* Price and Action Section */}
-                          <div className="mt-auto space-y-3">
-                            {/* Price Row */}
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-baseline gap-2">
-                                <span className="text-2xl font-bold text-gray-900">
-                                  ₹{product.defaultPrice || product.price}
-                                </span>
-                                {(product.defaultOriginalPrice || product.originalPrice) && (
-                                  <span className="text-sm text-gray-400 line-through">
-                                    ₹{product.defaultOriginalPrice || product.originalPrice}
-                                  </span>
-                                )}
-                              </div>
-                              
-                              {/* Discount Badge */}
-                              {(product.defaultOriginalPrice || product.originalPrice) && (
-                                <span className="text-xs font-bold text-red-600 bg-red-50 px-2 py-1 rounded-md">
-                                  -{Math.round(((product.defaultOriginalPrice || product.originalPrice) - (product.defaultPrice || product.price)) / (product.defaultOriginalPrice || product.originalPrice) * 100)}%
-                                </span>
-                              )}
-                            </div>
-
-                            {/* Stock Status */}
-                            <div className="flex items-center gap-1.5 text-xs">
-                              {product.stock > 20 ? (
-                                <>
-                                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                                  <span className="text-green-700 font-medium">In Stock</span>
-                                </>
-                              ) : product.stock > 0 ? (
-                                <>
-                                  <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-                                  <span className="text-orange-700 font-medium">Only {product.stock} left</span>
-                                </>
-                              ) : (
-                                <>
-                                  <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                                  <span className="text-red-700 font-medium">Out of Stock</span>
-                                </>
-                              )}
-                            </div>
-
-                            {/* Add to Cart Button or Quantity Controls */}
-                            {(() => {
-                              const cartItem = getCartItem(product);
-                              
-                              if (product.stock === 0) {
-                                return (
-                                  <button
-                                    disabled
-                                    className="w-full py-2.5 px-4 rounded-lg font-semibold text-sm bg-gray-100 text-gray-400 cursor-not-allowed flex items-center justify-center gap-2"
-                                  >
-                                    <FaShoppingCart className="text-sm" />
-                                    Out of Stock
-                                  </button>
-                                );
-                              }
-                              
-                              if (cartItem) {
-                                return (
-                                  <div 
-                                    onClick={(e) => {
-                                      e.preventDefault();
-                                      e.stopPropagation();
-                                    }}
-                                    className="flex items-center justify-between bg-orange-50 border-2 border-orange-200 rounded-lg p-2"
-                                  >
-                                    <span className="text-sm text-orange-700 font-medium">In Cart:</span>
-                                    <div className="flex items-center gap-2">
-                                      <motion.button
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          e.stopPropagation();
-                                          handleDecrementCart(cartItem.id);
-                                        }}
-                                        className="p-1.5 text-orange-600 hover:bg-orange-100 rounded-full transition-colors"
-                                        title={cartItem.quantity === 1 ? "Remove from cart" : "Decrease quantity"}
-                                      >
-                                        <FaMinus className="w-3 h-3" />
-                                      </motion.button>
-                                      <span className="font-bold text-orange-700 min-w-[24px] text-center">{cartItem.quantity}</span>
-                                      <motion.button
-                                        whileHover={{ scale: 1.1 }}
-                                        whileTap={{ scale: 0.9 }}
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          e.stopPropagation();
-                                          handleIncrementCart(cartItem.id);
-                                        }}
-                                        className="p-1.5 text-orange-600 hover:bg-orange-100 rounded-full transition-colors"
-                                      >
-                                        <FaPlus className="w-3 h-3" />
-                                      </motion.button>
-                                    </div>
-                                  </div>
-                                );
-                              }
-                              
-                              return (
-                                <motion.button
-                                  whileHover={{ scale: 1.02 }}
-                                  whileTap={{ scale: 0.98 }}
-                                  onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    handleAddToCart(product);
-                                  }}
-                                  className="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-2.5 px-4 rounded-lg font-semibold text-sm hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] flex items-center justify-center gap-2 group/btn"
-                                >
-                                  <FaShoppingCart className="text-sm group-hover/btn:scale-110 transition-transform" />
-                                  <span>Add to Cart</span>
-                                </motion.button>
-                              );
-                            })()}
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
                   ))
                 )}
               </div>

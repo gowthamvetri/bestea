@@ -18,6 +18,7 @@ import {
 } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
+import ImageUpload from '../../components/common/ImageUpload';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -42,8 +43,20 @@ const AdminCategories = () => {
     name: '',
     description: '',
     slug: '',
-    isActive: true
+    isActive: true,
+    colorTheme: '#9ACB3C'
   });
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [existingImage, setExistingImage] = useState(null);
+
+  // Debug: Track state changes
+  useEffect(() => {
+    console.log('selectedImage changed:', selectedImage);
+  }, [selectedImage]);
+
+  useEffect(() => {
+    console.log('existingImage changed:', existingImage);
+  }, [existingImage]);
   const [stats, setStats] = useState({
     totalCategories: 0,
     activeCategories: 0,
@@ -132,19 +145,31 @@ const AdminCategories = () => {
     setSelectedCategory(category);
     
     if (mode === 'edit' && category) {
+      console.log('Opening edit modal for category:', category);
+      console.log('Category image data:', category.image);
+      
       setCategoryForm({
         name: category.name,
         description: category.description || '',
         slug: category.slug,
-        isActive: category.isActive
+        isActive: category.isActive,
+        colorTheme: category.colorTheme || '#9ACB3C'
       });
+      
+      const existingImg = category.image?.url ? [{ url: category.image.url, public_id: category.image.public_id }] : [];
+      console.log('Setting existingImage:', existingImg);
+      setExistingImage(existingImg);
+      setSelectedImage(null);
     } else {
       setCategoryForm({
         name: '',
         description: '',
         slug: '',
-        isActive: true
+        isActive: true,
+        colorTheme: '#9ACB3C'
       });
+      setExistingImage([]);
+      setSelectedImage(null);
     }
     
     setShowModal(true);
@@ -157,8 +182,11 @@ const AdminCategories = () => {
       name: '',
       description: '',
       slug: '',
-      isActive: true
+      isActive: true,
+      colorTheme: '#9ACB3C'
     });
+    setSelectedImage(null);
+    setExistingImage([]);
   };
 
   const generateSlug = (name) => {
@@ -177,29 +205,102 @@ const AdminCategories = () => {
     }));
   };
 
+  const handleImageUpload = async (file) => {
+    try {
+      console.log('handleImageUpload called with file:', file);
+      console.log('File type:', typeof file);
+      console.log('File is File object:', file instanceof File);
+      
+      if (file) {
+        console.log('Setting selectedImage to File object:', {
+          name: file.name,
+          size: file.size,
+          type: file.type
+        });
+        setSelectedImage(file);
+      }
+      return Promise.resolve();
+    } catch (error) {
+      console.error('Error handling image upload:', error);
+      return Promise.reject(error);
+    }
+  };
+
+  const handleImageRemove = () => {
+    setSelectedImage(null);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
+      console.log('=== FORM SUBMIT ===');
+      console.log('Modal mode:', modalMode);
+      console.log('Selected category:', selectedCategory);
+      console.log('Category form:', categoryForm);
+      console.log('Selected image:', selectedImage);
+      console.log('Selected image is File:', selectedImage instanceof File);
+      console.log('Existing image:', existingImage);
+      
       const token = localStorage.getItem('token');
       
-      if (modalMode === 'add') {
-        const response = await axios.post(`${API_URL}/admin/categories`, categoryForm, {
-          headers: { 'Authorization': `Bearer ${token}` }
+      // Create FormData for file upload
+      const formData = new FormData();
+      
+      // Add form fields
+      Object.keys(categoryForm).forEach(key => {
+        formData.append(key, categoryForm[key]);
+      });
+      
+      // Add image if selected (new image uploaded)
+      if (selectedImage && selectedImage instanceof File) {
+        console.log('✅ Adding NEW image to FormData:', {
+          name: selectedImage.name,
+          size: selectedImage.size,
+          type: selectedImage.type
         });
+        formData.append('image', selectedImage);
+      } else if (modalMode === 'edit' && existingImage && existingImage.length > 0) {
+        console.log('ℹ️  Keeping existing image - no new file to upload');
+      } else {
+        console.log('⚠️  No image selected or available');
+      }
+      
+      // Debug FormData contents
+      console.log('📦 FormData contents:');
+      for (let [key, value] of formData.entries()) {
+        if (value instanceof File) {
+          console.log(`  ${key}: File(${value.name}, ${value.size} bytes, ${value.type})`);
+        } else {
+          console.log(`  ${key}:`, value);
+        }
+      }
+      
+      const config = {
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      };
+      
+      let response;
+      if (modalMode === 'add') {
+        console.log('🚀 Sending POST request to create category...');
+        response = await axios.post(`${API_URL}/admin/categories`, formData, config);
         
         if (response.data.success) {
+          console.log('✅ Category created successfully:', response.data);
           toast.success('Category created successfully');
           fetchCategories();
           fetchStats();
           closeModal();
         }
       } else {
-        const response = await axios.put(`${API_URL}/admin/categories/${selectedCategory._id}`, categoryForm, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+        console.log('🚀 Sending PUT request to update category...');
+        response = await axios.put(`${API_URL}/admin/categories/${selectedCategory._id}`, formData, config);
         
         if (response.data.success) {
+          console.log('✅ Category updated successfully:', response.data);
           toast.success('Category updated successfully');
           fetchCategories();
           fetchStats();
@@ -207,7 +308,8 @@ const AdminCategories = () => {
         }
       }
     } catch (error) {
-      console.error('Error saving category:', error);
+      console.error('❌ Error saving category:', error);
+      console.error('Error response:', error.response?.data);
       toast.error(error.response?.data?.message || 'Failed to save category');
     }
   };
@@ -281,7 +383,7 @@ const AdminCategories = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-bestea-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
       </div>
     );
   }
@@ -302,7 +404,7 @@ const AdminCategories = () => {
           className="bg-white rounded-lg shadow-md p-6"
         >
           <div className="flex items-center">
-            <div className="p-3 rounded-full bg-bestea-100 text-bestea-600">
+            <div className="p-3 rounded-full bg-green-100 text-green-600">
               <FaTags size={24} />
             </div>
             <div className="ml-4">
@@ -376,7 +478,7 @@ const AdminCategories = () => {
                 placeholder="Search categories..."
                 value={searchQuery}
                 onChange={handleSearch}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bestea-500 focus:border-bestea-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
               />
             </div>
 
@@ -384,7 +486,7 @@ const AdminCategories = () => {
             <select
               value={filters.active}
               onChange={(e) => handleFilterChange('active', e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bestea-500 focus:border-bestea-500"
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
             >
               <option value="all">All Categories</option>
               <option value="true">Active Only</option>
@@ -419,7 +521,7 @@ const AdminCategories = () => {
 
             <button
               onClick={() => openModal('add')}
-              className="flex items-center gap-2 px-4 py-2 bg-bestea-600 text-white rounded-lg hover:bg-bestea-700 transition-colors"
+              className="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
             >
               <FaPlus size={16} />
               Add Category
@@ -626,7 +728,7 @@ const AdminCategories = () => {
                     value={categoryForm.name}
                     onChange={handleFormChange}
                     required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bestea-500 focus:border-bestea-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="Enter category name"
                   />
                 </div>
@@ -640,7 +742,7 @@ const AdminCategories = () => {
                     name="slug"
                     value={categoryForm.slug}
                     onChange={handleFormChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bestea-500 focus:border-bestea-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="URL-friendly slug (auto-generated if empty)"
                   />
                   <p className="text-xs text-gray-500 mt-1">
@@ -657,9 +759,55 @@ const AdminCategories = () => {
                     value={categoryForm.description}
                     onChange={handleFormChange}
                     rows="3"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bestea-500 focus:border-bestea-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     placeholder="Enter category description (optional)"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Category Image
+                  </label>
+                  <ImageUpload
+                    type="single"
+                    maxFiles={1}
+                    maxSize={3}
+                    onUpload={handleImageUpload}
+                    onRemove={handleImageRemove}
+                    existingImages={existingImage}
+                    className="w-full"
+                    accept="image/*"
+                    label="Upload Category Image"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Upload an image to represent this category. Recommended size: 400x400px.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Color Theme
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="color"
+                      name="colorTheme"
+                      value={categoryForm.colorTheme}
+                      onChange={handleFormChange}
+                      className="w-12 h-10 border border-gray-300 rounded cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      name="colorTheme"
+                      value={categoryForm.colorTheme}
+                      onChange={handleFormChange}
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                      placeholder="#9ACB3C"
+                    />
+                  </div>
+                  <p className="text-xs text-gray-500 mt-1">
+                    Choose a theme color for this category.
+                  </p>
                 </div>
 
                 <div>
@@ -669,7 +817,7 @@ const AdminCategories = () => {
                       name="isActive"
                       checked={categoryForm.isActive}
                       onChange={handleFormChange}
-                      className="rounded border-gray-300 text-bestea-600 focus:ring-bestea-500"
+                      className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                     />
                     <span className="ml-2 text-sm text-gray-700">Active Category</span>
                   </label>
@@ -688,7 +836,7 @@ const AdminCategories = () => {
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-bestea-600 text-white rounded-lg hover:bg-bestea-700 transition-colors"
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
                   >
                     {modalMode === 'add' ? 'Create Category' : 'Update Category'}
                   </button>

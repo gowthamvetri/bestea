@@ -29,7 +29,6 @@ const Checkout = () => {
   const cartDiscount = useSelector(state => state.cart.discount || 0);
   const appliedCoupon = useSelector(state => state.cart.appliedCoupon);
   const totalQuantity = useSelector(state => state.cart.totalQuantity || 0);  const [formData, setFormData] = useState({
-    // Shipping Information
     firstName: '',
     lastName: '',
     email: '',
@@ -40,10 +39,8 @@ const Checkout = () => {
     pincode: '',
     landmark: '',
     
-    // Payment Information
     paymentMethod: 'razorpay',
     
-    // Order Notes
     orderNotes: ''
   });
 
@@ -52,21 +49,10 @@ const Checkout = () => {
   const [currentStep, setCurrentStep] = useState(1);
 
   useEffect(() => {
-    // Redirect if cart is empty
-    if (cartItems.length === 0) {
-      toast.error('Your cart is empty');
-      navigate('/cart');
-    }
-  }, [cartItems, navigate]);
-
-  // Recalculate cart totals when component mounts
-  useEffect(() => {
     // Force recalculation of cart totals
     if (cartItems && cartItems.length > 0) {
       dispatch(calculateTotals());
     } else if (cartItems && cartItems.length === 0) {
-      // Redirect to cart page if no items
-      toast.error('Your cart is empty. Please add items before checkout.');
       navigate('/cart');
     }
   }, [cartItems, dispatch, navigate]);
@@ -158,6 +144,7 @@ const Checkout = () => {
             price: item.price || 0,
             total: itemTotal,
             image: item.image || '',
+            mainImage: item.image ? { url: item.image } : null,
             variant: item.variant?.name || null
           };
         }),
@@ -242,7 +229,7 @@ const Checkout = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading cart...</p>
         </div>
       </div>
@@ -283,7 +270,7 @@ const Checkout = () => {
                   <div className="flex flex-col items-center">
                     <div className={`w-12 h-12 rounded-full flex items-center justify-center border-2 ${
                       isCompleted ? 'bg-green-500 border-green-500 text-white' :
-                      isActive ? 'bg-orange-500 border-orange-500 text-white' :
+                      isActive ? 'bg-green-500 border-green-500 text-white' :
                       'bg-white border-gray-300 text-gray-400'
                     }`}>
                       {isCompleted ? (
@@ -293,7 +280,7 @@ const Checkout = () => {
                       )}
                     </div>
                     <span className={`mt-2 text-sm font-medium ${
-                      isActive ? 'text-orange-600' : 
+                      isActive ? 'text-green-600' : 
                       isCompleted ? 'text-green-600' : 'text-gray-400'
                     }`}>
                       {step.title}
@@ -333,7 +320,7 @@ const Checkout = () => {
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleInputChange}
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                           errors.firstName ? 'border-red-500' : 'border-gray-300'
                         }`}
                         placeholder="Enter first name"
@@ -350,7 +337,7 @@ const Checkout = () => {
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleInputChange}
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                           errors.lastName ? 'border-red-500' : 'border-gray-300'
                         }`}
                         placeholder="Enter last name"
@@ -369,7 +356,7 @@ const Checkout = () => {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                          className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                             errors.email ? 'border-red-500' : 'border-gray-300'
                           }`}
                           placeholder="Enter email address"
@@ -389,7 +376,7 @@ const Checkout = () => {
                           name="phone"
                           value={formData.phone}
                           onChange={handleInputChange}
-                          className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                          className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                             errors.phone ? 'border-red-500' : 'border-gray-300'
                           }`}
                           placeholder="Enter phone number"
@@ -410,7 +397,7 @@ const Checkout = () => {
                         value={formData.address}
                         onChange={handleInputChange}
                         rows={3}
-                        className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                        className={`w-full pl-10 pr-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                           errors.address ? 'border-red-500' : 'border-gray-300'
                         }`}
                         placeholder="Enter full address"
@@ -429,7 +416,7 @@ const Checkout = () => {
                         name="city"
                         value={formData.city}
                         onChange={handleInputChange}
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                           errors.city ? 'border-red-500' : 'border-gray-300'
                         }`}
                         placeholder="Enter city"
@@ -445,7 +432,7 @@ const Checkout = () => {
                         name="state"
                         value={formData.state}
                         onChange={handleInputChange}
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                           errors.state ? 'border-red-500' : 'border-gray-300'
                         }`}
                       >
@@ -466,7 +453,7 @@ const Checkout = () => {
                         name="pincode"
                         value={formData.pincode}
                         onChange={handleInputChange}
-                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                        className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                           errors.pincode ? 'border-red-500' : 'border-gray-300'
                         }`}
                         placeholder="Enter pincode"
@@ -485,7 +472,7 @@ const Checkout = () => {
                       name="landmark"
                       value={formData.landmark}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="Enter nearby landmark"
                     />
                   </div>
@@ -494,7 +481,7 @@ const Checkout = () => {
                     <button
                       type="button"
                       onClick={nextStep}
-                      className="px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+                      className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                     >
                       Continue to Payment
                     </button>
@@ -519,7 +506,7 @@ const Checkout = () => {
                           key={method.id}
                           className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors ${
                             formData.paymentMethod === method.id
-                              ? 'border-orange-500 bg-orange-50'
+                              ? 'border-green-500 bg-green-50'
                               : 'border-gray-300 hover:bg-gray-50'
                           }`}
                         >
@@ -532,7 +519,7 @@ const Checkout = () => {
                             className="sr-only"
                           />
                           <Icon className={`w-6 h-6 mr-4 ${
-                            formData.paymentMethod === method.id ? 'text-orange-600' : 'text-gray-400'
+                            formData.paymentMethod === method.id ? 'text-green-600' : 'text-gray-400'
                           }`} />
                           <div className="flex-1">
                             <div className="font-medium text-gray-900">{method.name}</div>
@@ -540,7 +527,7 @@ const Checkout = () => {
                           </div>
                           <div className={`w-4 h-4 rounded-full border-2 ${
                             formData.paymentMethod === method.id
-                              ? 'border-orange-500 bg-orange-500'
+                              ? 'border-green-500 bg-green-500'
                               : 'border-gray-300'
                           }`}>
                             {formData.paymentMethod === method.id && (
@@ -563,7 +550,7 @@ const Checkout = () => {
                     <button
                       type="button"
                       onClick={nextStep}
-                      className="px-6 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+                      className="px-6 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
                     >
                       Review Order
                     </button>
@@ -611,7 +598,7 @@ const Checkout = () => {
                       value={formData.orderNotes}
                       onChange={handleInputChange}
                       rows={3}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                       placeholder="Special instructions for your order..."
                     />
                   </div>
@@ -674,7 +661,7 @@ const Checkout = () => {
                 <div className="border-t pt-3">
                   <div className="flex justify-between">
                     <span className="text-lg font-medium text-gray-900">Total</span>
-                    <span className="text-lg font-bold text-orange-600">₹{(Number(finalTotal) || 0).toFixed(2)}</span>
+                    <span className="text-lg font-bold text-green-600">₹{(Number(finalTotal) || 0).toFixed(2)}</span>
                   </div>
                 </div>
               </div>

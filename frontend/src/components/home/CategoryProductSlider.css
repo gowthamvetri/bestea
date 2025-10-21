@@ -18,10 +18,10 @@
 }
 
 .category-slider .swiper-pagination-bullet-active {
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
   width: 32px;
   border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+  box-shadow: 0 4px 12px rgba(5, 150, 105, 0.4);
 }
 
 .category-slider .swiper-pagination-bullet:hover {
@@ -43,10 +43,10 @@
 
 .category-slider .swiper-button-prev:hover,
 .category-slider .swiper-button-next:hover {
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
   color: white;
-  border-color: #f97316;
-  box-shadow: 0 15px 35px rgba(249, 115, 22, 0.3);
+  border-color: #059669;
+  box-shadow: 0 15px 35px rgba(5, 150, 105, 0.3);
   transform: scale(1.05);
 }
 

@@ -19,6 +19,14 @@ const orderSchema = new mongoose.Schema({
       ref: 'Product',
       required: true
     },
+    name: {
+      type: String,
+      required: true
+    },
+    mainImage: {
+      url: String,
+      public_id: String
+    },
     variant: String, // e.g., "500g"
     quantity: {
       type: Number,

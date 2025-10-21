@@ -346,7 +346,7 @@ const AddEditProduct = () => {
   if (loading && isEditMode) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-500"></div>
       </div>
     );
   }
@@ -391,7 +391,7 @@ const AddEditProduct = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                       errors.name ? 'border-red-500' : 'border-gray-300'
                     }`}
                     placeholder="Enter product name"
@@ -408,7 +408,7 @@ const AddEditProduct = () => {
                     name="sku"
                     value={formData.sku}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="Product SKU"
                   />
                 </div>
@@ -422,7 +422,7 @@ const AddEditProduct = () => {
                     value={formData.category}
                     onChange={handleInputChange}
                     disabled={categoriesLoading}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                       errors.category ? 'border-red-500' : 'border-gray-300'
                     } ${categoriesLoading ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                   >
@@ -445,7 +445,7 @@ const AddEditProduct = () => {
                     name="weight"
                     value={formData.weight}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="250"
                   />
                 </div>
@@ -459,7 +459,7 @@ const AddEditProduct = () => {
                     name="price"
                     value={formData.price}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                       errors.price ? 'border-red-500' : 'border-gray-300'
                     }`}
                     placeholder="0"
@@ -478,7 +478,7 @@ const AddEditProduct = () => {
                     name="originalPrice"
                     value={formData.originalPrice}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="0"
                     min="0"
                     step="0.01"
@@ -494,7 +494,7 @@ const AddEditProduct = () => {
                     name="stock"
                     value={formData.stock}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                       errors.stock ? 'border-red-500' : 'border-gray-300'
                     }`}
                     placeholder="0"
@@ -512,7 +512,7 @@ const AddEditProduct = () => {
                     name="origin"
                     value={formData.origin}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     placeholder="e.g., Assam, India"
                   />
                 </div>
@@ -527,7 +527,7 @@ const AddEditProduct = () => {
                     name="blendType"
                     value={formData.blendType}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     required
                   >
                     <option value="">Select Blend Type</option>
@@ -550,7 +550,7 @@ const AddEditProduct = () => {
                     name="strength"
                     value={formData.strength}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                     required
                   >
                     <option value="">Select Strength</option>
@@ -571,7 +571,7 @@ const AddEditProduct = () => {
                   value={formData.shortDescription}
                   onChange={handleInputChange}
                   rows={2}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                   placeholder="Brief product description..."
                 />
               </div>
@@ -585,7 +585,7 @@ const AddEditProduct = () => {
                   value={formData.description}
                   onChange={handleInputChange}
                   rows={4}
-                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                  className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                     errors.description ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Detailed product description..."
@@ -611,7 +611,7 @@ const AddEditProduct = () => {
                   <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                     <FaUpload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
                     <div className="text-sm text-gray-600">
-                      <label className="cursor-pointer text-orange-600 hover:text-orange-800">
+                      <label className="cursor-pointer text-green-600 hover:text-green-800">
                         Click to upload
                         <input
                           type="file"
@@ -636,7 +636,7 @@ const AddEditProduct = () => {
                           src={image.url}
                           alt={image.alt}
                           className={`w-full h-32 object-cover rounded-lg border-2 ${
-                            index === mainImageIndex ? 'border-orange-500' : 'border-gray-200'
+                            index === mainImageIndex ? 'border-green-500' : 'border-gray-200'
                           }`}
                         />
                         <div className="absolute top-2 right-2 flex space-x-1">
@@ -661,7 +661,7 @@ const AddEditProduct = () => {
                         </div>
                         {index === mainImageIndex && (
                           <div className="absolute bottom-2 left-2">
-                            <span className="px-2 py-1 bg-orange-500 text-white text-xs rounded">Main</span>
+                            <span className="px-2 py-1 bg-green-500 text-white text-xs rounded">Main</span>
                           </div>
                         )}
                       </div>
@@ -690,7 +690,7 @@ const AddEditProduct = () => {
                     name="isActive"
                     checked={formData.isActive}
                     onChange={handleInputChange}
-                    className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                    className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                   />
                   <span className="ml-2 text-sm text-gray-700">Active</span>
                 </label>
@@ -701,7 +701,7 @@ const AddEditProduct = () => {
                     name="isFeatured"
                     checked={formData.isFeatured}
                     onChange={handleInputChange}
-                    className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                    className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                   />
                   <span className="ml-2 text-sm text-gray-700">Featured Product</span>
                 </label>
@@ -712,7 +712,7 @@ const AddEditProduct = () => {
                     name="isBestseller"
                     checked={formData.isBestseller}
                     onChange={handleInputChange}
-                    className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                    className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                   />
                   <span className="ml-2 text-sm text-gray-700">Bestseller</span>
                 </label>
@@ -723,7 +723,7 @@ const AddEditProduct = () => {
                     name="isOrganic"
                     checked={formData.isOrganic}
                     onChange={handleInputChange}
-                    className="rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                    className="rounded border-gray-300 text-green-600 focus:ring-green-500"
                   />
                   <span className="ml-2 text-sm text-gray-700">Organic</span>
                 </label>
@@ -741,7 +741,7 @@ const AddEditProduct = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full flex items-center justify-center px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50"
+                  className="w-full flex items-center justify-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 disabled:opacity-50"
                 >
                   {loading ? (
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -754,7 +754,7 @@ const AddEditProduct = () => {
                 <button
                   type="button"
                   onClick={() => navigate('/admin/products')}
-                  className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full px-4 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                   Cancel
                 </button>

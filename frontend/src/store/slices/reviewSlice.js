@@ -71,8 +71,20 @@ export const deleteReview = createAsyncThunk(
 
 export const fetchFeaturedTestimonials = createAsyncThunk(
   'reviews/fetchFeaturedTestimonials',
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
+      // Check cache first
+      const state = getState();
+      const { featuredTestimonials, lastFetchTime } = state.reviews;
+      const now = Date.now();
+      const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes for testimonials (less frequent updates)
+      
+      if (featuredTestimonials.length > 0 && lastFetchTime.featuredTestimonials && (now - lastFetchTime.featuredTestimonials < CACHE_DURATION)) {
+        console.log('Using cached testimonials data');
+        return featuredTestimonials;
+      }
+      
+      console.log('Fetching testimonials from API...');
       const response = await axios.get(`${API_URL}/reviews/featured-testimonials`);
       return response.data;
     } catch (error) {
@@ -136,8 +148,12 @@ const initialState = {
   currentProductReviews: [],
   userReviews: [],
   testimonials: [],
+  featuredTestimonials: [],
   loading: false,
   error: null,
+  lastFetchTime: {
+    featuredTestimonials: null,
+  },
   pagination: {
     page: 1,
     totalPages: 1,
@@ -269,6 +285,8 @@ const reviewSlice = createSlice({
       .addCase(fetchFeaturedTestimonials.fulfilled, (state, action) => {
         state.loading = false;
         state.testimonials = action.payload;
+        state.featuredTestimonials = action.payload;
+        state.lastFetchTime.featuredTestimonials = Date.now();
       })
       .addCase(fetchFeaturedTestimonials.rejected, (state, action) => {
         state.loading = false;

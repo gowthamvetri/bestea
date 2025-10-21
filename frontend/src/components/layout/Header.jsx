@@ -76,7 +76,7 @@ const Header = () => {
   return (
     <>
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white text-center py-2.5">
+      <div className="bg-gradient-to-r from-green-500 to-green-600 text-white text-center py-2.5">
         <div className="w-full px-4">
           <div className="flex items-center justify-center space-x-6 text-sm font-medium">
             <div className="flex items-center space-x-2">
@@ -104,7 +104,7 @@ const Header = () => {
             {/* Mobile Menu Button */}
             <button
               onClick={() => dispatch(toggleMobileMenu())}
-              className="lg:hidden p-2.5 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300"
+              className="lg:hidden p-2.5 text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all duration-300"
               aria-label="Toggle mobile menu"
             >
               {isMobileMenuOpen ? <FaTimes size={22} /> : <FaBars size={22} />}
@@ -117,7 +117,7 @@ const Header = () => {
               onClick={() => dispatch(closeMobileMenu())}
             >
               <div className="relative">
-                <div className="w-11 h-11 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl flex items-center justify-center shadow-md group-hover:shadow-orange-500/30 transition-all duration-300 group-hover:scale-105">
+                <div className="w-11 h-11 bg-gradient-to-br from-green-500 to-green-600 rounded-2xl flex items-center justify-center shadow-md group-hover:shadow-green-500/30 transition-all duration-300 group-hover:scale-105">
                   <span className="text-white font-bold text-2xl">B</span>
                 </div>
                 <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-gradient-to-br from-green-400 to-green-600 rounded-full shadow-sm"></div>
@@ -126,7 +126,7 @@ const Header = () => {
                 <span className="text-2xl lg:text-3xl font-bold text-gray-900">
                   BESTEA
                 </span>
-                <div className="text-[10px] bg-gradient-to-r from-green-600 to-orange-600 bg-clip-text text-transparent font-semibold tracking-widest uppercase -mt-0.5">
+                <div className="text-[10px] bg-gradient-to-r from-green-600 to-green-600 bg-clip-text text-transparent font-semibold tracking-widest uppercase -mt-0.5">
                   Premium Tea Co.
                 </div>
               </div>
@@ -142,12 +142,12 @@ const Header = () => {
                     to={item.href}
                     className={`relative px-5 py-2.5 font-semibold text-sm transition-all duration-300 group rounded-xl ${
                       isActive 
-                        ? 'text-orange-600 bg-orange-50' 
-                        : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50'
+                        ? 'text-green-600 bg-green-50' 
+                        : 'text-gray-700 hover:text-green-600 hover:bg-green-50'
                     }`}
                   >
                     {item.name}
-                    <span className={`absolute inset-x-5 -bottom-1 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 transform transition-transform duration-300 rounded-full ${
+                    <span className={`absolute inset-x-5 -bottom-1 h-0.5 bg-gradient-to-r from-green-500 to-green-600 transform transition-transform duration-300 rounded-full ${
                       isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100'
                     }`} />
                   </Link>
@@ -161,7 +161,7 @@ const Header = () => {
               {/* Search */}
               <button
                 onClick={() => dispatch(toggleSearchModal())}
-                className="p-2.5 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300 group"
+                className="p-2.5 text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all duration-300 group"
                 aria-label="Search"
               >
                 <FaSearch size={18} className="group-hover:scale-110 transition-transform duration-300" />
@@ -171,7 +171,7 @@ const Header = () => {
               {isAuthenticated && (
                 <Link
                   to="/wishlist"
-                  className="relative p-2.5 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300 group"
+                  className="relative p-2.5 text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all duration-300 group"
                   aria-label="Wishlist"
                 >
                   <FaHeart size={18} className="group-hover:scale-110 transition-transform duration-300" />
@@ -186,12 +186,12 @@ const Header = () => {
               {/* Cart */}
               <button
                 onClick={handleCartClick}
-                className="relative p-2.5 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300 group"
+                className="relative p-2.5 text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all duration-300 group"
                 aria-label="Shopping cart"
               >
                 <FaShoppingCart size={18} className="group-hover:scale-110 transition-transform duration-300" />
                 {totalQuantity > 0 && (
-                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-md">
+                  <span className="absolute -top-1 -right-1 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold shadow-md">
                     {totalQuantity}
                   </span>
                 )}
@@ -200,16 +200,16 @@ const Header = () => {
               {/* User Menu */}
               {isAuthenticated ? (
                 <div className="relative group">
-                  <button className="flex items-center space-x-2 p-2.5 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300">
+                  <button className="flex items-center space-x-2 p-2.5 text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all duration-300">
                     {user && getAvatarUrl(user) !== '/images/default-avatar.svg' ? (
                       <img
                         src={getAvatarUrl(user)}
                         alt={user.name || 'User'}
                         onError={handleAvatarError}
-                        className="w-8 h-8 rounded-full object-cover ring-2 ring-orange-100 group-hover:ring-orange-300 transition-all duration-300"
+                        className="w-8 h-8 rounded-full object-cover ring-2 ring-green-100 group-hover:ring-green-300 transition-all duration-300"
                       />
                     ) : (
-                      <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-orange-500 rounded-full flex items-center justify-center">
+                      <div className="w-8 h-8 bg-gradient-to-br from-green-400 to-green-500 rounded-full flex items-center justify-center">
                         <FaUser size={14} className="text-white" />
                       </div>
                     )}
@@ -223,21 +223,21 @@ const Header = () => {
                     <div className="p-2">
                       <Link
                         to="/profile"
-                        className="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700 rounded-xl transition-all duration-300 font-medium"
+                        className="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-xl transition-all duration-300 font-medium"
                       >
                         <FaUser className="w-4 h-4" />
                         <span>My Profile</span>
                       </Link>
                       <Link
                         to="/orders"
-                        className="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700 rounded-xl transition-all duration-300 font-medium"
+                        className="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-xl transition-all duration-300 font-medium"
                       >
                         <FaShoppingCart className="w-4 h-4" />
                         <span>My Orders</span>
                       </Link>
                       <Link
                         to="/wishlist"
-                        className="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-700 rounded-xl transition-all duration-300 font-medium"
+                        className="flex items-center space-x-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-xl transition-all duration-300 font-medium"
                       >
                         <FaHeart className="w-4 h-4" />
                         <span>Wishlist</span>
@@ -250,36 +250,36 @@ const Header = () => {
                         <div className="px-2 py-2">
                           <hr className="border-gray-200" />
                           <div className="px-4 py-2.5">
-                            <span className="text-xs font-bold text-orange-600 uppercase tracking-wider bg-orange-50 px-2 py-1 rounded-md">
+                            <span className="text-xs font-bold text-green-600 uppercase tracking-wider bg-green-50 px-2 py-1 rounded-md">
                               Admin Panel
                             </span>
                           </div>
                           <Link
                             to="/admin/dashboard"
-                            className="flex items-center space-x-3 px-4 py-2.5 text-sm text-orange-600 hover:bg-orange-100 hover:text-orange-700 rounded-xl transition-all duration-300 font-medium"
+                            className="flex items-center space-x-3 px-4 py-2.5 text-sm text-green-600 hover:bg-green-100 hover:text-green-700 rounded-xl transition-all duration-300 font-medium"
                           >
-                            <div className="w-4 h-4 bg-orange-500 rounded"></div>
+                            <div className="w-4 h-4 bg-green-500 rounded"></div>
                             <span>Dashboard</span>
                           </Link>
                           <Link
                             to="/admin/products"
-                            className="flex items-center space-x-3 px-4 py-2.5 text-sm text-orange-600 hover:bg-orange-100 hover:text-orange-700 rounded-xl transition-all duration-300 font-medium"
+                            className="flex items-center space-x-3 px-4 py-2.5 text-sm text-green-600 hover:bg-green-100 hover:text-green-700 rounded-xl transition-all duration-300 font-medium"
                           >
-                            <div className="w-4 h-4 bg-orange-500 rounded"></div>
+                            <div className="w-4 h-4 bg-green-500 rounded"></div>
                             <span>Products</span>
                           </Link>
                           <Link
                             to="/admin/orders"
-                            className="flex items-center space-x-3 px-4 py-2.5 text-sm text-orange-600 hover:bg-orange-100 hover:text-orange-700 rounded-xl transition-all duration-300 font-medium"
+                            className="flex items-center space-x-3 px-4 py-2.5 text-sm text-green-600 hover:bg-green-100 hover:text-green-700 rounded-xl transition-all duration-300 font-medium"
                           >
-                            <div className="w-4 h-4 bg-orange-500 rounded"></div>
+                            <div className="w-4 h-4 bg-green-500 rounded"></div>
                             <span>Orders</span>
                           </Link>
                           <Link
                             to="/admin/customers"
-                            className="flex items-center space-x-3 px-4 py-2.5 text-sm text-orange-600 hover:bg-orange-100 hover:text-orange-700 rounded-xl transition-all duration-300 font-medium"
+                            className="flex items-center space-x-3 px-4 py-2.5 text-sm text-green-600 hover:bg-green-100 hover:text-green-700 rounded-xl transition-all duration-300 font-medium"
                           >
-                            <div className="w-4 h-4 bg-orange-500 rounded"></div>
+                            <div className="w-4 h-4 bg-green-500 rounded"></div>
                             <span>Customers</span>
                           </Link>
                         </div>
@@ -301,7 +301,7 @@ const Header = () => {
               ) : (
                 <Link
                   to="/auth"
-                  className="px-5 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 text-sm"
+                  className="px-5 py-2.5 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-xl hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105 text-sm"
                 >
                   Login
                 </Link>
@@ -335,19 +335,19 @@ const Header = () => {
                           onClick={() => dispatch(closeMobileMenu())}
                           className={`flex items-center space-x-3 py-3 px-4 rounded-xl transition-all duration-300 font-medium ${
                             isActive 
-                              ? 'text-orange-600 bg-orange-100 border-l-4 border-orange-500' 
-                              : 'text-gray-700 hover:text-orange-600 hover:bg-orange-50'
+                              ? 'text-green-600 bg-green-100 border-l-4 border-green-500' 
+                              : 'text-gray-700 hover:text-green-600 hover:bg-green-50'
                           }`}
                         >
                           <div className={`w-2 h-2 rounded-full ${
-                            isActive ? 'bg-orange-600' : 'bg-orange-400'
+                            isActive ? 'bg-green-600' : 'bg-green-400'
                           }`}></div>
                           <span>{item.name}</span>
                           {isActive && (
                             <motion.div
                               initial={{ scale: 0 }}
                               animate={{ scale: 1 }}
-                              className="ml-auto w-2 h-2 bg-orange-600 rounded-full"
+                              className="ml-auto w-2 h-2 bg-green-600 rounded-full"
                             />
                           )}
                         </Link>
@@ -365,7 +365,7 @@ const Header = () => {
                       <Link
                         to="/auth"
                         onClick={() => dispatch(closeMobileMenu())}
-                        className="flex items-center space-x-3 py-3 px-4 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-xl font-semibold shadow-lg"
+                        className="flex items-center space-x-3 py-3 px-4 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl font-semibold shadow-lg"
                       >
                         <FaUser className="w-4 h-4" />
                         <span>Login / Register</span>
@@ -383,7 +383,7 @@ const Header = () => {
                       <Link
                         to="/profile"
                         onClick={() => dispatch(closeMobileMenu())}
-                        className="flex items-center space-x-3 py-3 px-4 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300 font-medium"
+                        className="flex items-center space-x-3 py-3 px-4 text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all duration-300 font-medium"
                       >
                         <FaUser className="w-4 h-4" />
                         <span>My Profile</span>
@@ -391,7 +391,7 @@ const Header = () => {
                       <Link
                         to="/cart"
                         onClick={() => dispatch(closeMobileMenu())}
-                        className="flex items-center space-x-3 py-3 px-4 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300 font-medium"
+                        className="flex items-center space-x-3 py-3 px-4 text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all duration-300 font-medium"
                       >
                         <FaShoppingCart className="w-4 h-4" />
                         <span>My Cart {totalQuantity > 0 && `(${totalQuantity})`}</span>
@@ -399,7 +399,7 @@ const Header = () => {
                       <Link
                         to="/orders"
                         onClick={() => dispatch(closeMobileMenu())}
-                        className="flex items-center space-x-3 py-3 px-4 text-gray-700 hover:text-orange-600 hover:bg-orange-50 rounded-xl transition-all duration-300 font-medium"
+                        className="flex items-center space-x-3 py-3 px-4 text-gray-700 hover:text-green-600 hover:bg-green-50 rounded-xl transition-all duration-300 font-medium"
                       >
                         <FaShoppingCart className="w-4 h-4" />
                         <span>My Orders</span>

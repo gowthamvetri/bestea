@@ -289,7 +289,7 @@ const AdminProducts = () => {
       'oolong': 'bg-yellow-100 text-yellow-800',
       'herbal': 'bg-purple-100 text-purple-800',
       'flavored': 'bg-pink-100 text-pink-800',
-      'chai': 'bg-orange-100 text-orange-800'
+      'chai': 'bg-green-100 text-green-800'
     };
     return colors[category] || 'bg-gray-100 text-gray-800';
   };
@@ -324,7 +324,7 @@ const AdminProducts = () => {
         </div>
         <Link
           to="/admin/products/add"
-          className="mt-4 md:mt-0 inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+          className="mt-4 md:mt-0 inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
         >
           <FaPlus className="w-4 h-4 mr-2" />
           Add New Product
@@ -343,7 +343,7 @@ const AdminProducts = () => {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by name, category..."
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
           </div>
@@ -355,7 +355,7 @@ const AdminProducts = () => {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
               >
                 {categories.map(cat => (
                   <option key={cat.value} value={cat.value}>{cat.label}</option>
@@ -369,7 +369,7 @@ const AdminProducts = () => {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -382,7 +382,7 @@ const AdminProducts = () => {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               <option value="createdAt">Date Created</option>
               <option value="name">Name</option>
@@ -398,7 +398,7 @@ const AdminProducts = () => {
             <select
               value={sortOrder}
               onChange={(e) => setSortOrder(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               <option value="desc">Descending</option>
               <option value="asc">Ascending</option>
@@ -426,7 +426,7 @@ const AdminProducts = () => {
             </button>
             <button
               onClick={fetchProducts}
-              className="px-3 py-1 text-sm text-orange-600 hover:text-orange-800 border border-orange-300 rounded-md hover:bg-orange-50"
+              className="px-3 py-1 text-sm text-green-600 hover:text-green-800 border border-green-300 rounded-md hover:bg-green-50"
             >
               Refresh
             </button>
@@ -468,7 +468,7 @@ const AdminProducts = () => {
                     </span>
                   )}
                   {product.stock <= 10 && product.stock > 0 && (
-                    <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800">
+                    <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                       Low Stock
                     </span>
                   )}
@@ -521,7 +521,7 @@ const AdminProducts = () => {
                     )}
                   </div>
                   <div className={`text-sm font-medium ${
-                    product.stock === 0 ? 'text-red-600' : product.stock <= 10 ? 'text-orange-600' : 'text-green-600'
+                    product.stock === 0 ? 'text-red-600' : product.stock <= 10 ? 'text-green-600' : 'text-green-600'
                   }`}>
                     Stock: {product.stock || 0}
                   </div>
@@ -600,7 +600,7 @@ const AdminProducts = () => {
           </p>
           <Link
             to="/admin/products/add"
-            className="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+            className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
           >
             <FaPlus className="w-4 h-4 mr-2" />
             Add New Product
@@ -641,7 +641,7 @@ const AdminProducts = () => {
                   onClick={() => handlePageChange(pageNumber)}
                   className={`px-3 py-2 text-sm font-medium rounded-md ${
                     currentPage === pageNumber
-                      ? 'text-orange-600 bg-orange-50 border border-orange-500'
+                      ? 'text-green-600 bg-green-50 border border-green-500'
                       : 'text-gray-500 bg-white border border-gray-300 hover:bg-gray-50'
                   }`}
                 >

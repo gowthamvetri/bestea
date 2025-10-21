@@ -8,7 +8,6 @@ const {
   cancelOrder,
   processPayment
 } = require('../controllers/orderController');
-const { debugOrders } = require('../controllers/debugController');
 const { fetchUserOrdersUniversal } = require('../controllers/orderControllerUniversal');
 
 // @route   POST /api/orders
@@ -19,7 +18,6 @@ router.post('/', auth, createOrder);
 // @route   GET /api/orders/debug
 // @desc    Debug all orders (development only)
 // @access  Private
-router.get('/debug', auth, debugOrders);
 
 // @route   GET /api/orders
 // @desc    Get user orders (universal version)
@@ -36,8 +34,13 @@ router.get('/:id', auth, getOrderById);
 // @access  Private/Admin
 router.put('/:id/status', auth, updateOrderStatus);
 
+// @route   PUT /api/orders/:id/cancel
+// @desc    Cancel order (within 24 hours)
+// @access  Private
+router.put('/:id/cancel', auth, cancelOrder);
+
 // @route   DELETE /api/orders/:id
-// @desc    Cancel order
+// @desc    Delete order (admin only - deprecated, use cancel instead)
 // @access  Private
 router.delete('/:id', auth, cancelOrder);
 

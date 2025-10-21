@@ -87,8 +87,20 @@ export const fetchProductById = createAsyncThunk(
 
 export const fetchCategories = createAsyncThunk(
   'products/fetchCategories',
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
+      // Check cache first - don't fetch if we have recent data
+      const state = getState();
+      const { categories, lastFetchTime } = state.products;
+      const now = Date.now();
+      const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+      
+      if (categories.length > 0 && lastFetchTime.categories && (now - lastFetchTime.categories < CACHE_DURATION)) {
+        console.log('Using cached categories data');
+        return categories;
+      }
+      
+      console.log('Fetching categories from API...');
       const response = await axios.get(`${API_URL}/categories`);
       console.log('Categories API Response:', response.data);
       
@@ -118,8 +130,20 @@ export const fetchCategories = createAsyncThunk(
 
 export const fetchBestSellers = createAsyncThunk(
   'products/fetchBestSellers',
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
+      // Check cache first
+      const state = getState();
+      const { bestSellers, lastFetchTime } = state.products;
+      const now = Date.now();
+      const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+      
+      if (bestSellers.length > 0 && lastFetchTime.bestSellers && (now - lastFetchTime.bestSellers < CACHE_DURATION)) {
+        console.log('Using cached bestsellers data');
+        return bestSellers;
+      }
+      
+      console.log('Fetching bestsellers from API...');
       const response = await axios.get(`${API_URL}/products/bestsellers`);
       console.log('Bestsellers API Response:', response.data);
       
@@ -159,8 +183,20 @@ export const fetchNewArrivals = createAsyncThunk(
 
 export const fetchFeaturedProducts = createAsyncThunk(
   'products/fetchFeaturedProducts',
-  async (_, { rejectWithValue }) => {
+  async (_, { rejectWithValue, getState }) => {
     try {
+      // Check cache first
+      const state = getState();
+      const { featuredProducts, lastFetchTime } = state.products;
+      const now = Date.now();
+      const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+      
+      if (featuredProducts.length > 0 && lastFetchTime.featuredProducts && (now - lastFetchTime.featuredProducts < CACHE_DURATION)) {
+        console.log('Using cached featured products data');
+        return featuredProducts;
+      }
+      
+      console.log('Fetching featured products from API...');
       const response = await axios.get(`${API_URL}/products/featured`);
       console.log('Featured Products API Response:', response.data);
       
@@ -321,6 +357,7 @@ const productSlice = createSlice({
         } else {
           state.categories = [];
         }
+        state.lastFetchTime.categories = Date.now();
         state.error = null;
       })
       .addCase(fetchCategories.rejected, (state, action) => {
@@ -345,6 +382,7 @@ const productSlice = createSlice({
         } else {
           state.bestSellers = [];
         }
+        state.lastFetchTime.bestSellers = Date.now();
         state.error = null;
       })
       .addCase(fetchBestSellers.rejected, (state, action) => {
@@ -393,6 +431,7 @@ const productSlice = createSlice({
         } else {
           state.featuredProducts = [];
         }
+        state.lastFetchTime.featuredProducts = Date.now();
         state.error = null;
       })
       .addCase(fetchFeaturedProducts.rejected, (state, action) => {

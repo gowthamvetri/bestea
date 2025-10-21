@@ -129,7 +129,7 @@ const AvatarUpload = ({
 
         {/* Camera Icon for Small Avatars */}
         {editable && !uploading && size === 'small' && (
-          <div className="absolute -bottom-1 -right-1 bg-bestea-500 text-white rounded-full p-1 shadow-md">
+          <div className="absolute -bottom-1 -right-1 bg-green-500 text-white rounded-full p-1 shadow-md">
             <FaCamera size={10} />
           </div>
         )}

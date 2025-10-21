@@ -5,10 +5,60 @@
 
 /* ========================================
    BESTEA Professional Design System
-   Modern E-commerce UI
+   Modern E-commerce UI - BellBeli Inspired
    ======================================== */
 
 /* Google Fonts Import */
+
+/* ========================================
+   BellBeli-Style Utilities
+   ======================================== */
+
+/* Scrollbar Hide */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Line Clamp Utilities */
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* BellBeli Product Card Hover Effects */
+.product-card-bellbeli {
+  @apply bg-white rounded-lg shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden;
+}
+
+.product-card-bellbeli:hover {
+  transform: translateY(-2px);
+}
+
+/* Category Icon Hover */
+.category-icon:hover {
+  @apply transform scale-110 transition-transform duration-200;
+}
 
 /* ========================================
    CSS Variables - Design Tokens
@@ -36,7 +86,7 @@
   
   /* Semantic Colors */
   --color-success: #10b981;
-  --color-warning: #f59e0b;
+  --color-warning: #059669;
   --color-error: #ef4444;
   --color-info: #3b82f6;
   
@@ -167,9 +217,9 @@ img {
   
   /* Primary Button */
   .btn-primary {
-    @apply bg-gradient-to-r from-orange-500 to-orange-600 text-white
-           hover:from-orange-600 hover:to-orange-700 
-           focus:ring-orange-500 shadow-lg hover:shadow-xl
+    @apply bg-gradient-to-r from-green-500 to-green-600 text-white
+           hover:from-green-600 hover:to-green-700 
+           focus:ring-green-500 shadow-lg hover:shadow-xl
            transform hover:-translate-y-0.5 active:translate-y-0;
   }
   
@@ -199,9 +249,9 @@ img {
   
   /* Outline Button */
   .btn-outline {
-    @apply bg-transparent border-2 border-orange-500 text-orange-600
-           hover:bg-orange-500 hover:text-white
-           focus:ring-orange-500
+    @apply bg-transparent border-2 border-green-500 text-green-600
+           hover:bg-green-500 hover:text-white
+           focus:ring-green-500
            transform hover:-translate-y-0.5 active:translate-y-0;
   }
   
@@ -233,26 +283,67 @@ img {
      Professional Card System
      ======================================== */
   .card {
-    @apply bg-white rounded-2xl border border-gray-100 shadow-md
-           transition-all duration-300;
+    @apply bg-white rounded-3xl border border-gray-100/60 shadow-lg backdrop-blur-sm
+           transition-all duration-500 relative overflow-hidden;
+  }
+  
+  .card::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-white/50 to-transparent 
+           opacity-0 transition-opacity duration-500 pointer-events-none;
+  }
+  
+  .card:hover::before {
+    @apply opacity-100;
   }
   
   .card-hover {
-    @apply hover:shadow-xl hover:border-gray-200 
-           transform hover:-translate-y-1;
+    @apply hover:shadow-2xl hover:border-bestea-400/20 hover:bg-gradient-to-br hover:from-white hover:to-gray-50/50
+           transform hover:-translate-y-2 hover:scale-[1.02];
   }
   
   .card-interactive {
-    @apply hover:shadow-2xl hover:border-orange-200
-           transform hover:-translate-y-2 cursor-pointer;
+    @apply hover:shadow-2xl hover:border-bestea-400/30 hover:bg-gradient-to-br hover:from-bestea-400/5 hover:to-special-500/5
+           transform hover:-translate-y-3 hover:scale-105 cursor-pointer
+           ring-0 hover:ring-2 hover:ring-bestea-400/10;
   }
   
   .card-elevated {
-    @apply shadow-xl border-0;
+    @apply shadow-2xl border-0 bg-gradient-to-br from-white to-gray-50/30;
   }
   
   .card-flat {
-    @apply shadow-none border-gray-200;
+    @apply shadow-sm border-gray-200/60 hover:shadow-lg;
+  }
+  
+  .card-glass {
+    @apply bg-white/80 backdrop-blur-xl border border-white/20 shadow-xl;
+  }
+  
+  .card-gradient {
+    @apply bg-gradient-to-br from-bestea-400/5 via-white to-special-500/5 
+           border border-bestea-400/10 shadow-lg hover:shadow-2xl
+           hover:from-bestea-400/10 hover:to-special-500/10;
+  }
+  
+  .card-feature {
+    @apply bg-gradient-to-br from-white via-gray-50/50 to-white 
+           border border-gray-200/60 shadow-xl hover:shadow-2xl
+           hover:border-bestea-400/20 hover:bg-gradient-to-br hover:from-bestea-400/5 hover:to-special-500/5
+           transform hover:-translate-y-1 hover:scale-[1.01] transition-all duration-300;
+  }
+  
+  /* Card Content Areas */
+  .card-header {
+    @apply p-6 border-b border-gray-100/60 bg-gradient-to-r from-gray-50/30 to-transparent;
+  }
+  
+  .card-body {
+    @apply p-6;
+  }
+  
+  .card-footer {
+    @apply p-6 border-t border-gray-100/60 bg-gradient-to-r from-gray-50/30 to-transparent;
   }
 
   /* ========================================
@@ -269,7 +360,7 @@ img {
   .form-input {
     @apply w-full px-4 py-3 bg-white border border-gray-300 rounded-xl
            text-gray-900 placeholder-gray-400
-           focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500
+           focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
            transition-all duration-300;
   }
   
@@ -300,8 +391,8 @@ img {
   /* Checkbox and Radio */
   .form-checkbox,
   .form-radio {
-    @apply w-5 h-5 text-orange-600 border-gray-300 rounded
-           focus:ring-orange-500 focus:ring-2 cursor-pointer;
+    @apply w-5 h-5 text-green-600 border-gray-300 rounded
+           focus:ring-green-500 focus:ring-2 cursor-pointer;
   }
 
   /* ========================================
@@ -329,7 +420,7 @@ img {
   }
   
   .badge-primary {
-    @apply bg-orange-100 text-orange-800;
+    @apply bg-green-100 text-green-800;
   }
   
   .badge-neutral {
@@ -344,58 +435,90 @@ img {
      Product Card Components
      ======================================== */
   .product-card {
-    @apply bg-white rounded-2xl overflow-hidden border border-gray-100
-           shadow-md hover:shadow-2xl transition-all duration-500
-           transform hover:-translate-y-2;
+    @apply bg-white rounded-3xl overflow-hidden border border-gray-100/60
+           shadow-lg hover:shadow-2xl transition-all duration-500
+           transform hover:-translate-y-3 hover:scale-[1.02]
+           ring-0 hover:ring-4 hover:ring-bestea-400/10
+           backdrop-blur-sm relative;
+  }
+  
+  .product-card::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-bestea-400/5 via-transparent to-special-500/5
+           opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none;
   }
   
   .product-image-wrapper {
-    @apply relative aspect-square overflow-hidden bg-gray-100;
+    @apply relative aspect-square overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50;
   }
   
   .product-image {
     @apply w-full h-full object-cover 
-           transition-transform duration-700 group-hover:scale-110;
+           transition-all duration-700 group-hover:scale-110 group-hover:rotate-1
+           filter group-hover:brightness-110;
   }
   
   .product-badge-wrapper {
-    @apply absolute top-4 left-4 flex flex-col gap-2 z-10;
+    @apply absolute top-4 left-4 flex flex-col gap-2 z-20;
   }
   
   .product-badge {
-    @apply px-3 py-1 rounded-full text-xs font-bold
-           backdrop-blur-sm shadow-lg;
+    @apply px-4 py-2 rounded-2xl text-xs font-bold
+           backdrop-blur-xl shadow-xl border border-white/20
+           transform transition-all duration-300 hover:scale-110;
   }
   
   .product-badge-sale {
-    @apply bg-red-500 text-white;
+    @apply bg-gradient-to-r from-red-500 to-red-600 text-white
+           shadow-red-500/25 hover:shadow-red-500/40;
   }
   
   .product-badge-new {
-    @apply bg-blue-500 text-white;
+    @apply bg-gradient-to-r from-blue-500 to-blue-600 text-white
+           shadow-blue-500/25 hover:shadow-blue-500/40;
   }
   
   .product-badge-featured {
-    @apply bg-orange-500 text-white;
+    @apply bg-gradient-to-r from-bestea-400 to-special-500 text-white
+           shadow-bestea-400/25 hover:shadow-bestea-400/40;
   }
   
   .product-badge-bestseller {
-    @apply bg-yellow-500 text-white;
+    @apply bg-gradient-to-r from-cardamom-400 to-green-400 text-white
+           shadow-yellow-500/25 hover:shadow-yellow-500/40;
+  }
+  
+  .product-overlay {
+    @apply absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent
+           opacity-0 group-hover:opacity-100 transition-opacity duration-300
+           flex items-end justify-center p-6;
   }
   
   .product-info {
-    @apply p-5;
+    @apply p-6 relative z-10 bg-gradient-to-t from-white to-gray-50/50;
   }
   
   .product-category {
-    @apply inline-block px-3 py-1 mb-2 text-xs font-medium
-           bg-orange-50 text-orange-600 rounded-lg;
+    @apply inline-block px-4 py-2 mb-3 text-xs font-bold
+           bg-gradient-to-r from-bestea-400/10 to-special-500/10 
+           text-bestea-400 rounded-2xl border border-bestea-400/20
+           hover:bg-gradient-to-r hover:from-bestea-400/20 hover:to-special-500/20
+           transition-all duration-300;
   }
   
   .product-title {
-    @apply font-bold text-lg text-gray-900 mb-2
-           group-hover:text-orange-600 transition-colors duration-300
-           line-clamp-2;
+    @apply font-bold text-xl text-gray-900 mb-3 font-playfair
+           group-hover:text-bestea-400 transition-colors duration-300
+           line-clamp-2 leading-tight;
+  }
+  
+  .product-price {
+    @apply text-2xl font-bold text-bestea-400 mb-4 font-inter
+           group-hover:scale-105 transition-transform duration-300;
+  }
+  
+  .product-actions {
+    @apply flex items-center gap-3 pt-4 border-t border-gray-100/60;
   }
   
   .product-description {
@@ -435,17 +558,17 @@ img {
      ======================================== */
   .nav-link {
     @apply relative px-4 py-2 font-medium text-sm tracking-wide
-           text-gray-700 hover:text-orange-600 transition-all duration-300
-           rounded-xl hover:bg-orange-50;
+           text-gray-700 hover:text-green-600 transition-all duration-300
+           rounded-xl hover:bg-green-50;
   }
   
   .nav-link-active {
-    @apply text-orange-600 bg-orange-50;
+    @apply text-green-600 bg-green-50;
   }
   
   .nav-link::after {
     content: '';
-    @apply absolute inset-x-4 -bottom-1 h-0.5 bg-orange-600
+    @apply absolute inset-x-4 -bottom-1 h-0.5 bg-green-600
            transform scale-x-0 transition-transform duration-300 rounded-full;
   }
   
@@ -478,7 +601,7 @@ img {
   }
   
   .section-badge {
-    @apply inline-flex items-center gap-2 bg-orange-100 text-orange-700
+    @apply inline-flex items-center gap-2 bg-green-100 text-green-700
            px-4 py-2 rounded-full text-sm font-medium mb-4;
   }
 
@@ -487,7 +610,7 @@ img {
      ======================================== */
   .hero-section {
     @apply relative min-h-[70vh] flex items-center
-           bg-gradient-to-br from-gray-50 via-white to-orange-50;
+           bg-gradient-to-br from-gray-50 via-white to-green-50;
   }
   
   .hero-title {
@@ -510,13 +633,13 @@ img {
   .feature-box {
     @apply bg-white rounded-2xl p-8 text-center
            border border-gray-100 shadow-md
-           hover:shadow-xl hover:border-orange-200
+           hover:shadow-xl hover:border-green-200
            transition-all duration-300 transform hover:-translate-y-2;
   }
   
   .feature-icon {
     @apply w-16 h-16 mx-auto mb-6 rounded-2xl
-           bg-gradient-to-br from-orange-500 to-orange-600
+           bg-gradient-to-br from-green-500 to-green-600
            flex items-center justify-center text-white text-3xl
            shadow-lg;
   }
@@ -624,7 +747,7 @@ img {
   }
   
   .spinner {
-    @apply inline-block w-8 h-8 border-4 border-gray-200 border-t-orange-600
+    @apply inline-block w-8 h-8 border-4 border-gray-200 border-t-green-600
            rounded-full animate-spin;
   }
 }
@@ -644,7 +767,7 @@ img {
   
   /* Gradient Backgrounds */
   .bg-gradient-primary {
-    @apply bg-gradient-to-r from-orange-500 to-orange-600;
+    @apply bg-gradient-to-r from-green-500 to-green-600;
   }
   
   .bg-gradient-success {
@@ -652,12 +775,12 @@ img {
   }
   
   .bg-gradient-professional {
-    @apply bg-gradient-to-br from-gray-50 via-white to-orange-50;
+    @apply bg-gradient-to-br from-gray-50 via-white to-green-50;
   }
   
   /* Text Gradients */
   .text-gradient-primary {
-    @apply bg-gradient-to-r from-orange-500 to-orange-600
+    @apply bg-gradient-to-r from-green-500 to-green-600
            bg-clip-text text-transparent;
   }
   

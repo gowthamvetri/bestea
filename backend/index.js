@@ -16,7 +16,12 @@ app.use(compression());
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: process.env.NODE_ENV === 'development' ? 1000 : 100 // Higher limit for development
+  max: process.env.NODE_ENV === 'production' ? 100 : 2000, // Much higher limit for development
+  message: {
+    error: 'Too many requests from this IP, please try again later.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
 });
 app.use('/api/', limiter);
 
@@ -46,16 +51,43 @@ if (process.env.NODE_ENV === 'development') {
 const connectDB = async () => {
   try {
     if (process.env.MONGODB_URI) {
-      await mongoose.connect(process.env.MONGODB_URI, {
+      // Configure mongoose behavior and timeouts
+      // Note: 'bufferMaxEntries' is removed (invalid option) and bufferCommands is no longer necessary
+      mongoose.set('bufferCommands', false);
+
+      const connection = await mongoose.connect(process.env.MONGODB_URI, {
+        // useNewUrlParser/useUnifiedTopology are still fine to pass for older drivers; Mongoose will ignore if not needed
         useNewUrlParser: true,
         useUnifiedTopology: true,
+        // Increase server selection timeout for slow connections
+        serverSelectionTimeoutMS: 30000,
+        socketTimeoutMS: 30000,
+        connectTimeoutMS: 30000,
+        // Connection pool tuning
+        maxPoolSize: 10,
+        minPoolSize: 1,
+        maxIdleTimeMS: 30000,
+        // Retry writes and write concern
+        retryWrites: true,
+        w: 'majority'
       });
-      console.log('🍃 MongoDB Connected Successfully');
+      
+      console.log('🍃 MongoDB Connected Successfully to:', connection.connection.name);
+      
+      // Handle connection events
+      mongoose.connection.on('error', (err) => {
+        console.error('❌ MongoDB Connection Error:', err);
+      });
+      
+      mongoose.connection.on('disconnected', () => {
+        console.log('⚠️  MongoDB Disconnected');
+      });
+      
     } else {
       console.log('📝 Running in mock mode - MongoDB not configured');
     }
   } catch (err) {
-    console.warn('⚠️  MongoDB Connection Failed, using mock data:', err.message);
+    console.warn('⚠️  MongoDB Connection Failed:', err.message);
     console.log('📝 Running in mock mode');
   }
 };
@@ -72,6 +104,7 @@ app.use('/api/reviews', require('./routes/reviews'));
 app.use('/api/payment', require('./routes/payment'));
 app.use('/api/admin', require('./routes/admin'));
 app.use('/api/upload', require('./routes/upload'));
+app.use('/api/wishlist', require('./routes/wishlist'));
 
 // Health Check Route
 app.get('/api/health', (req, res) => {

@@ -129,8 +129,8 @@ const ImageUpload = ({
         onClick={handleClick}
         className={`relative border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-all duration-300 ${
           dragOver
-            ? 'border-bestea-400 bg-bestea-50'
-            : 'border-gray-300 hover:border-bestea-400 hover:bg-gray-50'
+            ? 'border-green-400 bg-green-50'
+            : 'border-gray-300 hover:border-green-400 hover:bg-gray-50'
         } ${uploading ? 'pointer-events-none opacity-50' : ''}`}
       >
         <input
@@ -144,7 +144,7 @@ const ImageUpload = ({
 
         {uploading ? (
           <div className="flex flex-col items-center space-y-2">
-            <FaSpinner className="text-3xl text-bestea-400 animate-spin" />
+            <FaSpinner className="text-3xl text-green-400 animate-spin" />
             <p className="text-gray-600">Uploading...</p>
           </div>
         ) : (
@@ -203,7 +203,7 @@ const ImageUpload = ({
 
                   {/* Main Image Indicator */}
                   {item.isMain && (
-                    <div className="absolute bottom-2 left-2 bg-bestea-500 text-white text-xs px-2 py-1 rounded">
+                    <div className="absolute bottom-2 left-2 bg-green-500 text-white text-xs px-2 py-1 rounded">
                       Main
                     </div>
                   )}

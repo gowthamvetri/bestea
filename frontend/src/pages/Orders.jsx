@@ -19,7 +19,7 @@ import {
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import { getProductImageSrc, handleImageError, DEFAULT_PRODUCT_IMAGE } from '../utils/imageUtils';
-import { testOrdersAPI, testOrdersDebug, testAuth } from '../utils/debugOrders';
+
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -177,6 +177,70 @@ const Orders = () => {
     }
   };
 
+  const handleCancelOrder = async (orderId, orderNumber) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to cancel order ${orderNumber}?\n\nNote: Cancellation is only possible within 24 hours of placing the order.`
+    );
+
+    if (!confirmed) return;
+
+    const loadingToast = toast.loading('Cancelling order...');
+
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.put(
+        `${API_URL}/orders/${orderId}/cancel`,
+        { reason: 'Cancelled by customer' },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      if (response.data.success) {
+        toast.success('Order cancelled successfully! Refund will be processed within 5-7 business days.', {
+          id: loadingToast,
+          duration: 5000
+        });
+        // Refresh orders
+        fetchOrders();
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || 'Failed to cancel order. Please try again.', {
+        id: loadingToast
+      });
+    }
+  };
+
+  const canCancelOrder = (order) => {
+    if (!order) return false;
+    
+    // Check if order status allows cancellation
+    if (['shipped', 'delivered', 'cancelled'].includes(order.status)) {
+      return false;
+    }
+
+    // Check if order is within 24 hours
+    const orderTime = new Date(order.createdAt).getTime();
+    const currentTime = new Date().getTime();
+    const hoursPassed = (currentTime - orderTime) / (1000 * 60 * 60);
+
+    return hoursPassed <= 24;
+  };
+
+  const getTimeLeftToCancel = (order) => {
+    if (!order || !order.createdAt) return null;
+    
+    const orderTime = new Date(order.createdAt).getTime();
+    const currentTime = new Date().getTime();
+    const hoursLeft = 24 - ((currentTime - orderTime) / (1000 * 60 * 60));
+
+    if (hoursLeft <= 0) return null;
+    
+    if (hoursLeft < 1) {
+      return `${Math.floor(hoursLeft * 60)} minutes left`;
+    }
+    
+    return `${Math.floor(hoursLeft)} hours left`;
+  };
+
   const handleDownloadInvoice = (orderNumber) => {
     toast.success(`Downloading invoice for ${orderNumber}`);
     // In a real app, this would download the invoice PDF
@@ -238,50 +302,12 @@ const Orders = () => {
           <div className="mt-4 md:mt-0">
             <Link
               to="/shop"
-              className="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
             >
               Continue Shopping
             </Link>
           </div>
         </div>
-
-        {/* Debug Section - Development Only */}
-        {process.env.NODE_ENV === 'development' && (
-          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
-            <h3 className="text-sm font-medium text-yellow-800 mb-2">Debug Tools</h3>
-            <div className="flex flex-wrap gap-2">
-              <button
-                onClick={testAuth}
-                className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded text-xs hover:bg-yellow-200"
-              >
-                Test Auth
-              </button>
-              <button
-                onClick={testOrdersAPI}
-                className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded text-xs hover:bg-yellow-200"
-              >
-                Test Orders API
-              </button>
-              <button
-                onClick={testOrdersDebug}
-                className="px-3 py-1 bg-red-100 text-red-800 rounded text-xs hover:bg-red-200"
-              >
-                Debug Database
-              </button>
-              <button
-                onClick={fetchOrders}
-                className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded text-xs hover:bg-yellow-200"
-              >
-                Refetch Orders
-              </button>
-            </div>
-            <div className="mt-2 text-xs text-yellow-700">
-              Orders: {Array.isArray(orders) ? orders.length : 'Invalid'} | 
-              Filtered: {Array.isArray(filteredOrders) ? filteredOrders.length : 'Invalid'} | 
-              Loading: {loading ? 'Yes' : 'No'}
-            </div>
-          </div>
-        )}
 
         {/* Filters */}
         <div className="bg-white rounded-lg shadow p-6 mb-6">
@@ -295,7 +321,7 @@ const Orders = () => {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search by order number or product..."
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
               </div>
             </div>
@@ -307,7 +333,7 @@ const Orders = () => {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                   {orderStatuses.map(status => (
                     <option key={status.value} value={status.value}>{status.label}</option>
@@ -360,20 +386,34 @@ const Orders = () => {
 
                   {/* Order Items */}
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-                    {Array.isArray(order.items) && order.items.map((item, itemIndex) => (
-                      <div key={item._id || item.id || `${order._id}-item-${itemIndex}`} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
-                        <img
-                          src={getProductImageSrc(item)}
-                          alt={item.name}
-                          className="w-12 h-12 object-cover rounded"
-                          onError={(e) => handleImageError(e, DEFAULT_PRODUCT_IMAGE)}
-                        />
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">{item.name || 'Unknown Item'}</p>
-                          <p className="text-sm text-gray-600">Qty: {item.quantity || 1} × ₹{item.price || 0}</p>
+                    {Array.isArray(order.items) && order.items.map((item, itemIndex) => {
+                      // Handle both populated and unpopulated product data
+                      const productData = item.product || {};
+                      const productName = productData.name || item.name || 'Unknown Item';
+                      const productImage = productData.mainImage?.url || 
+                                          productData.images?.[0]?.url || 
+                                          item.image || 
+                                          item.mainImage?.url || 
+                                          DEFAULT_PRODUCT_IMAGE;
+                      
+                      return (
+                        <div key={item._id || item.id || `${order._id}-item-${itemIndex}`} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
+                          <img
+                            src={productImage}
+                            alt={productName}
+                            className="w-12 h-12 object-cover rounded"
+                            onError={(e) => handleImageError(e, DEFAULT_PRODUCT_IMAGE)}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-medium text-gray-900 truncate">{productName}</p>
+                            <p className="text-sm text-gray-600">
+                              Qty: {item.quantity || 1} × ₹{item.price || 0}
+                              {item.variant && <span className="ml-1 text-gray-500">({item.variant})</span>}
+                            </p>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
 
                   {/* Order Actions */}
@@ -388,7 +428,25 @@ const Orders = () => {
                       </span>
                     </div>
                     
-                    <div className="flex items-center space-x-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                      {/* Cancel Button - Show if order can be cancelled */}
+                      {canCancelOrder(order) && (
+                        <div className="flex flex-col items-end gap-1">
+                          <button
+                            onClick={() => handleCancelOrder(order._id, order.orderNumber)}
+                            className="inline-flex items-center px-3 py-1 text-sm text-red-600 hover:text-white hover:bg-red-600 border border-red-600 rounded-md transition-colors"
+                          >
+                            <FaTimesCircle className="w-4 h-4 mr-1" />
+                            Cancel Order
+                          </button>
+                          {getTimeLeftToCancel(order) && (
+                            <span className="text-xs text-orange-600 font-medium">
+                              ⏰ {getTimeLeftToCancel(order)} to cancel
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      
                       <button
                         onClick={() => {
                           setSelectedOrder(order);
@@ -443,7 +501,7 @@ const Orders = () => {
             </p>
             <Link
               to="/shop"
-              className="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+              className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
             >
               Start Shopping
             </Link>
@@ -554,24 +612,38 @@ const Orders = () => {
                     <div>
                       <h4 className="text-lg font-medium text-gray-900 mb-3">Order Items</h4>
                       <div className="space-y-3">
-                        {Array.isArray(selectedOrder?.items) && selectedOrder.items.map((item, itemIndex) => (
-                          <div key={item._id || item.id || `modal-item-${itemIndex}`} className="flex items-center space-x-4 p-3 border border-gray-200 rounded-lg">
-                            <img
-                              src={getProductImageSrc(item)}
-                              alt={item.name}
-                              className="w-16 h-16 object-cover rounded"
-                              onError={(e) => handleImageError(e, DEFAULT_PRODUCT_IMAGE)}
-                            />
-                            <div className="flex-1">
-                              <h5 className="font-medium text-gray-900">{item.name}</h5>
-                              <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
+                        {Array.isArray(selectedOrder?.items) && selectedOrder.items.map((item, itemIndex) => {
+                          // Handle both populated and unpopulated product data
+                          const productData = item.product || {};
+                          const productName = productData.name || item.name || 'Unknown Item';
+                          const productImage = productData.mainImage?.url || 
+                                              productData.images?.[0]?.url || 
+                                              item.image || 
+                                              item.mainImage?.url || 
+                                              DEFAULT_PRODUCT_IMAGE;
+                          
+                          return (
+                            <div key={item._id || item.id || `modal-item-${itemIndex}`} className="flex items-center space-x-4 p-3 border border-gray-200 rounded-lg">
+                              <img
+                                src={productImage}
+                                alt={productName}
+                                className="w-16 h-16 object-cover rounded"
+                                onError={(e) => handleImageError(e, DEFAULT_PRODUCT_IMAGE)}
+                              />
+                              <div className="flex-1">
+                                <h5 className="font-medium text-gray-900">{productName}</h5>
+                                <p className="text-sm text-gray-600">
+                                  Quantity: {item.quantity}
+                                  {item.variant && <span className="ml-2 text-gray-500">({item.variant})</span>}
+                                </p>
+                              </div>
+                              <div className="text-right">
+                                <p className="font-medium text-gray-900">₹{(item.price * item.quantity)}</p>
+                                <p className="text-sm text-gray-600">₹{item.price} each</p>
+                              </div>
                             </div>
-                            <div className="text-right">
-                              <p className="font-medium text-gray-900">₹{(item.price * item.quantity)}</p>
-                              <p className="text-sm text-gray-600">₹{item.price} each</p>
-                            </div>
-                          </div>
-                        ))}
+                          );
+                        })}
                       </div>
                     </div>
                   </div>

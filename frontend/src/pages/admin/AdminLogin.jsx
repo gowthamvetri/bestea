@@ -87,7 +87,7 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-orange-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-green-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -100,7 +100,7 @@ const AdminLogin = () => {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="mx-auto h-20 w-20 bg-orange-600 rounded-full flex items-center justify-center"
+            className="mx-auto h-20 w-20 bg-green-600 rounded-full flex items-center justify-center"
           >
             <FaUser className="h-8 w-8 text-white" />
           </motion.div>
@@ -146,7 +146,7 @@ const AdminLogin = () => {
                   autoComplete="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`block w-full pl-10 pr-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                  className={`block w-full pl-10 pr-3 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                     errors.email ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Enter your email"
@@ -173,7 +173,7 @@ const AdminLogin = () => {
                   autoComplete="current-password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`block w-full pl-10 pr-10 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 ${
+                  className={`block w-full pl-10 pr-10 py-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 ${
                     errors.password ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="Enter your password"
@@ -202,7 +202,7 @@ const AdminLogin = () => {
                 disabled={loading}
                 whileHover={{ scale: loading ? 1 : 1.02 }}
                 whileTap={{ scale: loading ? 1 : 0.98 }}
-                className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors ${
+                className={`group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors ${
                   loading ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >

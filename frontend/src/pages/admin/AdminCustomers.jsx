@@ -81,7 +81,7 @@ const AdminCustomers = () => {
   const getCustomerTier = (totalSpent) => {
     if (totalSpent >= 5000) return { tier: 'Gold', color: 'text-yellow-600' };
     if (totalSpent >= 2000) return { tier: 'Silver', color: 'text-gray-600' };
-    return { tier: 'Bronze', color: 'text-orange-600' };
+    return { tier: 'Bronze', color: 'text-green-600' };
   };
 
   return (
@@ -147,8 +147,8 @@ const AdminCustomers = () => {
 
         <div className="bg-white p-6 rounded-lg shadow-sm">
           <div className="flex items-center">
-            <div className="p-2 bg-orange-100 rounded-lg">
-              <FaShoppingCart className="w-6 h-6 text-orange-600" />
+            <div className="p-2 bg-green-100 rounded-lg">
+              <FaShoppingCart className="w-6 h-6 text-green-600" />
             </div>
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">Total Revenue</p>
@@ -174,7 +174,7 @@ const AdminCustomers = () => {
                 placeholder="Search customers..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
               />
             </div>
           </div>
@@ -182,7 +182,7 @@ const AdminCustomers = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -229,8 +229,8 @@ const AdminCustomers = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center">
                         <div className="flex-shrink-0 h-10 w-10">
-                          <div className="h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center">
-                            <span className="text-orange-600 font-medium">
+                          <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
+                            <span className="text-green-600 font-medium">
                               {customer.name.charAt(0)}
                             </span>
                           </div>
@@ -272,7 +272,7 @@ const AdminCustomers = () => {
                       <div className="flex gap-2">
                         <button
                           onClick={() => setSelectedCustomer(customer)}
-                          className="text-orange-600 hover:text-orange-800"
+                          className="text-green-600 hover:text-green-800"
                         >
                           <FaEye className="w-4 h-4" />
                         </button>
@@ -314,8 +314,8 @@ const AdminCustomers = () => {
                 {/* Customer Info */}
                 <div className="flex items-start space-x-4">
                   <div className="flex-shrink-0 h-16 w-16">
-                    <div className="h-16 w-16 rounded-full bg-orange-100 flex items-center justify-center">
-                      <span className="text-orange-600 font-medium text-xl">
+                    <div className="h-16 w-16 rounded-full bg-green-100 flex items-center justify-center">
+                      <span className="text-green-600 font-medium text-xl">
                         {selectedCustomer.name.charAt(0)}
                       </span>
                     </div>
@@ -377,7 +377,7 @@ const AdminCustomers = () => {
 
                 {/* Actions */}
                 <div className="flex gap-3 pt-4 border-t border-gray-200">
-                  <button className="flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
+                  <button className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
                     <FaEnvelope className="w-4 h-4 mr-2" />
                     Send Email
                   </button>

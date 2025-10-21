@@ -82,7 +82,7 @@ const AdminLayout = () => {
         {/* Logo */}
         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
           <Link to="/admin/dashboard" className="flex items-center">
-            <span className="text-2xl font-bold text-orange-600">Bestea</span>
+            <span className="text-2xl font-bold text-green-600">Bestea</span>
             <span className="ml-2 text-sm text-gray-500">Admin</span>
           </Link>
           <button
@@ -107,11 +107,11 @@ const AdminLayout = () => {
                   onClick={() => setSidebarOpen(false)}
                   className={`flex items-center px-3 py-2 mb-1 text-sm font-medium rounded-md transition-colors ${
                     active
-                      ? 'bg-orange-100 text-orange-700'
+                      ? 'bg-green-100 text-green-700'
                       : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
                   }`}
                 >
-                  <Icon className={`w-5 h-5 mr-3 ${active ? 'text-orange-500' : 'text-gray-400'}`} />
+                  <Icon className={`w-5 h-5 mr-3 ${active ? 'text-green-500' : 'text-gray-400'}`} />
                   {item.title}
                 </Link>
               );

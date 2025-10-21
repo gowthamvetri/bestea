@@ -81,14 +81,14 @@ const AdminAnalytics = () => {
           <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
           >
             <option value="7days">Last 7 days</option>
             <option value="30days">Last 30 days</option>
             <option value="90days">Last 90 days</option>
             <option value="1year">Last year</option>
           </select>
-          <button className="flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
+          <button className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
             <FaDownload className="w-4 h-4 mr-2" />
             Export Report
           </button>
@@ -162,8 +162,8 @@ const AdminAnalytics = () => {
               <Area
                 type="monotone"
                 dataKey="sales"
-                stroke="#f59e0b"
-                fill="#fef3c7"
+                stroke="#059669"
+                fill="#d1fae5"
                 strokeWidth={2}
               />
             </AreaChart>
@@ -206,7 +206,7 @@ const AdminAnalytics = () => {
             <Tooltip />
             <Legend />
             <Bar yAxisId="left" dataKey="orders" fill="#3b82f6" name="Orders" />
-            <Bar yAxisId="right" dataKey="revenue" fill="#f59e0b" name="Revenue (₹)" />
+            <Bar yAxisId="right" dataKey="revenue" fill="#059669" name="Revenue (₹)" />
           </BarChart>
         </ResponsiveContainer>
       </div>

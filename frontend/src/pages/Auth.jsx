@@ -165,7 +165,7 @@ const Auth = () => {
                     required={!isLogin}
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bestea-400 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-transparent"
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -182,7 +182,7 @@ const Auth = () => {
                   required
                   value={formData.email}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bestea-400 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-transparent"
                   placeholder="Enter your email"
                 />
               </div>
@@ -199,7 +199,7 @@ const Auth = () => {
                     required
                     value={formData.password}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-bestea-400 focus:border-transparent"
+                    className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-400 focus:border-transparent"
                     placeholder="Enter your password"
                   />
                   <button
@@ -233,7 +233,7 @@ const Auth = () => {
                     required={!isLogin}
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-bestea-400 focus:border-transparent ${
+                    className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-green-400 focus:border-transparent ${
                       formData.confirmPassword && formData.password !== formData.confirmPassword
                         ? 'border-red-300'
                         : 'border-gray-300'
@@ -253,7 +253,7 @@ const Auth = () => {
                       id="remember"
                       name="remember"
                       type="checkbox"
-                      className="h-4 w-4 text-bestea-400 focus:ring-bestea-400 border-gray-300 rounded"
+                      className="h-4 w-4 text-green-400 focus:ring-green-400 border-gray-300 rounded"
                     />
                     <label htmlFor="remember" className="ml-2 block text-sm text-gray-700">
                       Remember me
@@ -261,7 +261,7 @@ const Auth = () => {
                   </div>
                   <Link
                     to="/forgot-password"
-                    className="text-sm text-bestea-400 hover:text-bestea-500"
+                    className="text-sm text-green-400 hover:text-green-500"
                   >
                     Forgot password?
                   </Link>
@@ -306,7 +306,7 @@ const Auth = () => {
                 <button
                   type="button"
                   onClick={toggleAuthMode}
-                  className="ml-1 text-bestea-400 hover:text-bestea-500 font-medium"
+                  className="ml-1 text-green-400 hover:text-green-500 font-medium"
                 >
                   {isLogin ? 'Sign up' : 'Sign in'}
                 </button>
@@ -317,11 +317,11 @@ const Auth = () => {
             {!isLogin && (
               <p className="text-xs text-gray-500 text-center mt-4">
                 By creating an account, you agree to our{' '}
-                <Link to="/terms" className="text-bestea-400 hover:text-bestea-500">
+                <Link to="/terms" className="text-green-400 hover:text-green-500">
                   Terms of Service
                 </Link>{' '}
                 and{' '}
-                <Link to="/privacy" className="text-bestea-400 hover:text-bestea-500">
+                <Link to="/privacy" className="text-green-400 hover:text-green-500">
                   Privacy Policy
                 </Link>
               </p>
@@ -341,19 +341,19 @@ const Auth = () => {
               </h3>
               <ul className="space-y-3 text-sm text-gray-600">
                 <li className="flex items-start gap-2">
-                  <span className="w-2 h-2 bg-bestea-400 rounded-full mt-2 flex-shrink-0" />
+                  <span className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0" />
                   <span>Exclusive access to premium tea blends</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="w-2 h-2 bg-bestea-400 rounded-full mt-2 flex-shrink-0" />
+                  <span className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0" />
                   <span>Free shipping on orders above ₹499</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="w-2 h-2 bg-bestea-400 rounded-full mt-2 flex-shrink-0" />
+                  <span className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0" />
                   <span>Early access to new products and sales</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="w-2 h-2 bg-bestea-400 rounded-full mt-2 flex-shrink-0" />
+                  <span className="w-2 h-2 bg-green-400 rounded-full mt-2 flex-shrink-0" />
                   <span>Personalized tea recommendations</span>
                 </li>
               </ul>

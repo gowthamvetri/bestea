@@ -117,24 +117,38 @@ const getProducts = async (req, res) => {
   }
 };
 
-// @desc    Get single product
+// @desc    Get single product by ID or slug
 // @route   GET /api/products/:id
 // @access  Public
 const getProductById = async (req, res) => {
   try {
+    const { id } = req.params;
     let product;
     
+    // Check if the id is a valid MongoDB ObjectId
+    const isValidObjectId = /^[0-9a-fA-F]{24}$/.test(id);
+    
     try {
-      // Try to get from database first (without problematic population)
-      product = await Product.findById(req.params.id)
-        .populate('category', 'name slug');
+      if (isValidObjectId) {
+        // Fetch by MongoDB ID
+        product = await Product.findById(id)
+          .populate('category', 'name slug');
+      } else {
+        // Fetch by slug
+        product = await Product.findOne({ slug: id })
+          .populate('category', 'name slug');
+      }
     } catch (dbError) {
-      console.log('Database error, will use mock data if available:', dbError.message);
+      console.log('Database error:', dbError.message);
       product = null;
     }
 
     if (!product) {
-      return res.status(404).json({ message: 'Product not found' });
+      return res.status(404).json({ 
+        message: 'Product not found',
+        searchedFor: id,
+        searchType: isValidObjectId ? 'id' : 'slug'
+      });
     }
 
     res.json(product);

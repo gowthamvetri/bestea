@@ -150,7 +150,7 @@ const AdminProductDetail = () => {
         <h2 className="text-xl font-semibold text-gray-900">Product not found</h2>
         <Link
           to="/admin/products"
-          className="mt-4 inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700"
+          className="mt-4 inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700"
         >
           <FaArrowLeft className="w-4 h-4 mr-2" />
           Back to Products
@@ -217,7 +217,7 @@ const AdminProductDetail = () => {
                     key={index}
                     onClick={() => setSelectedImage(index)}
                     className={`aspect-w-1 aspect-h-1 rounded-lg overflow-hidden border-2 transition-colors ${
-                      selectedImage === index ? 'border-orange-500' : 'border-gray-200'
+                      selectedImage === index ? 'border-green-500' : 'border-gray-200'
                     }`}
                   >
                     <img
@@ -261,9 +261,9 @@ const AdminProductDetail = () => {
 
           {/* Quick Stats */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-orange-50 rounded-lg p-4">
+            <div className="bg-green-50 rounded-lg p-4">
               <div className="flex items-center">
-                <FaRupeeSign className="w-5 h-5 text-orange-600 mr-2" />
+                <FaRupeeSign className="w-5 h-5 text-green-600 mr-2" />
                 <div>
                   <p className="text-sm text-gray-600">Price</p>
                   <p className="text-lg font-semibold text-gray-900">₹{product.price || 0}</p>
@@ -422,7 +422,7 @@ const AdminProductDetail = () => {
                 {(product.flavorProfile || []).map((flavor, index) => (
                   <span
                     key={index}
-                    className="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-full"
+                    className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full"
                   >
                     {flavor}
                   </span>
