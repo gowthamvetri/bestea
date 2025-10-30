@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { managedRequest } from '../../utils/requestManager';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -43,7 +44,12 @@ export const fetchProducts = createAsyncThunk(
   async (params = {}, { rejectWithValue }) => {
     try {
       const queryString = new URLSearchParams(params).toString();
-      const response = await axios.get(`${API_URL}/products?${queryString}`);
+      const key = `products-${queryString}`;
+      const response = await managedRequest(
+        key,
+        () => axios.get(`${API_URL}/products?${queryString}`),
+        { useCache: true }
+      );
       return response.data;
     } catch (error) {
       // Handle rate limiting specifically
@@ -61,7 +67,12 @@ export const fetchProductBySlug = createAsyncThunk(
   'products/fetchProductBySlug',
   async (slug, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/products/${slug}`);
+      const key = `product-slug-${slug}`;
+      const response = await managedRequest(
+        key,
+        () => axios.get(`${API_URL}/products/${slug}`),
+        { useCache: true }
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(
@@ -75,7 +86,12 @@ export const fetchProductById = createAsyncThunk(
   'products/fetchProductById',
   async (id, { rejectWithValue }) => {
     try {
-      const response = await axios.get(`${API_URL}/products/${id}`);
+      const key = `product-id-${id}`;
+      const response = await managedRequest(
+        key,
+        () => axios.get(`${API_URL}/products/${id}`),
+        { useCache: true }
+      );
       return response.data;
     } catch (error) {
       return rejectWithValue(

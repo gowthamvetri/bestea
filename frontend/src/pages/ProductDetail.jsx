@@ -45,9 +45,12 @@ import { fetchProductById, fetchProductBySlug } from '../store/slices/productSli
 
 // Components
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import ProductReviews from '../components/product/ProductReviews';
+import RelatedProducts from '../components/product/RelatedProducts';
 
 // Utils
 import { getProductImageSrc, handleImageError } from '../utils/imageUtils';
+import { addToRecentlyViewed } from '../utils/recentlyViewed';
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -67,6 +70,13 @@ const ProductDetail = () => {
   const [isPinCodeValid, setIsPinCodeValid] = useState(null);
   const [pinCode, setPinCode] = useState('');
   const [showAllFeatures, setShowAllFeatures] = useState(false);
+  
+  // Refs to track if actions have been done
+  const lastFetchedId = React.useRef(null);
+  const hasTrackedView = React.useRef(false);
+  const lastTrackedProductId = React.useRef(null);
+  const loadingTimeoutRef = React.useRef(null);
+  const [loadingTimeout, setLoadingTimeout] = useState(false);
 
   // Check if current product with selected variant is already in cart
   const cartItem = cartItems.find(item => {
@@ -79,9 +89,38 @@ const ProductDetail = () => {
   const cartQuantity = cartItem?.quantity || 0;
   const isInWishlist = wishlistItems.some(item => item._id === currentProduct?._id || item.id === currentProduct?.id);
 
+  // Memoize product IDs to prevent unnecessary re-renders
+  // Use stable references by only depending on currentProduct itself
+  const productId = React.useMemo(() => {
+    if (!currentProduct) return null;
+    return currentProduct._id || currentProduct.id;
+  }, [currentProduct]);
+
+  const categoryId = React.useMemo(() => {
+    if (!currentProduct?.category) return null;
+    return typeof currentProduct.category === 'object' 
+      ? (currentProduct.category._id || currentProduct.category.id)
+      : currentProduct.category;
+  }, [currentProduct]);
+
+  const categoryName = React.useMemo(() => {
+    if (!currentProduct?.category) return null;
+    return typeof currentProduct.category === 'object'
+      ? currentProduct.category.name
+      : null;
+  }, [currentProduct]);
+
   // Fetch product data on mount
   useEffect(() => {
-    if (id) {
+    if (id && id !== lastFetchedId.current) {
+      lastFetchedId.current = id;
+      setLoadingTimeout(false);
+      
+      // Set a timeout to handle stuck loading states
+      loadingTimeoutRef.current = setTimeout(() => {
+        setLoadingTimeout(true);
+      }, 10000); // 10 seconds timeout
+      
       // Check if the id is a MongoDB ObjectId (24 characters, hexadecimal)
       const isObjectId = /^[0-9a-fA-F]{24}$/.test(id);
       
@@ -91,14 +130,30 @@ const ProductDetail = () => {
         dispatch(fetchProductBySlug(id));
       }
     }
-  }, [dispatch, id]);
+    
+    return () => {
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+      }
+    };
+  }, [id, dispatch]);
 
   // Set default variant when product loads
   useEffect(() => {
     if (currentProduct?.variants?.length > 0 && !selectedVariant) {
       setSelectedVariant(currentProduct.variants[0].name);
     }
-  }, [currentProduct, selectedVariant]);
+  }, [currentProduct]);
+
+  // Track product view - only once per product
+  useEffect(() => {
+    const currentProductId = currentProduct?._id;
+    
+    if (currentProductId && currentProductId !== lastTrackedProductId.current) {
+      lastTrackedProductId.current = currentProductId;
+      addToRecentlyViewed(currentProduct);
+    }
+  }, [currentProduct]);
 
   const handleAddToCart = () => {
     if (!currentProduct || (!currentProduct._id && !currentProduct.id)) {
@@ -230,54 +285,61 @@ const ProductDetail = () => {
   ];
 
   // Show loading spinner while fetching product
-  if (isLoading) {
-    return <LoadingSpinner fullScreen />;
-  }
-
-    if (isLoading) {
+  if (isLoading && !loadingTimeout) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <LoadingSpinner />
       </div>
     );
   }
 
-  if (error) {
+  if (error || loadingTimeout) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <FaExclamationTriangle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Product Not Found</h2>
-          <p className="text-gray-600 mb-4">The product you're looking for doesn't exist.</p>
-          <Link
-            to="/shop"
-            className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
-          >
-            <FaArrowLeft className="w-4 h-4 mr-2" />
-            Back to Shop
-          </Link>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            {loadingTimeout ? 'Loading Timeout' : 'Product Not Found'}
+          </h2>
+          <p className="text-gray-600 mb-4">
+            {loadingTimeout 
+              ? 'The product is taking too long to load. Please try again.' 
+              : "The product you're looking for doesn't exist."}
+          </p>
+          <div className="flex gap-3 justify-center">
+            <button
+              onClick={() => {
+                setLoadingTimeout(false);
+                lastFetchedId.current = null;
+                window.location.reload();
+              }}
+              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Try Again
+            </button>
+            <Link
+              to="/shop"
+              className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+            >
+              <FaArrowLeft className="mr-2" />
+              Back to Shop
+            </Link>
+          </div>
         </div>
       </div>
     );
   }
 
+  // Don't render until product is loaded
   if (!currentProduct) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Product Not Found</h2>
-          <Link
-            to="/shop"
-            className="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
-          >
-            <FaArrowLeft className="w-4 h-4 mr-2" />
-            Back to Shop
-          </Link>
-        </div>
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <LoadingSpinner />
       </div>
     );
   }
 
+  // Get current image and calculations
   const currentImage = currentProduct.images?.[selectedImageIndex] || currentProduct.mainImage;
 
   // Calculate discount percentage
@@ -829,54 +891,18 @@ const ProductDetail = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                     >
-                      <div className="mb-8">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4">Customer Reviews</h3>
-                        <div className="flex items-center gap-6 p-6 bg-gray-50 rounded-lg">
-                          <div className="text-center">
-                            <div className="text-4xl font-bold text-gray-900 mb-1">
-                              {currentProduct.averageRating || currentProduct.rating || 4.8}
-                            </div>
-                            <div className="flex items-center gap-1 mb-2">
-                              {[...Array(5)].map((_, i) => (
-                                <FaStar 
-                                  key={i} 
-                                  className={`w-5 h-5 ${
-                                    i < Math.floor(currentProduct.averageRating || currentProduct.rating || 4.8)
-                                      ? 'text-yellow-400' 
-                                      : 'text-gray-300'
-                                  }`} 
-                                />
-                              ))}
-                            </div>
-                            <div className="text-sm text-gray-600">{currentProduct.totalReviews || 0} ratings</div>
-                          </div>
-                          <div className="flex-1">
-                            {[5, 4, 3, 2, 1].map((rating) => {
-                              const percentage = rating === 5 ? 75 : rating === 4 ? 20 : rating === 3 ? 3 : rating === 2 ? 1 : 1;
-                              return (
-                                <div key={rating} className="flex items-center gap-3 mb-2">
-                                  <span className="text-sm text-gray-600 w-8">{rating} ★</span>
-                                  <div className="flex-1 h-2 bg-gray-200 rounded-full overflow-hidden">
-                                    <div 
-                                      className="h-full bg-yellow-400 rounded-full"
-                                      style={{ width: `${percentage}%` }}
-                                    />
-                                  </div>
-                                  <span className="text-sm text-gray-600 w-12 text-right">{percentage}%</span>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="text-center py-8 text-gray-500">
-                        <FaUsers className="w-12 h-12 mx-auto mb-3 text-gray-400" />
-                        <p>No reviews yet. Be the first to review this product!</p>
-                        <button className="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium">
-                          Write a Review
-                        </button>
-                      </div>
+                      <ProductReviews
+                        productId={currentProduct._id || currentProduct.id}
+                        reviews={currentProduct.reviews || []}
+                        onAddReview={async (reviewData) => {
+                          // TODO: Implement add review API call
+                          console.log('Adding review:', reviewData);
+                          // For now, just a placeholder
+                          throw new Error('Review submission not yet implemented');
+                        }}
+                        isAuthenticated={isAuthenticated}
+                        user={user}
+                      />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -885,12 +911,11 @@ const ProductDetail = () => {
           </div>
 
           {/* Related Products / You May Also Like */}
-          <div className="mt-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">You May Also Like</h2>
-            <div className="text-center py-12 bg-white rounded-lg border border-gray-200">
-              <p className="text-gray-500">Related products will appear here</p>
-            </div>
-          </div>
+          <RelatedProducts
+            currentProductId={productId}
+            categoryId={categoryId}
+            categoryName={categoryName}
+          />
         </div>
       </div>
     </>

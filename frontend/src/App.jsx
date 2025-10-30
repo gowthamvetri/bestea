@@ -39,6 +39,7 @@ import Orders from './pages/Orders';
 import Profile from './pages/Profile';
 import Wishlist from './pages/Wishlist';
 import BrewingGuide from './pages/BrewingGuide';
+import OrderSuccess from './pages/OrderSuccess';
 import NotFound from './pages/NotFound';
 
 // Admin Pages
@@ -63,9 +64,16 @@ function AppContent() {
   const location = useLocation();
   const { token, isAuthenticated } = useSelector(state => state.auth);
   const { pageLoading } = useSelector(state => state.ui);
+  
+  // Refs to track if initial fetches have been done
+  const hasInitialized = React.useRef(false);
+  const hasWishlistSynced = React.useRef(false);
 
   // Initialize app
   useEffect(() => {
+    if (hasInitialized.current) return;
+    hasInitialized.current = true;
+    
     // Setup axios interceptors for automatic logout on 401 errors
     setupAxiosInterceptors(dispatch, logout);
     
@@ -104,12 +112,19 @@ function AppContent() {
 
   // Sync wishlist when user logs in
   useEffect(() => {
-    if (isAuthenticated && token) {
+    if (isAuthenticated && token && !hasWishlistSynced.current) {
+      hasWishlistSynced.current = true;
+      
       // First, sync localStorage wishlist to backend
       dispatch(syncWishlistToAPI()).then(() => {
         // Then fetch the merged wishlist from backend
         dispatch(fetchWishlist());
       });
+    }
+    
+    // Reset when user logs out
+    if (!isAuthenticated) {
+      hasWishlistSynced.current = false;
     }
   }, [dispatch, isAuthenticated, token]);
 
@@ -146,6 +161,11 @@ function AppContent() {
           <Route path="/checkout" element={
             <ProtectedRoute>
               <Checkout />
+            </ProtectedRoute>
+          } />
+          <Route path="/order-success" element={
+            <ProtectedRoute>
+              <OrderSuccess />
             </ProtectedRoute>
           } />
           <Route path="/orders" element={

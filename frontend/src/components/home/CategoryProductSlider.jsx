@@ -19,13 +19,17 @@ const CategoryProductSlider = () => {
   const dispatch = useDispatch();
   const { categories, categoryProducts, isLoading } = useSelector(state => state.products);
   const [activeCategory, setActiveCategory] = useState(null);
+  const hasFetchedCategories = React.useRef(false);
 
   // Ensure categories is always an array
   const safeCategories = Array.isArray(categories) ? categories : [];
 
   useEffect(() => {
-    // Fetch categories on component mount
-    dispatch(fetchCategories());
+    // Only fetch categories once to prevent duplicate requests
+    if (!hasFetchedCategories.current && safeCategories.length === 0) {
+      hasFetchedCategories.current = true;
+      dispatch(fetchCategories());
+    }
   }, [dispatch]);
 
   useEffect(() => {

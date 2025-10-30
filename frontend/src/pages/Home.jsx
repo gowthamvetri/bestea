@@ -29,6 +29,7 @@ import LoadingSpinner from '../components/common/LoadingSpinner';
 import CategoryProductSlider from '../components/home/CategoryProductSlider';
 import Card from '../components/common/Card';
 import AddToCartButton from '../components/common/AddToCartButton';
+import RecentlyViewedProducts from '../components/product/RecentlyViewedProducts';
 
 // Hero Carousel Component - Now uses dynamic data from featured products
 const HeroCarousel = ({ featuredProducts = [] }) => {
@@ -234,11 +235,18 @@ const Home = () => {
     }
   };
 
+  const hasFetchedCategories = React.useRef(false);
+
   useEffect(() => {
     dispatch(fetchBestSellers());
     dispatch(fetchFeaturedProducts());
     dispatch(fetchFeaturedTestimonials());
-    dispatch(fetchCategories());
+    
+    // Only fetch categories once to prevent duplicate requests
+    if (!hasFetchedCategories.current && categories.length === 0) {
+      hasFetchedCategories.current = true;
+      dispatch(fetchCategories());
+    }
   }, [dispatch]);
 
   // Fetch products for the first category when categories are loaded
@@ -1144,6 +1152,9 @@ const Home = () => {
           </motion.div>
         </div>
       </section>
+
+      {/* Recently Viewed Products */}
+      <RecentlyViewedProducts />
     </div>
   );
 };

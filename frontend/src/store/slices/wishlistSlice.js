@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { managedRequest } from '../../utils/requestManager';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
@@ -40,9 +41,14 @@ export const fetchWishlist = createAsyncThunk(
         return migrateWishlistItems(localWishlist);
       }
 
-      const response = await axios.get(`${API_URL}/wishlist`, {
-        headers: { Authorization: `Bearer ${auth.token}` }
-      });
+      const key = `wishlist-${auth.user?.id || 'user'}`;
+      const response = await managedRequest(
+        key,
+        () => axios.get(`${API_URL}/wishlist`, {
+          headers: { Authorization: `Bearer ${auth.token}` }
+        }),
+        { useCache: true }
+      );
       return response.data.items;
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Failed to fetch wishlist');
@@ -111,10 +117,15 @@ export const syncWishlistToAPI = createAsyncThunk(
 
       console.log('Syncing wishlist with', productIds.length, 'items');
       
-      const response = await axios.post(
-        `${API_URL}/wishlist/sync`,
-        { productIds },
-        { headers: { Authorization: `Bearer ${auth.token}` } }
+      const key = `wishlist-sync-${auth.user?.id || 'user'}`;
+      const response = await managedRequest(
+        key,
+        () => axios.post(
+          `${API_URL}/wishlist/sync`,
+          { productIds },
+          { headers: { Authorization: `Bearer ${auth.token}` } }
+        ),
+        { useCache: false } // Don't cache sync operations
       );
       
       console.log('Wishlist sync successful:', response.data);

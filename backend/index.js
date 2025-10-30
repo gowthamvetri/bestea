@@ -16,7 +16,7 @@ app.use(compression());
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: process.env.NODE_ENV === 'production' ? 100 : 2000, // Much higher limit for development
+  max: process.env.NODE_ENV === 'production' ? 100 : 5000, // Much higher limit for development (React Strict Mode doubles requests)
   message: {
     error: 'Too many requests from this IP, please try again later.'
   },
@@ -64,7 +64,7 @@ const connectDB = async () => {
         socketTimeoutMS: 30000,
         connectTimeoutMS: 30000,
         // Connection pool tuning
-        maxPoolSize: 10,
+        maxPoolSize: 10, 
         minPoolSize: 1,
         maxIdleTimeMS: 30000,
         // Retry writes and write concern

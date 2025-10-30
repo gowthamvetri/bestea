@@ -17,6 +17,7 @@ import {
 import { toast } from 'react-hot-toast';
 import { getProductImageSrc, handleImageError, DEFAULT_PRODUCT_IMAGE } from '../utils/imageUtils';
 import { clearCart, calculateTotals } from '../store/slices/cartSlice';
+import { processPayment } from '../services/paymentService';
 
 const API_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -119,7 +120,7 @@ const Checkout = () => {
       const token = localStorage.getItem('token');
       if (!token) {
         toast.error('Please login to place order');
-        navigate('/login');
+        navigate('/auth?mode=login');
         return;
       }
 
@@ -130,7 +131,7 @@ const Checkout = () => {
         return;
       }
 
-      // Prepare order data with validation
+      // Prepare order data
       const orderData = {
         items: cartItems.map(item => {
           if (!item.productId && !item.id) {
@@ -166,27 +167,97 @@ const Checkout = () => {
         orderNotes: formData.orderNotes
       };
 
-      console.log('Placing order with data:', orderData);
+      console.log('Processing payment with method:', formData.paymentMethod);
 
-      const response = await fetch(`${API_URL}/orders`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(orderData)
-      });
+      // Handle payment based on selected method
+      if (formData.paymentMethod === 'razorpay') {
+        // Process Razorpay payment
+        try {
+          const paymentResult = await processPayment(
+            'razorpay',
+            {
+              total: finalTotal,
+              orderId: null // Will be generated on backend
+            },
+            {
+              name: `${formData.firstName} ${formData.lastName}`,
+              email: formData.email,
+              phone: formData.phone,
+              address: formData.address
+            }
+          );
 
-      const result = await response.json();
+          console.log('Payment successful:', paymentResult);
 
-      if (response.ok && result.success) {
-        // Clear cart after successful order placement
-        dispatch(clearCart());
-        toast.success('Order placed successfully!');
-        navigate('/orders');
+          // Add payment details to order
+          orderData.payment = {
+            method: 'razorpay',
+            status: 'completed',
+            transactionId: paymentResult.data.data.paymentId,
+            razorpayOrderId: paymentResult.data.data.orderId,
+            razorpaySignature: paymentResult.data.data.signature
+          };
+
+          // Create order after successful payment
+          const response = await fetch(`${API_URL}/orders`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(orderData)
+          });
+
+          const result = await response.json();
+
+          if (response.ok && result.success) {
+            dispatch(clearCart());
+            toast.success('Order placed successfully!');
+            navigate(`/order-success?orderId=${result.data._id}`);
+          } else {
+            throw new Error(result.message || 'Failed to place order');
+          }
+
+        } catch (paymentError) {
+          console.error('Payment error:', paymentError);
+          if (paymentError.message === 'Payment cancelled by user') {
+            toast.error('Payment cancelled');
+          } else {
+            toast.error(paymentError.description || paymentError.message || 'Payment failed. Please try again.');
+          }
+          setLoading(false);
+          return;
+        }
+
+      } else if (formData.paymentMethod === 'cod') {
+        // Handle Cash on Delivery
+        orderData.payment = {
+          method: 'cod',
+          status: 'pending'
+        };
+
+        const response = await fetch(`${API_URL}/orders`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(orderData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.success) {
+          dispatch(clearCart());
+          toast.success('Order placed successfully!');
+          navigate(`/order-success?orderId=${result.data._id}`);
+        } else {
+          throw new Error(result.message || 'Failed to place order');
+        }
       } else {
-        throw new Error(result.message || 'Failed to place order');
+        toast.error('Please select a valid payment method');
       }
+
     } catch (error) {
       console.error('Order placement error:', error);
       toast.error(error.message || 'Failed to place order. Please try again.');

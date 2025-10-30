@@ -16,7 +16,8 @@ import {
   FaChevronDown,
   FaTimesCircle,
   FaThLarge,
-  FaList
+  FaList,
+  FaEye,
 } from 'react-icons/fa';
 
 // Store actions
@@ -26,6 +27,7 @@ import { addToCart, updateQuantity, removeFromCart } from '../store/slices/cartS
 // Components
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import Card from '../components/common/Card';
+import AddToCartButton from '../components/common/AddToCartButton';
 
 const Shop = () => {
   const dispatch = useDispatch();
@@ -67,6 +69,9 @@ const Shop = () => {
   const [ratingFilter, setRatingFilter] = useState('');
   const [weightFilter, setWeightFilter] = useState('');
 
+  // Ref to track if categories have been fetched
+  const hasFetchedCategories = React.useRef(false);
+
   // Additional filter options
   const availabilityOptions = [
     { value: '', label: 'All Products' },
@@ -92,8 +97,11 @@ const Shop = () => {
 
   useEffect(() => {
     // Fetch categories only once when component mounts
-    dispatch(fetchCategories());
-  }, [dispatch]);
+    if (!hasFetchedCategories.current && categories.length === 0) {
+      hasFetchedCategories.current = true;
+      dispatch(fetchCategories());
+    }
+  }, [dispatch, categories.length]);
 
   // Handle category from URL parameter (both route param and query param)
   useEffect(() => {
@@ -859,13 +867,17 @@ const Shop = () => {
 
             {/* Products Grid */}
             <section className="py-8 px-6 lg:px-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              <div className={viewMode === 'grid' 
+                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" 
+                : "flex flex-col gap-4 max-w-5xl mx-auto"}>
                 {isLoading ? (
                   // Loading skeleton - Compact
                   [...Array(8)].map((_, index) => (
-                    <div key={index} className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm animate-pulse">
-                      <div className="aspect-[4/3] bg-gradient-to-br from-gray-200 to-gray-300"></div>
-                      <div className="p-4 space-y-3">
+                    <div key={index} className={viewMode === 'grid' 
+                      ? "bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm animate-pulse"
+                      : "bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm animate-pulse flex"}>
+                      <div className={viewMode === 'grid' ? "aspect-[4/3] bg-gradient-to-br from-gray-200 to-gray-300" : "w-48 h-48 bg-gradient-to-br from-gray-200 to-gray-300 flex-shrink-0"}></div>
+                      <div className="p-4 space-y-3 flex-1">
                         <div className="h-3 bg-gray-200 rounded-full w-1/3"></div>
                         <div className="h-4 bg-gray-200 rounded-full"></div>
                         <div className="h-4 bg-gray-200 rounded-full w-2/3"></div>
@@ -920,31 +932,168 @@ const Shop = () => {
                   </div>
                 ) : (
                   finalProducts.map((product, index) => (
-                    <Card.Product
-                      key={product._id || product.id}
-                      product={{
-                        ...product,
-                        images: product.mainImage?.url ? [product.mainImage.url] : [product.image || '/images/tea-placeholder.svg'],
-                        price: product.defaultPrice || product.price,
-                        originalPrice: product.defaultOriginalPrice || product.originalPrice,
-                        rating: product.averageRating || product.rating || 0,
-                        reviewCount: product.reviewCount || 0,
-                        isNew: product.badges?.includes('New'),
-                        isFeatured: product.badges?.includes('Best Seller'),
-                        discount: product.defaultOriginalPrice ? Math.round(((product.defaultOriginalPrice - product.defaultPrice) / product.defaultOriginalPrice) * 100) : 0
-                      }}
-                      delay={index}
-                      onAddToCart={() => handleAddToCart(product)}
-                      onAddToWishlist={() => {
-                        // Add to wishlist logic
-                        console.log('Add to wishlist:', product.name);
-                      }}
-                      onViewDetails={() => {
-                        // Navigate to product details
-                        window.location.href = `/product/${product._id || product.id}`;
-                      }}
-                    />
+                    viewMode === 'grid' ? (
+                      <Card.Product
+                        key={product._id || product.id}
+                        product={{
+                          ...product,
+                          images: product.mainImage?.url ? [product.mainImage.url] : [product.image || '/images/tea-placeholder.svg'],
+                          price: product.defaultPrice || product.price,
+                          originalPrice: product.defaultOriginalPrice || product.originalPrice,
+                          rating: product.averageRating || product.rating || 0,
+                          reviewCount: product.reviewCount || 0,
+                          isNew: product.badges?.includes('New'),
+                          isFeatured: product.badges?.includes('Best Seller'),
+                          discount: product.defaultOriginalPrice ? Math.round(((product.defaultOriginalPrice - product.defaultPrice) / product.defaultOriginalPrice) * 100) : 0
+                        }}
+                        delay={index}
+                        onAddToCart={() => handleAddToCart(product)}
+                        onAddToWishlist={() => {
+                          // Add to wishlist logic
+                          console.log('Add to wishlist:', product.name);
+                        }}
+                        onViewDetails={() => {
+                          // Navigate to product details
+                          window.location.href = `/product/${product._id || product.id}`;
+                        }}
+                      />
+                    ) : (
+                      // List View - Professional Design like Wishlist
+                      <motion.div
+                        key={product._id || product.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ 
+                          delay: index * 0.05, 
+                          duration: 0.3
+                        }}
+                        className="bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden border-2 border-gray-100 hover:border-green-200 flex items-center p-4 sm:p-5"
+                      >
+                        <div className="flex flex-col sm:flex-row items-start gap-4 w-full">
+                          {/* Image Section */}
+                          <div className="relative flex-shrink-0">
+                            <div className="relative overflow-hidden rounded-xl bg-gray-100 shadow-md group">
+                              <img
+                                src={product.mainImage?.url || product.image || '/images/tea-placeholder.svg'}
+                                alt={product.name}
+                                className="w-full sm:w-32 h-32 object-cover group-hover:scale-110 transition-transform duration-500"
+                                loading="lazy"
+                              />
+                              {/* Discount Badge */}
+                              {product.defaultOriginalPrice && product.defaultOriginalPrice > (product.defaultPrice || product.price) && (
+                                <div className="absolute top-2 left-2 bg-gradient-to-r from-red-500 to-red-600 text-white px-2 py-1 rounded-lg text-xs font-bold shadow-md">
+                                  -{Math.round(((product.defaultOriginalPrice - (product.defaultPrice || product.price)) / product.defaultOriginalPrice) * 100)}% OFF
+                                </div>
+                              )}
+                              {/* Stock Status */}
+                              {product.stock <= 0 && (
+                                <div className="absolute top-2 right-2 bg-gray-900 text-white px-2 py-1 rounded-lg text-xs font-semibold shadow-md">
+                                  Out of Stock
+                                </div>
+                              )}
+                            </div>
+                          </div>
 
+                          {/* Content Section - Flex 1 */}
+                          <div className="flex-1 min-w-0 w-full">
+                            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                              {/* Product Info */}
+                              <div className="flex-1 min-w-0">
+                                <h3 className="font-bold text-gray-900 text-lg mb-2 line-clamp-2">
+                                  {product.name}
+                                </h3>
+                                <p className="text-sm text-gray-600 mb-3 line-clamp-2 leading-relaxed">
+                                  {product.shortDescription || product.description || 'Premium quality tea'}
+                                </p>
+                                
+                                {/* Rating and Category */}
+                                <div className="flex flex-wrap items-center gap-3 mb-3">
+                                  {(product.averageRating || product.rating || product.reviewCount) && (
+                                    <div className="flex items-center bg-amber-50 px-2.5 py-1.5 rounded-lg border border-amber-200">
+                                      <FaStar className="w-4 h-4 text-amber-500" />
+                                      <span className="text-sm font-semibold text-gray-900 ml-1.5">
+                                        {product.averageRating || product.rating || 0}
+                                      </span>
+                                      {product.reviewCount && (
+                                        <span className="text-xs text-gray-500 ml-1">({product.reviewCount})</span>
+                                      )}
+                                    </div>
+                                  )}
+                                  {product.category?.name && (
+                                    <span className="px-2.5 py-1.5 bg-green-50 text-green-700 text-xs rounded-lg font-medium border border-green-200">
+                                      {product.category.name}
+                                    </span>
+                                  )}
+                                  {product.badges?.includes('Best Seller') && (
+                                    <span className="px-2.5 py-1.5 bg-gradient-to-r from-green-500 to-green-600 text-white text-xs rounded-lg font-bold shadow-sm">
+                                      ★ Bestseller
+                                    </span>
+                                  )}
+                                  {product.badges?.includes('New') && (
+                                    <span className="px-2.5 py-1.5 bg-blue-500 text-white text-xs rounded-lg font-bold shadow-sm">
+                                      NEW
+                                    </span>
+                                  )}
+                                </div>
+
+                                {/* Price Section */}
+                                <div className="flex flex-wrap items-baseline gap-2 mb-4">
+                                  <span className="text-2xl font-bold text-gray-900">
+                                    ₹{(product.defaultPrice || product.price).toLocaleString()}
+                                  </span>
+                                  {product.defaultOriginalPrice && product.defaultOriginalPrice > (product.defaultPrice || product.price) && (
+                                    <>
+                                      <span className="text-base text-gray-500 line-through">
+                                        ₹{product.defaultOriginalPrice.toLocaleString()}
+                                      </span>
+                                      <span className="text-sm text-green-600 font-semibold bg-green-50 px-2 py-0.5 rounded-md">
+                                        Save ₹{(product.defaultOriginalPrice - (product.defaultPrice || product.price)).toLocaleString()}
+                                      </span>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Action Buttons Section */}
+                              <div className="flex flex-col sm:flex-row lg:flex-col gap-2 sm:gap-3 lg:gap-2 lg:min-w-[200px]">
+                                {/* Quick View Button */}
+                                <Link
+                                  to={`/product/${product._id || product.id}`}
+                                  className="flex items-center justify-center gap-2 px-4 py-2.5 text-gray-700 bg-white border-2 border-gray-200 rounded-xl hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
+                                >
+                                  <FaEye className="w-4 h-4" />
+                                  <span className="hidden sm:inline">Quick View</span>
+                                </Link>
+                                
+                                {/* Add to Cart or Wishlist */}
+                                <div className="flex gap-2">
+                                  {/* Wishlist Button */}
+                                  <button
+                                    onClick={() => console.log('Add to wishlist:', product.name)}
+                                    className="flex items-center justify-center gap-2 px-4 py-2.5 text-gray-700 bg-white border-2 border-gray-200 rounded-xl hover:bg-red-50 hover:border-red-300 hover:text-red-500 transition-all duration-200 font-medium shadow-sm hover:shadow-md"
+                                  >
+                                    <FaHeart className="w-4 h-4" />
+                                  </button>
+                                  
+                                  {/* Add to Cart Button */}
+                                  <div className="flex-1">
+                                    <AddToCartButton 
+                                      product={{
+                                        ...product,
+                                        _id: product._id || product.id,
+                                        price: product.defaultPrice || product.price,
+                                        originalPrice: product.defaultOriginalPrice || product.originalPrice
+                                      }}
+                                      size="medium"
+                                    />
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )
                   ))
                 )}
               </div>
@@ -957,3 +1106,4 @@ const Shop = () => {
 };
 
 export default Shop;
+
